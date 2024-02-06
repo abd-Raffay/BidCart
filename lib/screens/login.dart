@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:email_validator/email_validator.dart';
-
 import 'package:bidcart/screens/onboarding.dart';
-import 'package:bidcart/screens/customer/signup.dart';
-import 'package:bidcart/screens/customer/homescreen.dart';
+import 'package:email_validator/email_validator.dart';
+import 'package:bidcart/screens/usersignup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:bidcart/screens/homescreen_customer.dart';
 
 class LoginPage extends StatefulWidget {
   @override

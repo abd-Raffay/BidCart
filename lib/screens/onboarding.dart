@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bidcart/screens/customer/login.dart';
-
+import 'package:bidcart/screens/login.dart';
 
 class OnBoarding extends StatelessWidget {
   const OnBoarding({super.key});
@@ -76,7 +75,7 @@ class OnBoarding extends StatelessWidget {
                   print("Signup Page");
                 },
                 child:Center(
-                    child:Text("continue as a Seller",style: TextStyle(
+                    child:Text("Want to open a Store?",style: TextStyle(
                       fontFamily: "Preahvihear",
                       fontSize: 14,
                       color: Colors.white,
