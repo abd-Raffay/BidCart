@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:bidcart/screens/onboarding.dart';
-import 'package:email_validator/email_validator.dart';
-import 'package:bidcart/screens/usersignup.dart';
-import 'package:bidcart/screens/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:email_validator/email_validator.dart';
+import 'package:bidcart/screens/customer/signup.dart';
+import 'package:bidcart/screens/customer/login.dart';
+
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:bidcart/toast/toast.dart';
-import 'package:bidcart/screens/login.dart';
+import 'package:bidcart/screens/customer/login.dart';
+import 'package:bidcart/screens/onboarding.dart';
 
 
 class Signup extends StatefulWidget {
