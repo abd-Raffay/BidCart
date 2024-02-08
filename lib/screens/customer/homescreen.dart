@@ -1,3 +1,5 @@
+import 'package:bidcart/controllers/signup_controller.dart';
+import 'package:bidcart/repository/authentication/authentication_repository.dart';
 import 'package:flutter/material.dart';
 class CustomerScreen extends StatefulWidget {
   const CustomerScreen({super.key});
@@ -11,12 +13,19 @@ class _CustomerScreenState extends State<CustomerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Center(child: Text('User Home Screen')),
+          title: Center(child: Text('Customer Home Screen')),
           backgroundColor: Colors.cyan,
           automaticallyImplyLeading: false,
         ),
       body: Container(
-        child:Text("HI"),
+        child: ElevatedButton(onPressed: (){
+          AuthenticationRepository.instance.logout();
+        },
+          child: Text("Press me"))
+
+
+
+
 
       ),
     );

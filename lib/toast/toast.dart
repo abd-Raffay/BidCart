@@ -25,7 +25,7 @@ LoadingToast(context) async {
   toast.show(context);
 
   Future.delayed(const Duration(seconds: 0)).then((value) {
-    toast.dismiss();
+   // toast.dismiss();
   });
 
 }
