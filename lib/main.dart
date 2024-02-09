@@ -1,10 +1,8 @@
 import 'package:bidcart/repository/authentication/authentication_repository.dart';
+import 'package:bidcart/screens/onboarding.dart';
 import 'package:bidcart/themes/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:bidcart/screens/splashscreen.dart';
-import 'package:bidcart/themes/theme.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
 void main() async {
@@ -27,7 +25,7 @@ class MyApp extends StatelessWidget {
       theme: TAppTheme.lightTheme,
       darkTheme: TAppTheme.darkTheme,
       themeMode: ThemeMode.light,
-      home: SplashScreen(),
+      home: const OnBoarding(),
     );
   }
 }

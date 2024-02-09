@@ -32,5 +32,11 @@ class Exceptions {
         return const Exceptions();
     }
 
+
+  }
+
+  @override
+  String toString() {
+    return message;
   }
 }

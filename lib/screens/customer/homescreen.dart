@@ -1,4 +1,3 @@
-import 'package:bidcart/controllers/signup_controller.dart';
 import 'package:bidcart/repository/authentication/authentication_repository.dart';
 import 'package:flutter/material.dart';
 class CustomerScreen extends StatefulWidget {

@@ -4,9 +4,6 @@ import 'package:bidcart/screens/customer/login.dart';
 
 class OnBoarding extends StatelessWidget {
   const OnBoarding({super.key});
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,11 +17,10 @@ class OnBoarding extends StatelessWidget {
         )),
 
           child: Column(
-
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(padding: EdgeInsets.only(top:10.0)),
-              SizedBox(height: 100,),
+              const Padding(padding: EdgeInsets.only(top:10.0)),
+              const SizedBox(height: 100,),
               const Center(
                 child: Image(
                   image: AssetImage("assets/images/white_logo.png"),
@@ -48,7 +44,7 @@ class OnBoarding extends StatelessWidget {
 
                 ),
               ),
-              Padding(padding: EdgeInsets.only(bottom:250.0)),
+              const Padding(padding: EdgeInsets.only(bottom:250.0)),
 
               Container(
 
@@ -58,20 +54,20 @@ class OnBoarding extends StatelessWidget {
                       builder:(_)=> LoginPage() ,
                     ));
                   },
-                    child:Text("Get Started",style: TextStyle(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF0BBFDC),
+                    fixedSize: const Size(350, 20),
+                    elevation: 10,
+                  ),
+                    child:const Text("Get Started",style: TextStyle(
                       fontFamily: "Preahvihear",
                       fontSize: 14,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     )),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF0BBFDC),
-                    fixedSize: Size(350, 20),
-                    elevation: 0,
-                  ),
                 ),
               ),
-              Padding(padding: EdgeInsets.only(bottom: 10)),
+              const Padding(padding: EdgeInsets.only(bottom: 10)),
               GestureDetector(onTap:(){
                   print("Signup Page");
                 },
@@ -79,8 +75,9 @@ class OnBoarding extends StatelessWidget {
                     child:Text("continue as a Seller",style: TextStyle(
                       fontFamily: "Preahvihear",
                       fontSize: 14,
+
                       color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                     // fontWeight: FontWeight.bold,
                       decoration: TextDecoration.combine([
                           TextDecoration.underline,
                           TextDecoration.underline]),

@@ -1,25 +1,21 @@
 import 'package:bidcart/controllers/signin_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:email_validator/email_validator.dart';
-
 import 'package:bidcart/screens/onboarding.dart';
 import 'package:bidcart/screens/customer/signup.dart';
-import 'package:bidcart/screens/customer/homescreen.dart';
 import 'package:get/get.dart';
 
-import '../../widget/login_form_widget.dart';
 
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
+
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+
   final controller = Get.put(SignInController());
 
   @override
@@ -39,10 +35,10 @@ class _LoginPageState extends State<LoginPage> {
                   child:TextButton(onPressed: (){
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (_) => OnBoarding()),
+                    MaterialPageRoute(builder: (_) => const OnBoarding()),
                   );
                 },
-                    child: Icon(Icons.arrow_back)
+                    child: const Icon(Icons.arrow_back)
                 ),)
               ),
               Container(
@@ -66,7 +62,109 @@ class _LoginPageState extends State<LoginPage> {
                   color: Colors.grey,
                 ),
               ),
-              LoginForm(),
+
+              Form(
+                key: _formKey,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      //Email Feild
+                      TextFormField(
+                        controller: controller.email,
+
+                        decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.email),
+
+                            labelText: 'Email',
+                            labelStyle: TextStyle(color: Colors.black),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(width: 2.0,color: Colors.cyan)
+                            ),
+
+                            border: OutlineInputBorder()),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your email';
+                          } else if (!EmailValidator.validate(value)) {
+                            return 'Please enter a valid email address';
+                          }
+                          return null;
+                        },
+
+                      ),
+
+                      const SizedBox(height: 10.0),
+
+                      //Password Feild
+                      TextFormField(
+                        controller: controller.password,
+
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.lock),
+                          labelText: 'Password',
+                          labelStyle: const TextStyle(color: Colors.black),
+                          focusedBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(width: 2.0,color: Colors.cyan)
+                          ),
+                          border: const OutlineInputBorder(),
+                          suffixIcon: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _obscureText = !_obscureText;
+                                });
+                              },
+                              child: Icon(
+                                _obscureText
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              )
+
+
+                        ),
+                        ),
+                        obscureText: _obscureText,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          return null;
+                        },
+                      ),
+
+                      Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+
+                            onPressed: () {},
+                            child: const Text("Forgot Password?",
+                              style: TextStyle(color: Colors.blue),),
+
+                          )
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.cyan,
+                            foregroundColor: Colors.white,
+                          ),
+                          onPressed: () {
+                            if(_formKey.currentState!.validate()){
+                              SignInController.instance.loginUser(controller.email.text.trim(), controller.password.text.trim());
+
+                              controller.email.clear();
+                              controller.password.clear();
+                            }
+                          },
+                          child: const Text('Login'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
 
               //Login Button
 
@@ -79,17 +177,15 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton.icon(
-                        icon: Image(
+                        icon: const Image(
                           image: AssetImage("assets/images/googlelogo.png"),
 
                           width: 30.0,
                         ),
                         onPressed: () {
-
                           SignInController.instance.googleSignIn();
-
                         },
-                        label: Text("Sign in with Google",
+                        label: const Text("Sign in with Google",
                         style:TextStyle(color: Colors.black)
                         )),
                   )
@@ -99,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
               TextButton(
                   onPressed: () {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (_) => Signup(),
+                      builder: (_) => const Signup(),
                     ));
                   },
                   child: const Text.rich(TextSpan(

@@ -1,14 +1,14 @@
 import 'dart:async';
-
 import 'package:bidcart/repository/authentication/authentication_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MailVerificationController extends GetxController{
  late Timer _timer;
 
   @override
-  void onInit(){
+   void onInit(){
     super.onInit();
     sendVerificationEmail();
     setTimerForAutoRedirect();
@@ -20,14 +20,19 @@ class MailVerificationController extends GetxController{
       await AuthenticationRepository.instance.sendEmailVerification();
 
     }catch (e){
-      //snackbar
+
+      Get.snackbar( "Failed", e.toString(),
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red[800],
+          colorText: Colors.white
+      );
       print("Error from catch send verfication ${e.toString()}");
     }
 
   }
 
   Future<void> setTimerForAutoRedirect() async{
-    _timer=Timer.periodic(const Duration(seconds: 3), (timer) {
+    _timer=Timer.periodic(const Duration(seconds: 5), (timer) {
       FirebaseAuth.instance.currentUser?.reload();
       final user=FirebaseAuth.instance.currentUser;
       if(user!.emailVerified){
@@ -44,9 +49,6 @@ class MailVerificationController extends GetxController{
     if(user!.emailVerified){
       AuthenticationRepository.instance.setIntialScreen(user);
     }
-
-
-
   }
 
 }

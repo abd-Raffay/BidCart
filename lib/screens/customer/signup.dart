@@ -1,18 +1,9 @@
 import 'package:bidcart/controllers/signup_controller.dart';
 import 'package:bidcart/model/customer_model.dart';
 import 'package:bidcart/repository/customer_repository.dart';
-import 'package:bidcart/screens/customer/homescreen.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:email_validator/email_validator.dart';
-import 'package:bidcart/screens/customer/signup.dart';
 import 'package:bidcart/screens/customer/login.dart';
-
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:bidcart/toast/toast.dart';
-import 'package:bidcart/screens/customer/login.dart';
-import 'package:bidcart/screens/onboarding.dart';
 import 'package:get/get.dart';
 
 
@@ -22,13 +13,14 @@ class Signup extends StatefulWidget {
 
   @override
   State<Signup> createState() => _SignupState();
+
 }
+
+
 class _SignupState extends State<Signup> {
   final controller = Get.put(SignUpController());
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
-
-
 
 
   final customerrepo = Get.put(CustomerRepository());
@@ -63,9 +55,9 @@ class _SignupState extends State<Signup> {
                     child: Image.asset('assets/images/logo.png'),
                   ),
 
-                  Align(
+                  const Align(
                     alignment: Alignment.bottomLeft,
-                    child: const Text(
+                    child: Text(
                       "Join our grocery Community",
                       style: TextStyle(
 
@@ -75,9 +67,9 @@ class _SignupState extends State<Signup> {
                       ),
                     ),
                   ),
-                  Align(
+                  const Align(
                     alignment: Alignment.bottomLeft,
-                    child: const Text(
+                    child: Text(
                       "Create your account to start Shopping",
                       style: TextStyle(
                         fontSize: 15,
@@ -87,7 +79,7 @@ class _SignupState extends State<Signup> {
                     ),
                   ),
 
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
 
                   //Username Feild
                   TextFormField(
@@ -153,9 +145,9 @@ class _SignupState extends State<Signup> {
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.lock,),
                       labelText: 'Password',
-                      border: OutlineInputBorder(),
-                      labelStyle: TextStyle(color: Colors.black),
-                      focusedBorder: OutlineInputBorder(
+                      border: const OutlineInputBorder(),
+                      labelStyle: const TextStyle(color: Colors.black),
+                      focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(width: 2.0,color: Colors.cyan)
                       ),
                       //errorText: "Password must be 8 digits long",
@@ -173,8 +165,6 @@ class _SignupState extends State<Signup> {
                       ),
                     ),
                     obscureText: _obscureText,
-
-
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
@@ -190,10 +180,6 @@ class _SignupState extends State<Signup> {
 
 
                   const SizedBox(height: 32.0),
-
-
-
-
 
                 // SignUp Button
                   SizedBox(
@@ -211,14 +197,17 @@ class _SignupState extends State<Signup> {
                             email: controller.email.text.trim(),
                             password: controller.password.text.trim(),
                             phone: controller.phone.text.trim(),
+                            id:"",
                         );
 
                         if (_formKey.currentState!.validate()) {
                           SignUpController.instance.createUser(customer);
-
                           //SignUpController.instance.registerUser(controller.email.text.trim(), controller.password.text.trim());
+                          controller.email.clear();
+                          controller.password.clear();
 
                         }
+
 
 
                        // await _signUp();

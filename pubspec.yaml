@@ -31,6 +31,7 @@ dependencies:
   get_storage: ^2.0.3
   flutter_native_splash: ^2.3.10
   google_sign_in: ^6.2.1
+  flutter_launcher_icons: ^0.13.1
 
 
 dev_dependencies:
@@ -38,14 +39,19 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^3.0.1
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logo.png"
+
 
 flutter_native_splash:
-  color: "#000000"
+  color: "#FFFFFF"
 
   image: assets/images/logo.png
   image_dark: assets/images/logo.png
   android_12:
-    icon_background_color: "#f7f6f1"
+    icon_background_color: "#FFFFFF"
     image: assets/images/logo.png
     image_dark: assets/images/logo.png
 

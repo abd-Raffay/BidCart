@@ -1,5 +1,5 @@
 import 'package:bidcart/controllers/mail_verfication_controller.dart';
-import 'package:bidcart/repository/authentication/authentication_repository.dart';
+import 'package:bidcart/screens/customer/login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -73,7 +73,7 @@ class MailVerification extends StatelessWidget {
               const SizedBox(
                 height: 30,
               ),
-              TextButton(onPressed: ()=> AuthenticationRepository.instance.logout(),
+              TextButton(onPressed:(){ Navigator.push(context,MaterialPageRoute(builder: (context) =>LoginPage()));},
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
