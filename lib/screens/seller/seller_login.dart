@@ -1,22 +1,24 @@
-import 'package:bidcart/controllers/signin_controller.dart';
+
+import 'package:bidcart/controllers/seller_controllers/seller_login_controller.dart';
+import 'package:bidcart/screens/common/forget_password.dart';
+import 'package:bidcart/screens/seller/seller_signup.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:bidcart/screens/onboarding.dart';
-import 'package:bidcart/screens/customer/signup.dart';
+import 'package:bidcart/screens/common/onboarding.dart';
 import 'package:get/get.dart';
 
 
-class LoginPage extends StatefulWidget {
+class SLoginPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _SLoginPageState createState() => _SLoginPageState();
 }
 
 
-class _LoginPageState extends State<LoginPage> {
+class _SLoginPageState extends State<SLoginPage> {
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
 
-  final controller = Get.put(SignInController());
+  final controller = Get.put(SellerLogInController());
 
   @override
   Widget build(BuildContext context) {
@@ -29,36 +31,40 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding:const EdgeInsets.only(top: 40.0),
-                  child:TextButton(onPressed: (){
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => const OnBoarding()),
-                  );
-                },
-                    child: const Icon(Icons.arrow_back)
-                ),)
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding:const EdgeInsets.only(top: 20.0),
+                    child:TextButton(onPressed: (){
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => const OnBoarding()),
+                      );
+                    },
+                        child: const Icon(Icons.arrow_back)
+                    ),)
               ),
               Container(
-                width: 200,
-                height: 200,
+                width: 250,
+                height: 250,
                 child: Image.asset('assets/images/logo.png'),
               ),
-              const Text(
+              const Align(
+                alignment: Alignment.center,
+                child: Text(
 
-                "Login to BidCart",
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
+                  "Reconnect with your customers!",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
+              const SizedBox(height: 10,),
               const Text(
-                "Enter your credentials",
+                "Log in to your seller dashboard to engage with shoppers and grow your brand.",
                 style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
+                  //fontSize: 15,
+                  //fontWeight: FontWeight.bold,
                   color: Colors.grey,
                 ),
               ),
@@ -107,6 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                           labelStyle: const TextStyle(color: Colors.black),
                           focusedBorder: const OutlineInputBorder(
                               borderSide: BorderSide(width: 2.0,color: Colors.cyan)
+
                           ),
                           border: const OutlineInputBorder(),
                           suffixIcon: GestureDetector(
@@ -122,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                               )
 
 
-                        ),
+                          ),
                         ),
                         obscureText: _obscureText,
                         validator: (value) {
@@ -137,7 +144,9 @@ class _LoginPageState extends State<LoginPage> {
                           alignment: Alignment.centerRight,
                           child: TextButton(
 
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.offAll(() => const ForgetPassword());
+                            },
                             child: const Text("Forgot Password?",
                               style: TextStyle(color: Colors.blue),),
 
@@ -145,17 +154,18 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(
                         width: double.infinity,
-                        child: ElevatedButton(
+                          child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.cyan,
                             foregroundColor: Colors.white,
                           ),
                           onPressed: () {
                             if(_formKey.currentState!.validate()){
-                              SignInController.instance.loginUser(controller.email.text.trim(), controller.password.text.trim());
+                              SellerLogInController.instance.loginUser(controller.email.text.trim(), controller.password.text.trim());
 
-                              controller.email.clear();
                               controller.password.clear();
+                              //controller.email.clear();
+                             // controller.password.clear();
                             }
                           },
                           child: const Text('Login'),
@@ -170,32 +180,11 @@ class _LoginPageState extends State<LoginPage> {
 
 
               const SizedBox(height: 10),
-              Column(
-                children: [
-                  const Text("OR"),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                        icon: const Image(
-                          image: AssetImage("assets/images/googlelogo.png"),
-
-                          width: 30.0,
-                        ),
-                        onPressed: () {
-                          SignInController.instance.googleSignIn();
-                        },
-                        label: const Text("Sign in with Google",
-                        style:TextStyle(color: Colors.black)
-                        )),
-                  )
-                ],
-              ),
 
               TextButton(
                   onPressed: () {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (_) => const Signup(),
+                      builder: (_) => const SSignup(),
                     ));
                   },
                   child: const Text.rich(TextSpan(
@@ -206,8 +195,6 @@ class _LoginPageState extends State<LoginPage> {
                             text: "Signup",
                             style: TextStyle(color: Colors.blue))
                       ]))),
-
-
             ],
           ),
         ),

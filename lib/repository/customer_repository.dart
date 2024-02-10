@@ -12,12 +12,12 @@ class CustomerRepository extends GetxController {
     try {
       await _db
           .collection("customer")
-          .add(user.toJson());
-      Get.snackbar( "Success", "Your Account Has been created.",
+          .add(user.toJson()).whenComplete(() => Get.snackbar( "Success", "Please Verify your Email.",
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.green[400],
           colorText: Colors.white
-      );
+      ));
+
     } on Exception catch (e) {
       Get.snackbar("Error", "Something went wrong. Try again",
           snackPosition: SnackPosition.BOTTOM,

@@ -1,5 +1,5 @@
-import 'package:bidcart/repository/authentication/authentication_repository.dart';
-import 'package:bidcart/screens/onboarding.dart';
+import 'package:bidcart/repository/authentication/customer_authentication_repository.dart';
+import 'package:bidcart/screens/common/onboarding.dart';
 import 'package:bidcart/themes/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp()
-      .then((value) => Get.put(AuthenticationRepository()));
+      .then((value) => Get.put(CustomerAuthenticationRepository()));
   runApp(const MyApp());
 }
 
@@ -22,8 +22,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: TAppTheme.lightTheme,
-      darkTheme: TAppTheme.darkTheme,
+      theme: BidcartTheme.lightTheme,
+      darkTheme: BidcartTheme.darkTheme,
       themeMode: ThemeMode.light,
       home: const OnBoarding(),
     );

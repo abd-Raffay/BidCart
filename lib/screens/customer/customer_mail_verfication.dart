@@ -1,21 +1,28 @@
-import 'package:bidcart/controllers/mail_verfication_controller.dart';
-import 'package:bidcart/screens/customer/login.dart';
+import 'package:bidcart/controllers/customer_controllers/customer_mail_verfication_controller.dart';
+import 'package:bidcart/repository/authentication/customer_authentication_repository.dart';
+import 'package:bidcart/screens/customer/customer_login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
-class MailVerification extends StatelessWidget {
-  const MailVerification({super.key});
+class CustomerMailVerification extends StatelessWidget {
+  const CustomerMailVerification({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(MailVerificationController());
+    final controller = Get.put(CustomerMailVerificationController());
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-            padding: const EdgeInsets.only(top: 30 * 5, left: 30, right: 30),
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              const Icon(Icons.email, size: 100),
-              const SizedBox(height: 20),
+            padding: const EdgeInsets.only(top: 50, left: 30, right: 30),
+            child: Column(mainAxisSize: MainAxisSize.min,
+                children: [
+              SizedBox(
+                  height:300,
+                  width: 300,
+
+                child: Lottie.asset("assets/animations/Email_loading.json")),
+              //const SizedBox(height: 20),
               const Text("Verify your email Address",
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -30,10 +37,6 @@ class MailVerification extends StatelessWidget {
                     " on your email. Please check mail and"
                     " click on that link to verify you Email Address.",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                fontFamily: "Preahvihear",
-
-                )
               ),
               const SizedBox(
                 height: 30,
@@ -43,7 +46,7 @@ class MailVerification extends StatelessWidget {
                       " click on the Contine button",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontFamily: "Preahvihear",
+
 
                   )
               ),
@@ -58,6 +61,8 @@ class MailVerification extends StatelessWidget {
                 child: OutlinedButton(onPressed: ()=>controller.manuallyCheckEmailVerificationStatus(),
                     child: const Text("Continue",
                       style: TextStyle(
+
+
                         color: Colors.black,
 
                       ),
@@ -73,7 +78,11 @@ class MailVerification extends StatelessWidget {
               const SizedBox(
                 height: 30,
               ),
-              TextButton(onPressed:(){ Navigator.push(context,MaterialPageRoute(builder: (context) =>LoginPage()));},
+              TextButton(onPressed:(){
+                Get.offAll(()=> CustomerLoginPage());
+                CustomerAuthenticationRepository.instance.logout();
+                //Navigator.push(context,MaterialPageRoute(builder: (context) =>CustomerLoginPage()));
+                },
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

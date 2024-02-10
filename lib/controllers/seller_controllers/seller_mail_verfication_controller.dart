@@ -1,10 +1,11 @@
 import 'dart:async';
-import 'package:bidcart/repository/authentication/authentication_repository.dart';
+
+import 'package:bidcart/repository/authentication/seller_authentication_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class MailVerificationController extends GetxController{
+class SellerMailVerificationController extends GetxController{
  late Timer _timer;
 
   @override
@@ -17,7 +18,7 @@ class MailVerificationController extends GetxController{
 
   Future<void> sendVerificationEmail() async {
     try{
-      await AuthenticationRepository.instance.sendEmailVerification();
+      await SellerAuthenticationRepository.instance.sendEmailVerification();
 
     }catch (e){
 
@@ -37,7 +38,7 @@ class MailVerificationController extends GetxController{
       final user=FirebaseAuth.instance.currentUser;
       if(user!.emailVerified){
         timer.cancel();
-        AuthenticationRepository.instance.setIntialScreen(user);
+        SellerAuthenticationRepository.instance.setInitialScreen(user);
 
       }
     });
@@ -47,7 +48,7 @@ class MailVerificationController extends GetxController{
     FirebaseAuth.instance.currentUser?.reload();
     final user=FirebaseAuth.instance.currentUser;
     if(user!.emailVerified){
-      AuthenticationRepository.instance.setIntialScreen(user);
+      SellerAuthenticationRepository.instance.setInitialScreen(user);
     }
   }
 

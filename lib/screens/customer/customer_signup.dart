@@ -1,24 +1,24 @@
-import 'package:bidcart/controllers/signup_controller.dart';
+import 'package:bidcart/controllers/customer_controllers/customer_signup_controller.dart';
 import 'package:bidcart/model/customer_model.dart';
 import 'package:bidcart/repository/customer_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:bidcart/screens/customer/login.dart';
+import 'package:bidcart/screens/customer/customer_login.dart';
 import 'package:get/get.dart';
 
 
-class Signup extends StatefulWidget {
-  const Signup({super.key});
+class CustomerSignup extends StatefulWidget {
+  const CustomerSignup({super.key});
 
 
   @override
-  State<Signup> createState() => _SignupState();
+  State<CustomerSignup> createState() => _CustomerSignupState();
 
 }
 
 
-class _SignupState extends State<Signup> {
-  final controller = Get.put(SignUpController());
+class _CustomerSignupState extends State<CustomerSignup> {
+  final controller = Get.put(CustomerSignUpController());
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
 
@@ -34,7 +34,7 @@ class _SignupState extends State<Signup> {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => LoginPage()),
+                MaterialPageRoute(builder: (_) => CustomerLoginPage()),
               );
             },
           ),
@@ -201,7 +201,7 @@ class _SignupState extends State<Signup> {
                         );
 
                         if (_formKey.currentState!.validate()) {
-                          SignUpController.instance.createUser(customer);
+                          CustomerSignUpController.instance.createUser(customer);
                           //SignUpController.instance.registerUser(controller.email.text.trim(), controller.password.text.trim());
                           controller.email.clear();
                           controller.password.clear();

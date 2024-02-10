@@ -1,4 +1,5 @@
-import 'package:bidcart/repository/authentication/authentication_repository.dart';
+import 'package:bidcart/repository/authentication/customer_authentication_repository.dart';
+import 'package:bidcart/screens/common/onboarding.dart';
 import 'package:flutter/material.dart';
 class CustomerScreen extends StatefulWidget {
   const CustomerScreen({super.key});
@@ -18,7 +19,8 @@ class _CustomerScreenState extends State<CustomerScreen> {
         ),
       body: Container(
         child: ElevatedButton(onPressed: (){
-          AuthenticationRepository.instance.logout();
+          CustomerAuthenticationRepository.instance.logout();
+          Navigator.push(context,MaterialPageRoute(builder: (context) =>OnBoarding()));
         },
           child: Text("Press me"))
 

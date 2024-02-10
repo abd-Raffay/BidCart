@@ -1,17 +1,18 @@
 import 'package:bidcart/model/customer_model.dart';
 import 'package:bidcart/repository/customer_repository.dart';
 import 'package:bidcart/repository/exception/exceptions.dart';
-import 'package:bidcart/screens/customer/homescreen.dart';
-import 'package:bidcart/screens/mail_verfication.dart';
-import 'package:bidcart/screens/onboarding.dart';
+import 'package:bidcart/screens/customer/customer_homescreen.dart';
+import 'package:bidcart/screens/common/onboarding.dart';
+import 'package:bidcart/screens/customer/customer_mail_verfication.dart';
+import 'package:bidcart/screens/seller/seller_login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class AuthenticationRepository extends GetxController {
-  static AuthenticationRepository get instance => Get.find();
+class CustomerAuthenticationRepository extends GetxController {
+  static CustomerAuthenticationRepository get instance => Get.find();
   final _auth = FirebaseAuth.instance;
   late final Rx<User?> firebaseUser;
   final customerrepo = Get.put(CustomerRepository());
@@ -26,20 +27,31 @@ class AuthenticationRepository extends GetxController {
   }
 
   setIntialScreen(User? user) async {
-    user == null
-        ? Get.offAll(() => const OnBoarding())
-        : user.emailVerified
-            ? Get.offAll(() => const CustomerScreen())
-            : Get.offAll(() => const MailVerification());
+    if (user == null) {
+      print("User isssssssssssssssssssssss ${user}");
+      //Get.offAll(() => const OnBoarding());
+    } else if (user.emailVerified) {
+      //print("++++++++++++++++++++++++++++++++++++++++${sellerrepo.getApprovalStatus(user.uid).toString()}+++++++++++++++++++++++++++++++++");
+      //checks if the user is customer
+      if (await customerrepo.getCustomer(user.email.toString()) ==
+          user.email.toString()) {
+        Get.offAll(() => const CustomerScreen());
+      } else {
+        Get.offAll(() => SLoginPage());
+      }
+    } else {
+      Get.offAll(() => const CustomerMailVerification());
+    }
   }
 
-  Future<void> createUserWithEmailAndPassword(
-      String email, String password, CustomerModel customer) async {
+  Future<void> createUserWithEmailAndPassword(String email, String password,
+      CustomerModel customer) async {
     try {
       await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       customer.id = (await _auth.currentUser?.uid)!;
       customerrepo.createUser(customer);
+
       firebaseUser.value != null
           ? Get.offAll(() => OnBoarding())
           : Get.to(() => CustomerScreen());
@@ -58,14 +70,20 @@ class AuthenticationRepository extends GetxController {
     }
   }
 
-  Future<void> loginUserWithEmailAndPassword(
-      String email, String password) async {
+  Future<void> loginUserWithEmailAndPassword(String email,
+      String password) async {
     try {
       String emailformdb = (await customerrepo.getCustomer(email));
       print("Email from customerrepo ${emailformdb}");
       if (email == emailformdb) {
         await _auth.signInWithEmailAndPassword(
             email: email, password: password);
+      } else {
+        Get.snackbar(
+            "User Not Found", "User the the provided Email doesn't exists",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.red[800],
+            colorText: Colors.white);
       }
     } on FirebaseAuthException catch (e) {
       final ex = Exceptions.code(e.code);
@@ -87,11 +105,19 @@ class AuthenticationRepository extends GetxController {
 
   Future<UserCredential?> signInWithGoogle() async {
     try {
+      print(
+          "+++++++++++++++++++++++++++++++++1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      print(
+          "+++++++++++++++++++++++++++++++++2 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
       final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
+      await googleUser?.authentication;
+      print(
+          "+++++++++++++++++++++++++++++++++3 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
       final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
+      print(
+          "+++++++++++++++++++++++++++++++++4 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
       return await FirebaseAuth.instance.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
       print(e);
@@ -106,7 +132,6 @@ class AuthenticationRepository extends GetxController {
 
   Future<void> logout() async {
     await _auth.signOut();
-    print("Firebaese user ${firebaseUser.value}");
   }
 
   Future<void> sendEmailVerification() async {
@@ -120,4 +145,21 @@ class AuthenticationRepository extends GetxController {
       throw ex.message;
     }
   }
+
+
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      final ex = Exceptions.code(e.code);
+      throw ex.message;
+      // TODO
+    }
+    catch (_) {
+      const ex = Exceptions();
+      throw ex.message;
+    }
+
+    }
 }
+
