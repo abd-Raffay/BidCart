@@ -1,4 +1,5 @@
 import 'package:bidcart/repository/authentication/customer_authentication_repository.dart';
+import 'package:bidcart/repository/authentication/seller_authentication_repository.dart';
 import 'package:bidcart/screens/common/onboarding.dart';
 import 'package:bidcart/themes/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -9,8 +10,9 @@ void main() async {
   // This will make sure firebase is initialized
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp()
-      .then((value) => Get.put(CustomerAuthenticationRepository()));
+  await Firebase.initializeApp();
+  Get.put(CustomerAuthenticationRepository());
+  Get.put(SellerAuthenticationRepository());
   runApp(const MyApp());
 }
 

@@ -12,6 +12,7 @@ class ApprovalScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(SellerApprovalController());
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -90,19 +91,11 @@ class ApprovalScreen extends StatelessWidget {
                       ),
                     )),
               ),
-
-              /* SizedBox(height: 50,),
-              TextButton(onPressed: ()=>controller.sendVerificationEmail(),
-                  child: const Text("Resend Email Link",style: TextStyle(
-                      color: Colors.blue
-                  ),)
-              ),
-              const SizedBox(
-                height: 30,
-              ),*/
-              TextButton(onPressed:(){
-                SellerAuthenticationRepository.instance.logout();
-                Navigator.push(context,MaterialPageRoute(builder: (context) =>SLoginPage()));},
+              TextButton(
+                  onPressed:(){
+                    controller.Logout();
+                Navigator.push(context,MaterialPageRoute(builder: (context) =>SLoginPage()));
+                },
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

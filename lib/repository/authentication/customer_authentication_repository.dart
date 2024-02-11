@@ -30,7 +30,7 @@ class CustomerAuthenticationRepository extends GetxController {
   setIntialScreen(User? user) async {
     if (user == null) {
       print("User isssssssssssssssssssssss ${user}");
-      //Get.offAll(() => const OnBoarding());
+      Get.offAll(() => const OnBoarding());
     } else if (user.emailVerified) {
       //print("++++++++++++++++++++++++++++++++++++++++${sellerrepo.getApprovalStatus(user.uid).toString()}+++++++++++++++++++++++++++++++++");
       //checks if the user is customer
