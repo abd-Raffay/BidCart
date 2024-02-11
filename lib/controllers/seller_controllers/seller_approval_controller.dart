@@ -33,6 +33,9 @@ class SellerApprovalController extends GetxController {
     if (status == "approved") {
       SellerAuthenticationRepository.instance.setInitialScreen(user);
     }
+    if (status == "rejected") {
+      SellerAuthenticationRepository.instance.setInitialScreen(user);
+    }
   }
 
   Future<void> Logout() async {
