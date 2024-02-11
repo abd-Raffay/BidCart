@@ -195,13 +195,13 @@ class _CustomerSignupState extends State<CustomerSignup> {
                         final customer=CustomerModel(
                             name: controller.name.text.trim(),
                             email: controller.email.text.trim(),
-                            password: controller.password.text.trim(),
+                            //password: controller.password.text.trim(),
                             phone: controller.phone.text.trim(),
                             id:"",
                         );
 
                         if (_formKey.currentState!.validate()) {
-                          CustomerSignUpController.instance.createUser(customer);
+                          CustomerSignUpController.instance.createUser(customer,controller.password.text);
                           //SignUpController.instance.registerUser(controller.email.text.trim(), controller.password.text.trim());
                           controller.email.clear();
                           controller.password.clear();

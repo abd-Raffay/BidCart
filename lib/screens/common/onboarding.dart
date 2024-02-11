@@ -74,8 +74,9 @@ class OnBoarding extends StatelessWidget {
             const Padding(padding: EdgeInsets.only(bottom: 10)),
             TextButton(
                 onPressed: (){
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (_) => SLoginPage()));
+                  //Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    // builder: (_) => SLoginPage()));
+                  Get.offAll(()=> SLoginPage() );
                 },
                 child: Text(
                   "continue as a Seller",

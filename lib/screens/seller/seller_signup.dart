@@ -268,7 +268,7 @@ class _SSignupState extends State<SSignup> {
                     final seller=SellerModel(
                     sellername: controller.sellername.text.trim(),
                     email: controller.email.text.trim(),
-                    password: controller.password.text.trim(),
+                    //password: controller.password.text.trim(),
                     phone: controller.phone.text.trim(),
                     storename: controller.storename.text.trim(),
                     address: controller.address.text.trim(),
@@ -278,7 +278,7 @@ class _SSignupState extends State<SSignup> {
                     );
 
                     if (_formKey.currentState!.validate()) {
-                      SellerSignUpController.instance.createUser(seller);
+                      SellerSignUpController.instance.createUser(seller,controller.password.text);
                       //SellerSignUpController.instance.registerUser(controller.email.text.trim(), controller.password.text.trim());
                       //controller.email.clear();
                       // controller.password.clear();

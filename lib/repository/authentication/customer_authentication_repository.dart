@@ -1,10 +1,11 @@
+import 'package:bidcart/customer_navigation_bar.dart';
 import 'package:bidcart/model/customer_model.dart';
 import 'package:bidcart/repository/customer_repository.dart';
 import 'package:bidcart/repository/exception/exceptions.dart';
 import 'package:bidcart/screens/customer/customer_homescreen.dart';
 import 'package:bidcart/screens/common/onboarding.dart';
+import 'package:bidcart/screens/customer/customer_login.dart';
 import 'package:bidcart/screens/customer/customer_mail_verfication.dart';
-import 'package:bidcart/screens/seller/seller_login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -35,9 +36,12 @@ class CustomerAuthenticationRepository extends GetxController {
       //checks if the user is customer
       if (await customerrepo.getCustomer(user.email.toString()) ==
           user.email.toString()) {
-        Get.offAll(() => const CustomerScreen());
+        print("ccccustomer sadasdsdasasdsdadsasadsasda");
+        //Get.offAll(() => const CustomerScreen());
+        Get.offAll(()=>const CustomerNavigationBar());
       } else {
-        Get.offAll(() => SLoginPage());
+        Get.offAll(() => CustomerLoginPage());
+
       }
     } else {
       Get.offAll(() => const CustomerMailVerification());
@@ -54,7 +58,8 @@ class CustomerAuthenticationRepository extends GetxController {
 
       firebaseUser.value != null
           ? Get.offAll(() => OnBoarding())
-          : Get.to(() => CustomerScreen());
+          //: Get.to(() => CustomerScreen());
+            : Get.to(() =>CustomerNavigationBar() );
     } on FirebaseAuthException catch (e) {
       final ex = Exceptions.code(e.code);
 

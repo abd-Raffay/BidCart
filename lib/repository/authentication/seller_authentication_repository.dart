@@ -6,6 +6,7 @@ import 'package:bidcart/screens/seller/approval_screen.dart';
 import 'package:bidcart/screens/seller/seller_homescreen.dart';
 import 'package:bidcart/screens/seller/seller_login.dart';
 import 'package:bidcart/screens/seller/seller_mail_verfication.dart';
+import 'package:bidcart/seller_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -39,7 +40,8 @@ class SellerAuthenticationRepository extends GetxController {
       if (await sellerrepo.getSeller(user.email.toString())==user.email.toString()) {
         //check if the seller is approved
         if(await sellerrepo.getApprovalStatus(user.uid)=="approved"){
-          Get.offAll(() => const SellerHomeScreen());
+          //Get.offAll(() => const SellerHomeScreen());
+          Get.to(()=>SellerNavigationBar());
         }
         else{
           Get.offAll(() => const ApprovalScreen());
@@ -66,7 +68,8 @@ class SellerAuthenticationRepository extends GetxController {
       sellerrepo.createUser(seller);
       firebaseUser.value != null
           ? Get.offAll(() => OnBoarding())
-          : Get.to(() => SellerHomeScreen());
+          //: Get.to(() => SellerHomeScreen());
+      :Get.to(()=>SellerNavigationBar());
 
 
     } on FirebaseAuthException catch (e) {

@@ -4,14 +4,14 @@ class CustomerModel{
    String id;
   final String name;
   final String email;
-  final String password;
+  //final String password;
   final String phone;
 
    CustomerModel({
     required this.id,
     required this.name,
     required this.email,
-    required this.password,
+    //required this.password,
     required this.phone,
   });
   setid(String id){
@@ -22,7 +22,7 @@ class CustomerModel{
       "Userid":id,
       "Name": name,
       "Email": email,
-      "Password": password,
+      //"Password": password,
       "Phone": phone,
     };
   }
@@ -36,7 +36,7 @@ class CustomerModel{
     id:data["Userid"],
     name: data["Name"],
     email: data["Email"],
-    password: data["Password"],
+    //password: data["Password"],
     phone: data["Phone"],
   );
   }

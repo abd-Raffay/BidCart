@@ -22,11 +22,11 @@ class SellerSignUpController extends GetxController {
 
 
 
-  Future<void> createUser(SellerModel seller) async {
+  Future<void> createUser(SellerModel seller,String password) async {
     print("*********************************************************Seller signup controller*********************************************************************");
     Get.put(SellerAuthenticationRepository());
     final auth = SellerAuthenticationRepository.instance;
-    await auth.createUserWithEmailAndPassword(seller.email, seller.password,seller);
+    await auth.createUserWithEmailAndPassword(seller.email, password,seller);
     auth.setInitialScreen(auth.firebaseUser.value);
 
       print("*************************SellerAuthenticationRepository.instance**********************");

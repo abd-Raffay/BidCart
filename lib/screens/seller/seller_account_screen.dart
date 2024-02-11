@@ -1,15 +1,15 @@
-import 'package:bidcart/repository/authentication/customer_authentication_repository.dart';
 import 'package:bidcart/repository/authentication/seller_authentication_repository.dart';
 import 'package:bidcart/screens/common/onboarding.dart';
 import 'package:flutter/material.dart';
-class SellerHomeScreen extends StatefulWidget {
-  const SellerHomeScreen({super.key});
+
+class SellerAccountScreen extends StatefulWidget {
+  const SellerAccountScreen({super.key});
 
   @override
-  State<SellerHomeScreen> createState() => _SellerHomeScreenState();
+  State<SellerAccountScreen> createState() => _SellerAccountScreenState();
 }
 
-class _SellerHomeScreenState extends State<SellerHomeScreen> {
+class _SellerAccountScreenState extends State<SellerAccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +22,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  const Text("Home Screen is in Progress ... "),
+                  const Text("Account Screen is in Progress ... "),
                   SizedBox(height: 10,),
                   SizedBox(
                     width: double.infinity,

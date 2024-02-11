@@ -1,4 +1,3 @@
-
 import 'package:bidcart/controllers/seller_controllers/seller_login_controller.dart';
 import 'package:bidcart/screens/common/forget_password.dart';
 import 'package:bidcart/screens/seller/seller_signup.dart';

@@ -16,9 +16,9 @@ class CustomerSignUpController extends GetxController {
 
 
 
-  Future<void> createUser(CustomerModel customer) async {
+  Future<void> createUser(CustomerModel customer,String password) async {
     final auth = CustomerAuthenticationRepository.instance;
-    await CustomerAuthenticationRepository.instance.createUserWithEmailAndPassword(customer.email, customer.password,customer);
+    await CustomerAuthenticationRepository.instance.createUserWithEmailAndPassword(customer.email, password,customer);
     auth.setIntialScreen(auth.firebaseUser.value);
   }
 

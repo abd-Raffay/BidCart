@@ -1,15 +1,15 @@
 import 'package:bidcart/repository/authentication/customer_authentication_repository.dart';
-import 'package:bidcart/repository/authentication/seller_authentication_repository.dart';
 import 'package:bidcart/screens/common/onboarding.dart';
 import 'package:flutter/material.dart';
-class SellerHomeScreen extends StatefulWidget {
-  const SellerHomeScreen({super.key});
+
+class CustomerExploreScreen extends StatefulWidget {
+  const CustomerExploreScreen({super.key});
 
   @override
-  State<SellerHomeScreen> createState() => _SellerHomeScreenState();
+  State<CustomerExploreScreen> createState() => _CustomerExploreScreenState();
 }
 
-class _SellerHomeScreenState extends State<SellerHomeScreen> {
+class _CustomerExploreScreenState extends State<CustomerExploreScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +22,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  const Text("Home Screen is in Progress ... "),
+                  const Text("Explore Screen in Progress ... "),
                   SizedBox(height: 10,),
                   SizedBox(
                     width: double.infinity,
@@ -32,7 +32,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                           foregroundColor: Colors.white,
                         ),
                         onPressed: () {
-                          SellerAuthenticationRepository.instance.logout();
+                          CustomerAuthenticationRepository.instance.logout();
                           Navigator.push(
                               context,
                               MaterialPageRoute(

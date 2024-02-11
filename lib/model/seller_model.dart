@@ -6,7 +6,7 @@ class SellerModel {
   final String phone;
   final String cnic;
   final String email;
-  final String password;
+  //final String password;
   final String storename;
   final String address;
    String status;
@@ -17,7 +17,7 @@ class SellerModel {
     required this.phone,
     required this.cnic,
     required this.email,
-    required this.password,
+    //required this.password,
     required this.storename,
     required this.address,
     required this.status,
@@ -32,7 +32,7 @@ class SellerModel {
       "Userid":id,
       "SellerName": sellername,
       "Email": email,
-      "Password": password,
+      //"Password": password,
       "Phone": phone,
       "StoreName":storename,
       "Address":address,
@@ -50,7 +50,7 @@ class SellerModel {
       id:data["Userid"],
       sellername: data["SellerName"],
       email: data["Email"],
-      password: data["Password"],
+      //password: data["Password"],
       phone: data["Phone"],
       cnic:data["CNIC"],
       storename:data["StoreName"],
