@@ -1,6 +1,6 @@
 import 'package:bidcart/model/seller_model.dart';
 import 'package:bidcart/repository/exception/exceptions.dart';
-import 'package:bidcart/repository/seller_repository.dart';
+import 'package:bidcart/repository/seller_repository/seller_repository.dart';
 import 'package:bidcart/screens/common/onboarding.dart';
 import 'package:bidcart/screens/seller/approval_screen.dart';
 import 'package:bidcart/screens/seller/seller_homescreen.dart';

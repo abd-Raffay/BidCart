@@ -1,6 +1,7 @@
+import 'package:bidcart/const/images.dart';
 import 'package:bidcart/controllers/customer_controllers/customer_signup_controller.dart';
 import 'package:bidcart/model/customer_model.dart';
-import 'package:bidcart/repository/customer_repository.dart';
+import 'package:bidcart/repository/customer_repository/customer_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:bidcart/screens/customer/customer_login.dart';
@@ -52,7 +53,7 @@ class _CustomerSignupState extends State<CustomerSignup> {
                   Container(
                     width: 200,
                     height: 200,
-                    child: Image.asset('assets/images/logo.png'),
+                    child: Image.asset(Images.logo),
                   ),
 
                   const Align(

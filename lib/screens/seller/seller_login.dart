@@ -1,3 +1,4 @@
+import 'package:bidcart/const/images.dart';
 import 'package:bidcart/controllers/seller_controllers/seller_login_controller.dart';
 import 'package:bidcart/screens/common/forget_password.dart';
 import 'package:bidcart/screens/seller/seller_signup.dart';
@@ -45,7 +46,7 @@ class _SLoginPageState extends State<SLoginPage> {
               Container(
                 width: 250,
                 height: 250,
-                child: Image.asset('assets/images/logo.png'),
+                child: Image.asset(Images.logo),
               ),
               const Align(
                 alignment: Alignment.center,

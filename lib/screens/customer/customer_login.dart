@@ -1,3 +1,4 @@
+import 'package:bidcart/const/images.dart';
 import 'package:bidcart/controllers/customer_controllers/customer_signin_controller.dart';
 import 'package:bidcart/screens/common/forget_password.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class _CustomerLoginPageState extends State<CustomerLoginPage> {
               Container(
                 width: 250,
                 height: 250,
-                child: Image.asset('assets/images/logo.png'),
+                child: Image.asset(Images.logo),
               ),
               const Text(
 
@@ -182,7 +183,7 @@ class _CustomerLoginPageState extends State<CustomerLoginPage> {
 
                     child: OutlinedButton.icon(
                         icon: const Image(
-                          image: AssetImage("assets/images/googlelogo.png"),
+                          image: AssetImage(Images.googleLogo),
 
                           width: 30.0,
 

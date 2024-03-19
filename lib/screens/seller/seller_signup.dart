@@ -1,3 +1,4 @@
+import 'package:bidcart/const/images.dart';
 import 'package:bidcart/controllers/seller_controllers/seller_signup_controller.dart';
 import 'package:bidcart/model/seller_model.dart';
 import 'package:bidcart/screens/seller/seller_login.dart';
@@ -5,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:get/get.dart';
 
-import '../../repository/seller_repository.dart';
+import '../../repository/seller_repository/seller_repository.dart';
 
 
 class SSignup extends StatefulWidget {
@@ -61,7 +62,7 @@ class _SSignupState extends State<SSignup> {
                     Container(
                       width: 200,
                       height: 200,
-                      child: Image.asset('assets/images/logo.png'),
+                      child: Image.asset(Images.logo),
                     ),
 
                     //Heading and subHeadings

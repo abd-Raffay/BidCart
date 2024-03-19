@@ -1,4 +1,4 @@
-import 'package:bidcart/controllers/forget_password_controller.dart';
+import 'package:bidcart/controllers/common_controllers/forget_password_controller.dart';
 import 'package:bidcart/screens/customer/customer_login.dart';
 import 'package:bidcart/screens/seller/seller_login.dart';
 import 'package:flutter/material.dart';

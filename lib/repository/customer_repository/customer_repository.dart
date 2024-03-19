@@ -1,4 +1,5 @@
 import 'package:bidcart/model/customer_model.dart';
+import 'package:bidcart/model/product_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,21 +33,15 @@ class CustomerRepository extends GetxController {
 
     final snapshot = await _db.collection("customer").where("Email",isEqualTo: email).get();
     if (snapshot.docs.isNotEmpty) {
+
       final email = snapshot.docs.first.get("Email");
-      print("Email: $email");
+      //print("Email: $email");
       return email;
     } else {
-      print("No customer found with the provided email.");
+      //print("No customer found with the provided email.");
       return "";
     }
-    //final customerData = snapshot.docs.map((e) => CustomerModel.fromSnapshot(e)).single;
-   // return customerData;
-  }
 
-  Future<List<CustomerModel>>getAllCustomers(String email) async {
-    final snapshot = await _db.collection("customer").get();
-    final customerData = snapshot.docs.map((e) => CustomerModel.fromSnapshot(e)).toList();
-    return customerData;
   }
 
 }

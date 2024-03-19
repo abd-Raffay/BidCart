@@ -1,8 +1,7 @@
 import 'package:bidcart/customer_navigation_bar.dart';
 import 'package:bidcart/model/customer_model.dart';
-import 'package:bidcart/repository/customer_repository.dart';
+import 'package:bidcart/repository/customer_repository/customer_repository.dart';
 import 'package:bidcart/repository/exception/exceptions.dart';
-import 'package:bidcart/screens/customer/customer_homescreen.dart';
 import 'package:bidcart/screens/common/onboarding.dart';
 import 'package:bidcart/screens/customer/customer_login.dart';
 import 'package:bidcart/screens/customer/customer_mail_verfication.dart';
@@ -29,7 +28,7 @@ class CustomerAuthenticationRepository extends GetxController {
 
   setIntialScreen(User? user) async {
     if (user == null) {
-      print("User isssssssssssssssssssssss ${user}");
+      //print("User isssssssssssssssssssssss ${user}");
       Get.offAll(() => const OnBoarding());
     } else if (user.emailVerified) {
       //print("++++++++++++++++++++++++++++++++++++++++${sellerrepo.getApprovalStatus(user.uid).toString()}+++++++++++++++++++++++++++++++++");

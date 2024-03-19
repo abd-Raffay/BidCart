@@ -1,3 +1,4 @@
+import 'package:bidcart/const/images.dart';
 import 'package:bidcart/screens/common/reset_password.dart';
 import 'package:bidcart/screens/seller/seller_login.dart';
 import 'package:bidcart/screens/seller/seller_signup.dart';
@@ -14,7 +15,7 @@ class OnBoarding extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/onboarding.jpg'),
+            image: AssetImage(Images.onBoarding),
             fit: BoxFit.fill,
           ),
         ),
@@ -25,7 +26,7 @@ class OnBoarding extends StatelessWidget {
             const SizedBox(height: 100),
             const Center(
               child: Image(
-                image: AssetImage("assets/images/white_logo.png"),
+                image: AssetImage(Images.whiteLogo),
               ),
             ),
             const Text(
