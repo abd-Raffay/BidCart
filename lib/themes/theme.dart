@@ -17,7 +17,7 @@ class BidcartTheme {
               backgroundColor: Colors.cyan,
               disabledBackgroundColor: Colors.grey,
               disabledForegroundColor: Colors.grey,
-              padding: const EdgeInsets.symmetric(vertical: 18),
+              padding: const EdgeInsets.symmetric(vertical: 20),
               textStyle: const TextStyle(
                   fontSize: 16,
                   fontFamily: "Preahvihear",

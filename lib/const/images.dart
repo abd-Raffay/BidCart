@@ -7,6 +7,7 @@ class Images{
   static const String googleLogo = "assets/logo/google_logo.png";
   static const String whiteLogo = "assets/logo/white_logo.png";
   static const String onBoarding = "assets/logo/onboarding.jpg";
+  static const String split="assets/logo/split.png";
 
   // --Banners
   static const String banner1 ="https://firebasestorage.googleapis.com/v0/b/keen-device-396907.appspot.com/o/banners%2Fbanner1.jpg?alt=media&token=435b8c6f-8a61-4378-b3f1-1a3b6a9185b5";

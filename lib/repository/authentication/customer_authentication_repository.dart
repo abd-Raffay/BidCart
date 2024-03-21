@@ -1,4 +1,4 @@
-import 'package:bidcart/customer_navigation_bar.dart';
+import 'package:bidcart/screens/customer/customer_navigation_bar.dart';
 import 'package:bidcart/model/customer_model.dart';
 import 'package:bidcart/repository/customer_repository/customer_repository.dart';
 import 'package:bidcart/repository/exception/exceptions.dart';
@@ -35,7 +35,7 @@ class CustomerAuthenticationRepository extends GetxController {
       //checks if the user is customer
       if (await customerrepo.getCustomer(user.email.toString()) ==
           user.email.toString()) {
-        print("ccccustomer sadasdsdasasdsdadsasadsasda");
+        //print("ccccustomer sadasdsdasasdsdadsasadsasda");
         //Get.offAll(() => const CustomerScreen());
         Get.offAll(()=>const CustomerNavigationBar());
       } else {

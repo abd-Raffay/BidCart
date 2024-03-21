@@ -7,23 +7,43 @@ import '../../model/product_model.dart';
 class CustomerHomeController extends GetxController{
   static CustomerHomeController get instance => Get.find();
 
-  final homerepo = Get.put(CustomerHomeRepository());
+  final homeRepo = Get.put(CustomerHomeRepository());
+  @override
+  void onInit() {
+    super.onInit();
+    index = 0;
+    //print("indexsadasdasdasdasdasdds ${index}");
+    //getProductsList();
+  }
+
+
+
+  int index = 0;
+
 
   final carousalCurrentIndex=0.obs;
   late Future<List<ProductModel>> productList ;
+  List products = [];
 
   void updatePageIndicator(index){
     carousalCurrentIndex.value=index;
     //getProducts();
 
   }
+  Future<void> setIndex(int indexx) async {
+    index = indexx;
+
+  }
+
+
+
   setList(){
     return productList;
   }
 
   Future<List<ProductModel>> getProducts()  async {
-    productList=homerepo.getProducts();
-    print(productList);
+    productList=homeRepo.getProducts();
+    products= await productList;
       return productList;
   }
 

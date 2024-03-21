@@ -45,7 +45,7 @@ class NavigationController extends GetxController{
 
   final screens=[
    const CustomerScreen(),
-    const CustomerExploreScreen(),
+     const CustomerExploreScreen(),
     const CustomerCartScreen(),
     const CustomerFavouriteScreen(),
     const CustomerAccountScreen(),

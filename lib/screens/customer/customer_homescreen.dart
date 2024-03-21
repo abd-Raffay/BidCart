@@ -1,11 +1,12 @@
-
-
 import 'package:bidcart/const/images.dart';
+import 'package:bidcart/const/sizes.dart';
 import 'package:bidcart/controllers/customer_controllers/customer_home_controller.dart';
 import 'package:bidcart/model/product_model.dart';
-import 'package:bidcart/repository/authentication/customer_authentication_repository.dart';
+import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:bidcart/screens/common/grid_layout.dart';
 import 'package:bidcart/screens/common/onboarding.dart';
+import 'package:bidcart/screens/product_detail.dart';
+import 'package:bidcart/widget/app_bar/appBar.dart';
 import 'package:bidcart/widget/container/circular_container.dart';
 import 'package:bidcart/widget/products/product_cards/product_card_vertical.dart';
 import 'package:bidcart/widget/container/round_image.dart';
@@ -28,14 +29,16 @@ class _CustomerScreenState extends State<CustomerScreen> {
   Widget build(BuildContext context) {
     final controller = Get.put(CustomerHomeController());
     return Scaffold(
-      body: SingleChildScrollView(
+      body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               children: [
-
-                const SizedBox(height: 30),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                //const TAppBar(),
                 //logo
                 SizedBox(
                   width: 200,
@@ -45,8 +48,11 @@ class _CustomerScreenState extends State<CustomerScreen> {
 
                 //search bar
                 const SearchContainer(
+
+
                   text: 'Search in the Store',
                 ),
+
 
                 //Sliders
                 Padding(
@@ -63,7 +69,6 @@ class _CustomerScreenState extends State<CustomerScreen> {
                             RoundedImage(
                               imageUrl: Images.banner1,
                               isNetworkImage: true,
-
                             ),
                             RoundedImage(
                               imageUrl: Images.banner2,
@@ -78,7 +83,6 @@ class _CustomerScreenState extends State<CustomerScreen> {
                         const SizedBox(
                           height: 16.0,
                         ),
-
                         Center(
                           child: Obx(
                             () => Row(
@@ -108,20 +112,28 @@ class _CustomerScreenState extends State<CustomerScreen> {
                       if (snapshot.hasData) {
                         List<ProductModel>? productList = snapshot.data;
 
-                        return GridLayout(
-
-                          itemCount: productList!.length,
-                          itemBuilder: (context, index) {
-                            ProductModel product = productList[index];
-                            return ProductCardVertical(
-                              isNetworkImage: true,
-                              imageUrl: product.imageUrl,
-                              productTitle: product.name,
-                              quantity: product.quantity,
-                            );
-                          },
+                        return Expanded(
+                          child: SingleChildScrollView(
+                            child: GridLayout(
+                              itemCount: productList!.length,
+                              itemBuilder: (context, index) {
+                                ProductModel product = productList[index];
+                                return GestureDetector(
+                                  onTap: () {
+                                    controller.setIndex(index);
+                                    Get.to( ProductDetail(imageUrl: product.imageUrl, description: product.description, quantity: product.quantity, category: product.category, title: product.name,));
+                                  },
+                                  child: ProductCardVertical(
+                                    isNetworkImage: true,
+                                    imageUrl: product.imageUrl,
+                                    productTitle: product.name,
+                                    quantity: product.quantity,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
                         );
-
                       } else if (snapshot.hasError) {
                         return Center(child: Text(snapshot.error.toString()));
                       } else {
@@ -130,13 +142,17 @@ class _CustomerScreenState extends State<CustomerScreen> {
                         );
                       }
                     } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
+                      return const Column(
+                        children: [
+                          SizedBox(height: Sizes.defaultSpace*5),
+                          Center(
+                            child: CircularProgressIndicator(color: Colors.cyan,),
+                          ),
+                        ],
                       );
                     }
                   },
                 ),
-
               ])),
     );
   }

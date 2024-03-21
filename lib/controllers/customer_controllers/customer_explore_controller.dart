@@ -5,17 +5,15 @@ import 'package:bidcart/model/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CustomerExploreCardCOntroller extends GetxController{
-
+class CustomerExploreCardCOntroller extends GetxController {
   static CustomerExploreCardCOntroller get instance => Get.find();
-  int index=0;
-  RxBool showProducts = true.obs;
+
+  final homecontroller = Get.put(CustomerHomeController());
 
   void onInit() {
     super.onInit();
-    index=0;
-    showProducts = true.obs;
-    print("Controller initialized");
+    index = 0;
+    getProductsList();
   }
 
   final List<Map<String, dynamic>> exploreCards = [
@@ -70,57 +68,41 @@ class CustomerExploreCardCOntroller extends GetxController{
       'color': Colors.blueAccent,
     },
   ];
+  int index = 0;
+  late Future<List<ProductModel>> productList;
 
+  List unfilteredList = [];
+  List<ProductModel> filteredList = [];
 
-  final homecontroller = Get.put(CustomerHomeController());
-
-
-
-  late Future<List<ProductModel>> productList ;
-
-  List unfilteredList=[];
-  List<ProductModel> filteredList=[];
-
-  void toggleShowProducts() {
-    //print("RX SHOW PRODUCTS ${showProducts}");
-    showProducts.value = !showProducts.value;
-  }
   Future<void> setIndex(int indexx) async {
-    index=indexx;
-    toggleShowProducts();
+    index = indexx;
     filterList();
     //print("From Controller ${index}");
   }
 
- Future<List<ProductModel>>getProductsList()  async {
+  getTitle() {
+    final card = exploreCards[index];
+    return Text(card['title']);
+  }
 
-  // print("RX SHOW PRODUCTS ${showProducts}");
-    productList=homecontroller.getProducts();
-    unfilteredList=await productList;
+  Future<List<ProductModel>> getProductsList() async {
+    // print("RX SHOW PRODUCTS ${showProducts}");
+    productList = homecontroller.setList();
+    unfilteredList = await productList;
     return productList;
   }
 
   filterList() async {
-    getProductsList();
-    print(index);
-    print("unFILTERED LIST ${unfilteredList.length}");
+
+    //print(index);
+    //print("unFILTERED LIST ${unfilteredList.length}");
     filteredList.clear(); // Clear the filteredList before adding new items
 
     for (int i = 0; i < unfilteredList.length; i++) {
       if (unfilteredList[i].category == index.toString()) {
-        filteredList.add(unfilteredList[i]); // Add filtered items to filteredList
+        filteredList
+            .add(unfilteredList[i]); // Add filtered items to filteredList
       }
     }
-    print("FILTERED LIST ${filteredList.length}");
-
-    // Code here will only be executed after the loop is completed
-    return filteredList;
-  }
-
-
-
-
-  Future<List<ProductModel>>getFilteredProducts() async {
-     return filterList();
   }
 }

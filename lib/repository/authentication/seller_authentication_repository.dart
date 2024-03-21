@@ -7,7 +7,7 @@ import 'package:bidcart/screens/seller/seller_homescreen.dart';
 import 'package:bidcart/screens/seller/seller_login.dart';
 import 'package:bidcart/screens/seller/seller_mail_verfication.dart';
 import 'package:bidcart/screens/seller/seller_rejected_screen.dart';
-import 'package:bidcart/seller_navigation_bar.dart';
+import 'package:bidcart/screens/seller/seller_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';

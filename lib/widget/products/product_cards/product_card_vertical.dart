@@ -1,6 +1,7 @@
 import 'package:bidcart/controllers/customer_controllers/customer_home_controller.dart';
 import 'package:bidcart/repository/customer_repository/customer_home_repository.dart';
 import 'package:bidcart/repository/customer_repository/customer_repository.dart';
+import 'package:bidcart/screens/product_detail.dart';
 import 'package:bidcart/widget/products/product_text/product_label_text.dart';
 import 'package:bidcart/widget/products/product_text/product_title_text.dart';
 import 'package:bidcart/widget/container/round_image.dart';
@@ -8,6 +9,7 @@ import 'package:bidcart/widget/container/rounded_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 
 class ProductCardVertical extends StatelessWidget {
   const ProductCardVertical(
@@ -26,11 +28,7 @@ class ProductCardVertical extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-
-      },
-      child: Container(
+    return Container(
         width: 180,
         padding: const EdgeInsets.all(1),
         decoration: BoxDecoration(
@@ -50,7 +48,7 @@ class ProductCardVertical extends StatelessWidget {
 
              RoundedContainer(
               height: 180,
-              padding: EdgeInsets.all(1),
+              padding: const EdgeInsets.all(1),
               backgroundColor: Colors.white,
               child: Stack(
                 children: [
@@ -78,9 +76,9 @@ class ProductCardVertical extends StatelessWidget {
                     title: productTitle,
                     smallSize: true,
                   ),
-                  const SizedBox(height: 8.0),
+                  //const SizedBox(height: 8.0),
                    ProductLabelText(title: quantity),
-                  SizedBox(
+                  const SizedBox(
                     height: 12.5,
                   ),
                   Align(
@@ -108,7 +106,6 @@ class ProductCardVertical extends StatelessWidget {
             )
           ],
         ),
-      ),
     );
   }
 }

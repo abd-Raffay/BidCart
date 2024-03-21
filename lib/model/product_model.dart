@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProductModel {
-  final String id;
-  final String name;
-  final String description;
-  final String imageUrl;
-  final String quantity;
-  final String category;
+   String id;
+   String name;
+    String description;
+    String imageUrl;
+    String quantity;
+   String category;
 
   ProductModel({
       required this.category,
