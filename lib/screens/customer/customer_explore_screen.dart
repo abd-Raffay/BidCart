@@ -4,6 +4,7 @@ import 'package:bidcart/model/product_model.dart';
 import 'package:bidcart/screens/common/grid_layout.dart';
 import 'package:bidcart/screens/customer/customer_explore_products.dart';
 import 'package:bidcart/widget/app_bar/appBar.dart';
+import 'package:bidcart/widget/app_bar/cart_counter_icon.dart';
 import 'package:bidcart/widget/products/product_cards/explore_cards.dart';
 import 'package:bidcart/widget/container/searchcontainer.dart';
 import 'package:bidcart/widget/products/product_cards/product_card_vertical.dart';
@@ -32,7 +33,14 @@ class _CustomerExploreScreenState extends State<CustomerExploreScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: [
-              const TAppBar(title: Text("Find Products"),),
+              const TAppBar(
+                showBackArrow: false,
+                leadingIcon: Images.logo,
+                title: Text("Find Products"),
+                actions: [
+                  CartCounterIcon()
+                ],
+              ),
               const SearchContainer(
                 text: 'Search here',
                 showBorder: false,

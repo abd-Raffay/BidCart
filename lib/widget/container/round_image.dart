@@ -28,6 +28,7 @@ class RoundedImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+
       child: Container(
           width: width,
           height: height,

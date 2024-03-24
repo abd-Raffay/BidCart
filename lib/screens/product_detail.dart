@@ -3,6 +3,7 @@ import 'package:bidcart/const/sizes.dart';
 import 'package:bidcart/controllers/customer_controllers/customer_home_controller.dart';
 import 'package:bidcart/widget/app_bar/appBar.dart';
 import 'package:bidcart/widget/app_bar/bottomBar.dart';
+import 'package:bidcart/widget/cart/add_remove_buttons.dart';
 import 'package:bidcart/widget/container/round_image.dart';
 import 'package:bidcart/widget/products/product_text/product_label_text.dart';
 import 'package:bidcart/widget/products/product_text/product_title_text.dart';
@@ -12,12 +13,12 @@ import 'package:get/get.dart';
 
 class ProductDetail extends StatelessWidget {
   const ProductDetail({
-    super.key, required this.imageUrl, required this.title, required this.description, required this.quantity, required this.category});
+    super.key, required this.imageUrl, required this.title, required this.description, required this.size, required this.category});
 
   final String imageUrl;
   final String title;
   final String description;
-  final String quantity;
+  final String size;
   final String category;
 
 
@@ -63,37 +64,15 @@ class ProductDetail extends StatelessWidget {
                   fontSize: 24,
                 ),
                 ProductLabelText(
-                  title: quantity,
+                  title: size,
                   fontsize: Sizes.md,
                 ),
 
                 const SizedBox(
                   height: Sizes.defaultSpace,
                 ),
+                //const AddRemoveButtons(),
 
-                Row(
-                  children: [
-                    ElevatedButton(
-                        onPressed: () {},
-                        child: const Icon(CupertinoIcons.minus)),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16.0),
-                          border: Border.all(color: Colors.grey)),
-                      child: const SizedBox(
-                          height: 32 * 1.8, width: 32 * 2, child: Text("2")),
-                    ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    ElevatedButton(
-                        onPressed: () {},
-                        child: const Icon(CupertinoIcons.add)),
-                  ],
-                ),
                 const SizedBox(
                   height: Sizes.defaultSpace,
                 ),

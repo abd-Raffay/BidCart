@@ -39,8 +39,7 @@ class _ExploreProductsState extends State<ExploreProducts> {
               child: SingleChildScrollView(
                 child: controller.filteredList.isEmpty
                     ? const Center(
-                        child:
-                            CircularProgressIndicator()) // Show loader if the list is empty
+                        child:Text("Nothing here"))
                     : GridLayout(
                         itemCount: controller.filteredList.length,
                         itemBuilder: (context, index) {
@@ -48,14 +47,15 @@ class _ExploreProductsState extends State<ExploreProducts> {
                           return GestureDetector(
                             onTap: (){
                               controller.setIndex(index);
-                              Get.to( ProductDetail(imageUrl: product.imageUrl, description: product.description, quantity: product.quantity, category: product.category, title: product.name,));
+                              Get.to( ProductDetail(imageUrl: product.imageUrl, description: product.description, size: product.size, category: product.category, title: product.name,));
 
                             },
                             child: ProductCardVertical(
                               isNetworkImage: true,
                               imageUrl: product.imageUrl,
                               productTitle: product.name,
-                              quantity: product.quantity,
+                              size: product.size,
+                              productId: product.id, description: '', quantity: '',
                             ),
                           );
                         },

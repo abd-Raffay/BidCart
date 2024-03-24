@@ -7,7 +7,7 @@ class ProductModel {
     String imageUrl;
     String quantity;
    String category;
-
+String size;
   ProductModel({
       required this.category,
     required this.quantity,
@@ -15,6 +15,7 @@ class ProductModel {
     required this.name,
     required this.description,
     required this.imageUrl,
+    required this.size
   });
 
   toJson() {
@@ -27,7 +28,7 @@ class ProductModel {
       "category":category,
     };
   }
-  static ProductModel empty() => ProductModel(id: "", name: "", description:'', imageUrl: '',quantity:'',category:'');
+  static ProductModel empty() => ProductModel(id: "", name: "", description:'', imageUrl: '',quantity:'',category:'',size:'');
 
   //MAP Products Fetch  From FIREBASE to Model
 
@@ -42,6 +43,7 @@ class ProductModel {
       imageUrl: data["imageurl"],
       quantity: data["quantity"],
         category: data["category"],
+      size: data["size"],
     );
   }
 }

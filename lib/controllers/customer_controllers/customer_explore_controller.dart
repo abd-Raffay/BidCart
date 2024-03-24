@@ -69,6 +69,7 @@ class CustomerExploreCardCOntroller extends GetxController {
     },
   ];
   int index = 0;
+
   late Future<List<ProductModel>> productList;
 
   List unfilteredList = [];
