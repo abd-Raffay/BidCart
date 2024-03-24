@@ -18,7 +18,7 @@ class CustomerCartScreen extends StatefulWidget {
 class _CustomerCartScreenState extends State<CustomerCartScreen> {
   @override
   Widget build(BuildContext context) {
-    final cartController=Get.put(CartController());
+    final cartController = Get.put(CartController());
     return Scaffold(
         appBar: const TAppBar(
           showBackArrow: true,
@@ -40,27 +40,38 @@ class _CustomerCartScreenState extends State<CustomerCartScreen> {
                       return Center(
                         child: Text('Error: ${snapshot.error}'),
                       );
-                    } else if (snapshot.data == null || snapshot.data!.isEmpty) {
+                    } else if (snapshot.data == null ||
+                        snapshot.data!.isEmpty) {
                       return const Center(
-                        child: Text('Cart is empty'), // Display message if cart is empty
+                        child: Text(
+                            'Cart is empty'), // Display message if cart is empty
                       );
                     } else {
                       return ListView.separated(
                         shrinkWrap: true,
-                        separatorBuilder: (_, __) => const SizedBox(height: Sizes.spaceBtwSections),
+                        separatorBuilder: (_, __) =>
+                            const SizedBox(height: Sizes.spaceBtwSections),
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
                           var item = snapshot.data![index];
-                          return Column(
+                          return Row(
                             children: [
-                              CartItem(image: item.imageUrl, title: item.name, size: item.size),
-                              const SizedBox(height: Sizes.spaceBtwItems / 2),
-                              Row(
-                                children: [
-                                  const SizedBox(width: 70),
-                                  AddRemoveButtons(quantity: RxInt(int.parse(item.quantity))),
-                                ],
-                              ),
+                              CartItem(
+                                  image: item.imageUrl,
+                                  title: item.name,
+                                  size: item.size),
+
+
+
+                                  Expanded(
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: AddRemoveButtons(
+                                          quantity:
+                                              RxInt(int.parse(item.quantity))),
+                                    ),
+                                  ),
+
                               const SizedBox(height: Sizes.spaceBtwItems),
                             ],
                           );
@@ -70,17 +81,14 @@ class _CustomerCartScreenState extends State<CustomerCartScreen> {
                   },
                 ),
               ),
-
             ],
           ),
         ),
-
         bottomNavigationBar: BottomAppBar(
           color: Colors.transparent,
           surfaceTintColor: Colors.transparent,
           child: ElevatedButton(
             onPressed: () {},
-
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
               // Adjust padding as needed
