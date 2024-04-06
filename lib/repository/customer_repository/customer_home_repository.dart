@@ -26,8 +26,6 @@ class CustomerHomeRepository extends GetxController {
       print("Error getting products: $e");
       return [];
     }
-
-
   }
 
 

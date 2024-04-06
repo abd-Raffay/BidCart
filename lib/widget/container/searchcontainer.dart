@@ -23,9 +23,11 @@ class SearchContainer extends StatelessWidget {
       child:  Row(
         children: [
           const Icon(Icons.search,color: Colors.black,),
+
           const SizedBox(width: 16.0,),
           Text(text ,style: const TextStyle(
               color: Colors.grey
+
           ),),
         ],
       ),

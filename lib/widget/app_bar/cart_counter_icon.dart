@@ -1,4 +1,4 @@
-
+import 'package:bidcart/controllers/customer_controllers/customer_cart_controller.dart';
 import 'package:bidcart/screens/customer/customer_cart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,21 +11,36 @@ class CartCounterIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      IconButton(onPressed: () {Get.to(const CustomerCartScreen());}, icon: const Icon(CupertinoIcons.shopping_cart)),
-      Positioned(
-        right: 0,
-        child: Container(
-          width: 18,
-          height: 18,
-          decoration: BoxDecoration(
-            color: Colors.cyan,
-            borderRadius: BorderRadius.circular(100),
-          ),
-          child: const Center(child: Text('2',style: TextStyle(color: Colors.white70),)),
+    final cardController = Get.put(CartController());
 
+    return Stack(
+      children: [
+        IconButton(
+          onPressed: () {
+            Get.to(()=> CustomerCartScreen());
+          },
+          icon: const Icon(CupertinoIcons.shopping_cart),
         ),
-      )
-    ]);
+        Positioned(
+          right: 0,
+          child: Obx(
+            () => Container(
+              width: 18,
+              height: 18,
+              decoration: BoxDecoration(
+                color: Colors.cyan,
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: Center(
+                child: Text(
+                  '${cardController.cartCount.value}',
+                  style: const TextStyle(color: Colors.white70),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

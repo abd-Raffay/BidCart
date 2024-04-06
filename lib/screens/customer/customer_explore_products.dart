@@ -1,6 +1,7 @@
 import 'package:bidcart/controllers/customer_controllers/customer_explore_controller.dart';
 import 'package:bidcart/screens/common/grid_layout.dart';
-import 'package:bidcart/screens/product_detail.dart';
+import 'package:bidcart/screens/customer/product_detail.dart';
+
 import 'package:bidcart/widget/app_bar/appBar.dart';
 import 'package:bidcart/widget/container/searchcontainer.dart';
 import 'package:bidcart/widget/products/product_cards/product_card_vertical.dart';
@@ -38,24 +39,33 @@ class _ExploreProductsState extends State<ExploreProducts> {
             Expanded(
               child: SingleChildScrollView(
                 child: controller.filteredList.isEmpty
-                    ? const Center(
-                        child:Text("Nothing here"))
+                    ? const Center(child: Text("Nothing here"))
                     : GridLayout(
                         itemCount: controller.filteredList.length,
                         itemBuilder: (context, index) {
                           final product = controller.filteredList[index];
                           return GestureDetector(
-                            onTap: (){
+                            onTap: () {
                               controller.setIndex(index);
-                              Get.to( ProductDetail(imageUrl: product.imageUrl, description: product.description, size: product.size, category: product.category, title: product.name,));
-
+                              Get.to(ProductDetail(
+                                id: product.id,
+                                imageUrl: product.imageUrl,
+                                description: product.description,
+                                size: product.size,
+                                category: product.category,
+                                title: product.name,
+                                quantity: product.quantity,
+                              ));
                             },
                             child: ProductCardVertical(
                               isNetworkImage: true,
                               imageUrl: product.imageUrl,
                               productTitle: product.name,
                               size: product.size,
-                              productId: product.id, description: '', quantity: '',
+                              productId: product.id,
+                              description: '',
+                              quantity: 0,
+                              counter: RxInt(product.quantity),
                             ),
                           );
                         },

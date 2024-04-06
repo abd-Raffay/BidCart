@@ -1,5 +1,8 @@
-
-import 'package:bidcart/screens/product_detail.dart';
+import 'package:bidcart/const/images.dart';
+import 'package:bidcart/const/sizes.dart';
+import 'package:bidcart/screens/customer/product_detail.dart';
+import 'package:bidcart/widget/app_bar/bottomBar.dart';
+import 'package:bidcart/widget/modal/product_modal.dart';
 import 'package:bidcart/widget/products/product_text/product_label_text.dart';
 import 'package:bidcart/widget/products/product_text/product_title_text.dart';
 import 'package:bidcart/widget/container/round_image.dart';
@@ -18,20 +21,24 @@ class ProductCardVertical extends StatelessWidget {
     required this.productTitle,
     required this.size,
     required this.isNetworkImage,
-    required this.productId, required this.description, required this.quantity,
+    required this.productId,
+    required this.description,
+    required this.quantity,
+    required this.counter,
   });
 
   final String imageUrl;
   final String productTitle;
   final String description;
-  final String quantity;
-  final String size;
+  final int quantity;
+  final List<String> size;
   final bool isNetworkImage;
   final String productId;
+  final RxInt counter;
 
   @override
   Widget build(BuildContext context) {
-    final cartController=Get.put(CartController());
+    final cartController = Get.put(CartController());
     return Container(
       padding: const EdgeInsets.all(1),
       decoration: BoxDecoration(
@@ -53,40 +60,49 @@ class ProductCardVertical extends StatelessWidget {
             padding: const EdgeInsets.all(1),
             backgroundColor: Colors.white,
             child: GestureDetector(
-              onTap: (){
-                Get.to(ProductDetail(imageUrl: imageUrl, title: productTitle, description: description, size: size, category: ''));
+              onTap: () {
+                Get.to(ProductDetail(
+                  id: productId,
+                  imageUrl: imageUrl,
+                  title: productTitle,
+                  description: description,
+                  size: size,
+                  category: '',
+                  quantity: quantity,
+                ));
               },
-              child: Container(
-                child: Stack(
-                  children: [
-                    //photo
-                    RoundedImage(
-                      imageUrl: imageUrl,
-                      applyImageRadius: true,
-                      height: 180,
-                      width: 130,
-                      isNetworkImage: isNetworkImage,
-                    )
-                  ],
-                ),
+              child: Stack(
+                children: [
+                  //photo
+                  RoundedImage(
+                    imageUrl: imageUrl,
+                    applyImageRadius: true,
+                    height: 180,
+                    width: 130,
+                    isNetworkImage: isNetworkImage,
+                  )
+                ],
               ),
             ),
           ),
           const SizedBox(
             height: 8.0,
           ),
-
-
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 // _________ Product heading and sub heading _------__-___---
-                ProductTitleText(title: productTitle, smallSize: true,),
-                ProductLabelText(title: size),
-
+                ProductTitleText(
+                  title: productTitle,
+                  smallSize: true,
+                ),
+                Text(
+                  size.join(','),
+                  style: const TextStyle(fontSize: 10, color: Colors.grey),
+                ),
+                //ProductLabelText(title: size),
 
                 // ---- ADD BUTTON -----
                 Padding(
@@ -100,15 +116,29 @@ class ProductCardVertical extends StatelessWidget {
                           color: Colors.cyan.withOpacity(0.8),
                           borderRadius: BorderRadius.circular(16)),
                       child: IconButton(
-                        onPressed: () async {
-                          await cartController.getProductsList();
-                            cartController.addProductstoCart(productId);
-                        },
-                        icon: const Icon(
-                          Icons.add,
-                          color: Colors.white,
-                        ),
-                      ),
+                          onPressed: () async {
+                            showModalBottomSheet(
+                                backgroundColor: Colors.white,
+                                context: context,
+                                builder: ((context) {
+                                  return Container(
+                                      height: 270,
+                                      child: Modal(
+                                        image: imageUrl,
+                                        title: productTitle,
+                                        sizes: size,
+                                        id: productId,
+                                      ));
+                                })
+                            );
+                            await cartController.getProductsList();
+                            //cartController.addProductstoCart(productId, "","");
+                            //counter.value++;
+                          },
+                          icon: const Icon(
+                            Icons.add,
+                            color: Colors.white,
+                          )),
                     ),
                   ),
                 ),

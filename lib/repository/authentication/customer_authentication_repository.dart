@@ -114,12 +114,10 @@ class CustomerAuthenticationRepository extends GetxController {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       print(
           "+++++++++++++++++++++++++++++++++2 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-      final GoogleSignInAuthentication? googleAuth =
-      await googleUser?.authentication;
+      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
       print(
           "+++++++++++++++++++++++++++++++++3 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-      final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
+      final credential = GoogleAuthProvider.credential(accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
       print(
           "+++++++++++++++++++++++++++++++++4 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
       return await FirebaseAuth.instance.signInWithCredential(credential);

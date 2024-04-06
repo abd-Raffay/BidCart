@@ -11,21 +11,18 @@ class CustomerHomeController extends GetxController{
   final homeRepo = Get.put(CustomerHomeRepository());
   //final cartController =Get.put(CartController());
   @override
-  void onInit() {
+  Future<void> onInit() async {
+    await getProducts();
     super.onInit();
     index = 0;
-    //cartController.getProductsList();
-    //print("indexsadasdasdasdasdasdds ${index}");
-    //getProductsList();
   }
 
 
 
   int index = 0;
 
-
   final carousalCurrentIndex=0.obs;
-  late Future<List<ProductModel>> productList ;
+  late Future<List<ProductModel>> productList;
   List products = [];
 
   void updatePageIndicator(index){
@@ -35,7 +32,6 @@ class CustomerHomeController extends GetxController{
   }
   Future<void> setIndex(int indexx) async {
     index = indexx;
-
   }
 
 

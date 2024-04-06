@@ -20,11 +20,13 @@ class ProductTitleText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
+
       title,
       style: TextStyle(fontWeight: FontWeight.w300,fontSize: fontSize),
       overflow: TextOverflow.ellipsis,
       maxLines: maxLines,
       textAlign: textAlign,
+
 
     );
   }

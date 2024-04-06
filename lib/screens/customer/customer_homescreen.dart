@@ -48,6 +48,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     children: [
+
                       CarouselSlider(
                         options: CarouselOptions(
                           viewportFraction: 1,
@@ -69,6 +70,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                           ),
                         ],
                       ),
+
                       const SizedBox(
                         height: 16.0,
                       ),
@@ -93,14 +95,12 @@ class _CustomerScreenState extends State<CustomerScreen> {
                         ),
                       )
                     ],
-
                   ),
                 )),
 
             const SizedBox(
               height: 10.0,
             ),
-            //const TAppBar(),
             //logo
 
             //search bar
@@ -111,7 +111,6 @@ class _CustomerScreenState extends State<CustomerScreen> {
               ),
             ),
 
-            //Sliders
 
 
             FutureBuilder<List<ProductModel>>(
@@ -141,8 +140,10 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                   productId: product.id,
                                   description: product.description,
                                   quantity: product.quantity,
+                                  counter: RxInt(product.quantity),
                                 ),
                               );
+
                             },
                           ),
                         ),
