@@ -94,7 +94,7 @@ class ProductCardVertical extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // _________ Product heading and sub heading _------__-___---
-                ProductTitleText(
+                TitleText(
                   title: productTitle,
                   smallSize: true,
                 ),

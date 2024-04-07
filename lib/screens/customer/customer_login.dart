@@ -9,16 +9,18 @@ import 'package:get/get.dart';
 
 
 class CustomerLoginPage extends StatefulWidget {
+  const CustomerLoginPage({super.key});
+
   @override
-  _CustomerLoginPageState createState() => _CustomerLoginPageState();
+  CustomerLoginPageState createState() => CustomerLoginPageState();
 }
 
 
-class _CustomerLoginPageState extends State<CustomerLoginPage> {
+class CustomerLoginPageState extends State<CustomerLoginPage> {
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
 
-  final controller = Get.put(CustomerSignInController());
+  final signinController = Get.put(CustomerSignInController());
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +76,7 @@ class _CustomerLoginPageState extends State<CustomerLoginPage> {
                     children: [
                       //Email Feild
                       TextFormField(
-                        controller: controller.email,
+                        controller: signinController.email,
 
                         decoration: const InputDecoration(
                             prefixIcon: Icon(Icons.email),
@@ -101,7 +103,7 @@ class _CustomerLoginPageState extends State<CustomerLoginPage> {
 
                       //Password Feild
                       TextFormField(
-                        controller: controller.password,
+                        controller: signinController.password,
 
                         decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.lock),
@@ -156,10 +158,10 @@ class _CustomerLoginPageState extends State<CustomerLoginPage> {
                           ),
                           onPressed: () {
                             if(_formKey.currentState!.validate()){
-                              CustomerSignInController.instance.loginUser(controller.email.text.trim(), controller.password.text.trim());
+                              CustomerSignInController.instance.loginUser(signinController.email.text.trim(), signinController.password.text.trim());
 
-                              controller.email.clear();
-                              controller.password.clear();
+                              signinController.email.clear();
+                              signinController.password.clear();
                             }
                           },
                           child: const Text('Login'),

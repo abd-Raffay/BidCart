@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 class TitleText extends StatelessWidget {
   const TitleText(
       {super.key,
-      required this.title,
-       this.smallSize =false,
-      this.maxLines=2,
-      this.textAlign=TextAlign.left,
+        required this.title,
+        this.smallSize =false,
+        this.maxLines=2,
+        this.textAlign=TextAlign.left,
         this.fontSize=Sizes.fontSizeSm
       });
 
@@ -20,14 +20,11 @@ class TitleText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-
       title,
-      style: TextStyle(fontWeight: FontWeight.w300,fontSize: fontSize),
+      style: const TextStyle(fontWeight: FontWeight.w300,fontSize: Sizes.fontSizeMd),
       overflow: TextOverflow.ellipsis,
       maxLines: maxLines,
       textAlign: textAlign,
-
-
     );
   }
 }

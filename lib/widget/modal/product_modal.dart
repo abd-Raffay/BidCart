@@ -64,7 +64,7 @@ class _ModalState extends State<Modal> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Title aligned to the right of the photo
-                          ProductTitleText(title: widget.title),
+                          TitleText(title: widget.title),
 
                           const SizedBox(height: Sizes.spaceBtwSections),
 

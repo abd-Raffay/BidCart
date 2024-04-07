@@ -2,6 +2,7 @@ import 'package:bidcart/const/images.dart';
 import 'package:bidcart/controllers/seller_controllers/seller_signup_controller.dart';
 import 'package:bidcart/model/seller_model.dart';
 import 'package:bidcart/screens/seller/seller_login.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:get/get.dart';
@@ -274,8 +275,10 @@ class _SSignupState extends State<SSignup> {
                     storename: controller.storename.text.trim(),
                     address: controller.address.text.trim(),
                       cnic: controller.cnic.text.trim(),
-                      id:"",
+                      userId:"",
                       status: '',
+                      storeId: '',
+                        dateTime: Timestamp.now(),
                     );
 
                     if (_formKey.currentState!.validate()) {

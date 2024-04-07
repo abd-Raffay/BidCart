@@ -55,7 +55,7 @@ class ExploreCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ProductTitleText(
+                  TitleText(
                     title: title,
                     smallSize: true,
                   ),

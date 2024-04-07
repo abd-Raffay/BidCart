@@ -3,6 +3,7 @@ import 'package:bidcart/screens/common/grid_layout.dart';
 import 'package:bidcart/screens/customer/product_detail.dart';
 
 import 'package:bidcart/widget/app_bar/appBar.dart';
+import 'package:bidcart/widget/app_bar/cart_counter_icon.dart';
 import 'package:bidcart/widget/container/searchcontainer.dart';
 import 'package:bidcart/widget/products/product_cards/product_card_vertical.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,7 +29,7 @@ class _ExploreProductsState extends State<ExploreProducts> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
-            TAppBar(showBackArrow: true, title: controller.getTitle()),
+            TAppBar(showBackArrow: true, title: controller.getTitle(),actions: const [CartCounterIcon()],),
             const SearchContainer(
               text: 'Search here',
               showBorder: false,

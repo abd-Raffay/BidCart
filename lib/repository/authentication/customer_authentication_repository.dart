@@ -1,3 +1,4 @@
+import 'package:bidcart/screens/admin/admin_navigationbar.dart';
 import 'package:bidcart/screens/customer/customer_navigation_bar.dart';
 import 'package:bidcart/model/customer_model.dart';
 import 'package:bidcart/repository/customer_repository/customer_repository.dart';
@@ -28,11 +29,13 @@ class CustomerAuthenticationRepository extends GetxController {
 
   setIntialScreen(User? user) async {
     if (user == null) {
+      //Get.offAll(()=> AdminNavigationBar());
       //print("User isssssssssssssssssssssss ${user}");
       Get.offAll(() => const OnBoarding());
     } else if (user.emailVerified) {
       //print("++++++++++++++++++++++++++++++++++++++++${sellerrepo.getApprovalStatus(user.uid).toString()}+++++++++++++++++++++++++++++++++");
       //checks if the user is customer
+
       if (await customerrepo.getCustomer(user.email.toString()) ==
           user.email.toString()) {
         //print("ccccustomer sadasdsdasasdsdadsasadsasda");

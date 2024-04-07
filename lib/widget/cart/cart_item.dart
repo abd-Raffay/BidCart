@@ -33,7 +33,7 @@ class CartItem extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ProductTitleText(title: title),
+            TitleText(title: title),
             ProductLabelText(title: size),
           ],
 

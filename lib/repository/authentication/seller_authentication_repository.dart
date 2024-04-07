@@ -1,6 +1,7 @@
 import 'package:bidcart/model/seller_model.dart';
 import 'package:bidcart/repository/exception/exceptions.dart';
 import 'package:bidcart/repository/seller_repository/seller_repository.dart';
+import 'package:bidcart/screens/admin/admin_navigationbar.dart';
 import 'package:bidcart/screens/common/onboarding.dart';
 import 'package:bidcart/screens/seller/approval_screen.dart';
 import 'package:bidcart/screens/seller/seller_homescreen.dart';
@@ -8,6 +9,7 @@ import 'package:bidcart/screens/seller/seller_login.dart';
 import 'package:bidcart/screens/seller/seller_mail_verfication.dart';
 import 'package:bidcart/screens/seller/seller_rejected_screen.dart';
 import 'package:bidcart/screens/seller/seller_navigation_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -32,8 +34,9 @@ class SellerAuthenticationRepository extends GetxController {
   setInitialScreen(User? user) async {
 
     if (user == null) {
-      print("User isssssssssssssssssssssss ${user}");
-      //Get.offAll(() => const OnBoarding());
+      //Get.offAll(()=> AdminNavigationBar());
+      //print("User isssssssssssssssssssssss ${user}");
+      Get.offAll(() => const OnBoarding());
     } else if (user.emailVerified) {
       //print("++++++++++++++++++++++++++++++++++++++++${sellerrepo.getApprovalStatus(user.uid).toString()}+++++++++++++++++++++++++++++++++");
 
@@ -65,8 +68,11 @@ class SellerAuthenticationRepository extends GetxController {
 
       await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      seller.id = (await _auth.currentUser?.uid)!;
+
+      seller.userId = (await _auth.currentUser?.uid)!;
       seller.status="pending";
+      seller.dateTime=Timestamp.now();
+
 
       sellerrepo.createUser(seller);
       firebaseUser.value != null
