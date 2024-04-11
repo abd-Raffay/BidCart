@@ -1,6 +1,6 @@
 import 'package:bidcart/model/seller_model.dart';
 import 'package:bidcart/repository/exception/exceptions.dart';
-import 'package:bidcart/repository/seller_repository/seller_repository.dart';
+import 'package:bidcart/repository/seller_repository/seller_login_repository.dart';
 import 'package:bidcart/screens/admin/admin_navigationbar.dart';
 import 'package:bidcart/screens/common/onboarding.dart';
 import 'package:bidcart/screens/seller/approval_screen.dart';
@@ -19,7 +19,7 @@ class SellerAuthenticationRepository extends GetxController {
   static SellerAuthenticationRepository get instance => Get.find();
   final _auth = FirebaseAuth.instance;
   late final Rx<User?> firebaseUser;
-  final sellerrepo = Get.put(SellerRepository());
+  final sellerrepo = Get.put(SellerLoginRepository());
 
   @override
 
@@ -152,7 +152,7 @@ class SellerAuthenticationRepository extends GetxController {
   }
 
   Future GetApprovalStatus() async {
-    return await SellerRepository.instance.getApprovalStatus(firebaseUser.value!.uid);
+    return await SellerLoginRepository.instance.getApprovalStatus(firebaseUser.value!.uid);
   }
 
 

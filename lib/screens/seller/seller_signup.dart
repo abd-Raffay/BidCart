@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:get/get.dart';
 
-import '../../repository/seller_repository/seller_repository.dart';
+import '../../repository/seller_repository/seller_login_repository.dart';
 
 
 class SSignup extends StatefulWidget {
@@ -25,7 +25,7 @@ class _SSignupState extends State<SSignup> {
   bool _obscureText = true;
 
 
-  final sellerrepo = Get.put(SellerRepository());
+  final sellerrepo = Get.put(SellerLoginRepository());
 
   @override
   Widget build(BuildContext context) {

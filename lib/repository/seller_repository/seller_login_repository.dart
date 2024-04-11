@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 
 
 
-class SellerRepository extends GetxController{
-  static SellerRepository get instance => Get.find();
+class SellerLoginRepository extends GetxController{
+  static SellerLoginRepository get instance => Get.find();
   final _db = FirebaseFirestore.instance;
 
   createUser(SellerModel user) async {
