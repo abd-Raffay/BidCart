@@ -12,6 +12,7 @@ class SellerHomeController extends GetxController {
   @override
   Future<void> onInit() async {
     await getInventory();
+    await storeRepo.getOrderRequests();
     super.onInit();
   }
 

@@ -8,25 +8,25 @@ class AdminRepository extends GetxController{
 
   final _db = FirebaseFirestore.instance;
 
-  Future<List<SellerModel>> getSeller() async {
+  Stream<List<SellerModel>> getSellers() {
     try {
-      final snapshot = await _db.collection("seller").get();
-
-      List<SellerModel> sellerList = [];
-
-      for (var doc in snapshot.docs) {
-        if (doc.exists) {
-          SellerModel seller = SellerModel.fromSnapshot(doc);
-          sellerList.add(seller);
-        }
-      }
-      return sellerList;
+      return _db.collection("seller").snapshots().map((snapshot) {
+        return snapshot.docs.map((doc) {
+          if (doc.exists) {
+            return SellerModel.fromSnapshot(doc);
+          } else {
+            // Handle the case where the document does not exist
+            return null;
+          }
+        }).where((seller) => seller != null).map((seller) => seller as SellerModel).toList();
+      });
     } catch (e) {
-
       print("Error getting sellers: $e");
-      return [];
+      return Stream.value([]);
     }
   }
+
+
 
   Future<void> setStatus(String sellerId, String status) async {
     try {

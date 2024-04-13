@@ -1,4 +1,6 @@
+import 'package:bidcart/model/cart_model.dart';
 import 'package:bidcart/model/product_model.dart';
+import 'package:bidcart/model/request_model.dart';
 import 'package:bidcart/model/seller_products_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -101,9 +103,10 @@ class SellerStoreRepository extends GetxController{
   Future<void> deleteProduct(String productId) async {
     try {
       final CollectionReference inventoryCollection = FirebaseFirestore.instance.collection('inventory');
-      final String? userId = FirebaseAuth.instance.currentUser?.uid;
-      if (userId != null) {
-        final DocumentReference userDocRef = inventoryCollection.doc(userId);
+
+
+      if (_auth.currentUser?.uid != null) {
+        final DocumentReference userDocRef = inventoryCollection.doc(_auth.currentUser?.uid);
         final CollectionReference productsCollection = userDocRef.collection('products');
 
         // Delete the document with the specified product ID
@@ -116,10 +119,35 @@ class SellerStoreRepository extends GetxController{
     }
   }
 
-  Future<void> getRequests()async {
 
 
+  Stream<List<RequestData>> getOrderRequests() {
+    try {
+      final CollectionReference orderRequestCollection = FirebaseFirestore.instance.collection('orderrequest');
+
+      return orderRequestCollection.snapshots().map((snapshot) => snapshot.docs.map((doc) {
+        // Extract data from the document
+        String customerId = doc['customerid'];
+        String customerName = doc['customerName'];
+        String dateTime = doc['dateTime'];
+        List<dynamic> itemsData = doc['items'];
+        List<CartModel> items = itemsData.map((item) => CartModel.fromJson(item)).toList();
+
+        // Create RequestData object
+        return RequestData(
+          customerId: customerId,
+          items: items,
+          customerName: customerName,
+          dateTime: dateTime,
+        );
+      }).toList());
+    } catch (e) {
+      print('Error getting order requests: $e');
+      return Stream.empty();
+    }
   }
+
+
 
 
 

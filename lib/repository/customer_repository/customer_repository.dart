@@ -8,6 +8,17 @@ class CustomerRepository extends GetxController {
   static CustomerRepository get instance => Get.find();
 
   final _db = FirebaseFirestore.instance;
+  late CustomerModel customer=CustomerModel(id: "", name: "", email: "", phone: "");
+
+
+  @override
+  void onInit() {
+    super.onInit();
+    // Call main function to initialize orderRequests list
+  }
+
+
+
 
   createUser(CustomerModel user) async {
     try {
@@ -24,8 +35,6 @@ class CustomerRepository extends GetxController {
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.redAccent.withOpacity(0.1),
           colorText: Colors.red);
-
-
     }
   }
 
@@ -36,12 +45,26 @@ class CustomerRepository extends GetxController {
 
       final email = snapshot.docs.first.get("Email");
       //print("Email: $email");
+      customer=(await getCustomerr(email))!;
       return email;
     } else {
       //print("No customer found with the provided email.");
       return "";
     }
-
   }
 
+
+  Future<CustomerModel?> getCustomerr(String email) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection("customer")
+        .where("Email", isEqualTo: email)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      // If document exists, create a CustomerModel instance from it
+      return CustomerModel.fromSnapshot(snapshot.docs.first);
+    } else {
+      return null; // Return null if no user found with the provided email
+    }
+  }
 }

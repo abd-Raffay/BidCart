@@ -38,6 +38,7 @@ dependencies:
   cached_network_image: ^3.3.1
   easy_search_bar: ^2.5.0
   intl: ^0.19.0
+  firebase_app_check: ^0.2.2+1
 
 
 dev_dependencies:

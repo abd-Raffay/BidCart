@@ -3,6 +3,7 @@ import 'package:bidcart/repository/authentication/seller_authentication_reposito
 import 'package:bidcart/repository/customer_repository/customer_home_repository.dart';
 import 'package:bidcart/screens/common/onboarding.dart';
 import 'package:bidcart/themes/theme.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,6 +13,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
+  await FirebaseAppCheck.instance.activate();
   Get.put(CustomerAuthenticationRepository());
   Get.put(SellerAuthenticationRepository());
   //Get.put(CustomerHomeRepository());

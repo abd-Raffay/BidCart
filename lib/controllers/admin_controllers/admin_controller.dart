@@ -11,18 +11,23 @@ class AdminController extends GetxController {
 
   @override
   Future<void> onInit() async {
-    await getSellerList();
+    getSellerList();
     print('Admin Controller initialized');
     super.onInit();
   }
 
-  Future<void> getSellerList() async {
-    print('Admin Controller initialized ${sellers.length}');
-    sellers.assignAll(await adminRepo.getSeller());
-    sellers.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+  void getSellerList() {
+    final sellerStream = adminRepo.getSellers();
 
-
+    // Listen to changes in the seller list stream
+    sellerStream.listen((updatedSellers) {
+      sellers.assignAll(updatedSellers);
+      sellers.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+    }, onError: (error) {
+      print('Error getting seller list: $error');
+    });
   }
+
 
   Future<void> setStatus(String storeId, String status) async {
     await adminRepo.setStatus(storeId, status);

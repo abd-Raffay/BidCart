@@ -5,6 +5,7 @@ class CartModel {
   String name;
   String image;
   int quantity;
+ // String dateTime;
 
   String size; // List of sizes
 
@@ -14,6 +15,7 @@ class CartModel {
     required this.image,
     required this.quantity,
     required this.size,
+   // required this.dateTime
   });
 
   Map<String, dynamic> toJson() {
@@ -22,9 +24,21 @@ class CartModel {
       "name": name,
       "quantity": quantity,
       "imageurl": image,
-      "size": size, // Serialize sizes as a list of strings
+      "size": size,
+      //"dateTime":dateTime// Serialize sizes as a list of strings
     };
   }
+  factory CartModel.fromJson(Map<String, dynamic> json) {
+    return CartModel(
+      id: json["productid"],
+      name: json["name"],
+      image: json["imageurl"],
+      quantity: json["quantity"],
+      size: json["size"],
+
+    );
+  }
+
 
 
   static CartModel empty() => CartModel(
