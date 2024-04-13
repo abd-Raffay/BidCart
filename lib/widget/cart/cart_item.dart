@@ -1,6 +1,4 @@
-import 'package:bidcart/const/images.dart';
 import 'package:bidcart/const/sizes.dart';
-import 'package:bidcart/widget/cart/add_remove_buttons.dart';
 import 'package:bidcart/widget/container/round_image.dart';
 import 'package:bidcart/widget/products/product_text/product_label_text.dart';
 import 'package:bidcart/widget/products/product_text/product_title_text.dart';

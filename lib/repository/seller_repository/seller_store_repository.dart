@@ -70,6 +70,7 @@ class SellerStoreRepository extends GetxController{
     try {
       final String? userId = _auth.currentUser?.uid;
       if (userId != null) {
+        print(userId);
         final CollectionReference inventoryCollection = _db.collection('inventory');
         final DocumentReference userDocRef = inventoryCollection.doc(userId);
         final CollectionReference productsCollection = userDocRef.collection('products');
@@ -84,6 +85,7 @@ class SellerStoreRepository extends GetxController{
           print(doc.id);
           SellerProductModel product = SellerProductModel.fromSnapshot(doc as DocumentSnapshot<Map<String, dynamic>>);
           products.add(product);
+          print(product.toJson());
         });
         return products;
       } else {
@@ -112,6 +114,11 @@ class SellerStoreRepository extends GetxController{
     } catch (e) {
       print('Error deleting product: $e');
     }
+  }
+
+  Future<void> getRequests()async {
+
+
   }
 
 

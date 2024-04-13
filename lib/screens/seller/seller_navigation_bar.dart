@@ -1,5 +1,5 @@
 import 'package:bidcart/screens/seller/seller_add_screen.dart';
-import 'package:bidcart/screens/seller/requests_screen.dart';
+import 'package:bidcart/screens/seller/seller_requests_screen.dart';
 import 'package:bidcart/screens/seller/seller_account_screen.dart';
 import 'package:bidcart/screens/seller/seller_homescreen.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +42,7 @@ class SellerNavigationController extends GetxController {
 
   final screens = [
      SellerHomeScreen(),
-    const SellerRequestScreen(),
+     SellerRequestScreen(),
     const SellerAddScreen(),
     const SellerAccountScreen(),
   ];
