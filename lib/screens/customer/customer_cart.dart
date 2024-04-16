@@ -17,19 +17,19 @@ class CustomerCartScreen extends StatelessWidget {
     return Scaffold(
       appBar: TAppBar(
         showBackArrow: true,
-        title: Text("My Cart"),
+        title: const Text("My Cart",style: TextStyle(),),
         actions: [
           Obx(() {
             final cartItems = cartController.cartItems;
             return Visibility(
               visible: cartItems().isNotEmpty,
-              child: CartActions(),
+              child: const CartActions(),
             );
           }),
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(Sizes.defaultSpace),
+        padding: const EdgeInsets.only(top:Sizes.defaultSpace,right: Sizes.spaceBtwItems),
         child: Obx(() {
           final cartItems = cartController.cartItems;
           if (cartItems().isEmpty) {
@@ -40,7 +40,7 @@ class CustomerCartScreen extends StatelessWidget {
             return ListView.separated(
               shrinkWrap: true,
               separatorBuilder: (_, __) =>
-              const SizedBox(height: Sizes.spaceBtwSections),
+              const SizedBox(height: Sizes.spaceBtwSections/2),
               itemCount: cartItems().length,
               itemBuilder: (context, index) {
                 var item = cartItems()[index];
@@ -68,7 +68,7 @@ class CustomerCartScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: Sizes.spaceBtwItems),
+                    //const SizedBox(height: Sizes.spaceBtwItems),
                   ],
                 );
               },

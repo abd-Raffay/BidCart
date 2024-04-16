@@ -1,7 +1,5 @@
 import 'package:bidcart/const/images.dart';
-import 'package:bidcart/screens/common/reset_password.dart';
 import 'package:bidcart/screens/seller/seller_login.dart';
-import 'package:bidcart/screens/seller/seller_signup.dart';
 import 'package:flutter/material.dart';
 import 'package:bidcart/screens/customer/customer_login.dart';
 import 'package:get/get.dart';
@@ -52,7 +50,7 @@ class OnBoarding extends StatelessWidget {
                 child: ElevatedButton(
 
                   onPressed: () {
-                    Get.offAll(()=> CustomerLoginPage());
+                    Get.to(()=> CustomerLoginPage());
                     //Navigator.of(context).pushReplacement(MaterialPageRoute(
                      // builder: (_) => ResetPassword(),
                    // )
@@ -75,9 +73,8 @@ class OnBoarding extends StatelessWidget {
             const Padding(padding: EdgeInsets.only(bottom: 10)),
             TextButton(
                 onPressed: (){
-                  //Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    // builder: (_) => SLoginPage()));
-                  Get.offAll(()=> SLoginPage() );
+
+                  Get.to(()=> SLoginPage() );
                 },
                 child: Text(
                   "continue as a Seller",

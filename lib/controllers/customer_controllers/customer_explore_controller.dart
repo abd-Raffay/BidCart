@@ -68,12 +68,33 @@ class CustomerExploreCardCOntroller extends GetxController {
       'color': Colors.blueAccent,
     },
   ];
+
   int index = 0;
 
   late Future<List<ProductModel>> productList;
 
   List unfilteredList = [];
   List<ProductModel> filteredList = [];
+
+
+  late final RxList<ProductModel> products = <ProductModel>[].obs;
+  final RxString searchQuery = ''.obs;
+
+
+  List<ProductModel> filteredProducts() {
+    final query = searchQuery.value.toLowerCase();
+    return products.where((product) {
+      final productName = product.name.toLowerCase();
+      return productName.contains(query);
+    }).toList();
+  }
+
+  void filterProducts(String query) {
+    searchQuery.value = query;
+  }
+
+
+
 
   Future<void> setIndex(int indexx) async {
     index = indexx;
@@ -95,9 +116,8 @@ class CustomerExploreCardCOntroller extends GetxController {
 
   filterList() async {
 
-    //print(index);
-    //print("unFILTERED LIST ${unfilteredList.length}");
-    filteredList.clear(); // Clear the filteredList before adding new items
+    filteredList.clear();
+    products.clear();// Clear the filteredList before adding new items
 
     for (int i = 0; i < unfilteredList.length; i++) {
       if (unfilteredList[i].category == index.toString()) {
@@ -105,5 +125,6 @@ class CustomerExploreCardCOntroller extends GetxController {
             .add(unfilteredList[i]); // Add filtered items to filteredList
       }
     }
+    products.assignAll(filteredList);
   }
 }

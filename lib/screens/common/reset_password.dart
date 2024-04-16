@@ -1,6 +1,6 @@
 import 'package:bidcart/controllers/common_controllers/forget_password_controller.dart';
 import 'package:bidcart/screens/customer/customer_login.dart';
-import 'package:bidcart/screens/seller/seller_login.dart';
+import 'package:bidcart/widget/app_bar/appBar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -16,6 +16,7 @@ class ResetPassword extends StatelessWidget {
   Widget build(BuildContext context) {
     //final controller = Get.put(CustomerMailVerificationController());
     return Scaffold(
+      appBar: const TAppBar(showBackArrow: true,),
       body: SingleChildScrollView(
         child: Padding(
             padding: const EdgeInsets.only(top: 50, left: 30, right: 30),
@@ -53,7 +54,7 @@ class ResetPassword extends StatelessWidget {
                   child: ElevatedButton(
 
                     onPressed: () {
-                      Get.offAll(()=> CustomerLoginPage());
+                      Get.offAll(()=> const CustomerLoginPage());
                     },
                     child: const Text(
                       "Done",

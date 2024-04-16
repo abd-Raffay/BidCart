@@ -2,6 +2,7 @@ import 'package:bidcart/const/images.dart';
 import 'package:bidcart/controllers/seller_controllers/seller_signup_controller.dart';
 import 'package:bidcart/model/seller_model.dart';
 import 'package:bidcart/screens/seller/seller_login.dart';
+import 'package:bidcart/widget/app_bar/appBar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
@@ -30,6 +31,7 @@ class _SSignupState extends State<SSignup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const TAppBar(showBackArrow: true,),
 
       body:
       Column(
@@ -45,21 +47,6 @@ class _SSignupState extends State<SSignup> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 40),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: TextButton(
-                            onPressed: (){
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (_) => SLoginPage()),
-                              );
-
-                            },
-                            child: const Icon(Icons.arrow_back,color: Colors.black,)),
-                      ),
-                    ),
                     Container(
                       width: 200,
                       height: 200,
@@ -79,7 +66,7 @@ class _SSignupState extends State<SSignup> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
                     const Align(
                       alignment: Alignment.bottomLeft,
                       child: Text(

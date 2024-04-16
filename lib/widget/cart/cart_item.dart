@@ -26,7 +26,7 @@ class CartItem extends StatelessWidget {
            isNetworkImage: true,
 
         ),
-        const SizedBox(width: Sizes.spaceBtwItems,),
+       
 
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,6 +1,7 @@
 
 import 'package:bidcart/controllers/customer_controllers/customer_cart_controller.dart';
 import 'package:bidcart/repository/customer_repository/customer_home_repository.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../model/product_model.dart';
@@ -20,10 +21,28 @@ class CustomerHomeController extends GetxController{
 
 
   int index = 0;
+  TextEditingController search=TextEditingController();
 
   final carousalCurrentIndex=0.obs;
   late Future<List<ProductModel>> productList;
-  List products = [];
+  //List products = [];
+
+
+  late final RxList<ProductModel> products = <ProductModel>[].obs;
+  final RxString searchQuery = ''.obs;
+
+
+    List<ProductModel> filteredProducts() {
+    final query = searchQuery.value.toLowerCase();
+    return products.where((product) {
+      final productName = product.name.toLowerCase();
+      return productName.contains(query);
+    }).toList();
+  }
+
+  void filterProducts(String query) {
+    searchQuery.value = query;
+  }
 
   void updatePageIndicator(index){
     carousalCurrentIndex.value=index;
@@ -42,8 +61,8 @@ class CustomerHomeController extends GetxController{
 
   Future<List<ProductModel>> getProducts()  async {
     productList=homeRepo.getProducts();
-    products= await productList;
-      return productList;
+    products.assignAll(await homeRepo.getProducts());
+      return products;
   }
 
 

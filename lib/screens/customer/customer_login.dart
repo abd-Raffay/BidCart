@@ -1,6 +1,8 @@
 import 'package:bidcart/const/images.dart';
 import 'package:bidcart/controllers/customer_controllers/customer_signin_controller.dart';
 import 'package:bidcart/screens/common/forget_password.dart';
+import 'package:bidcart/widget/app_bar/appBar.dart';
+import 'package:bidcart/widget/container/round_image.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:bidcart/screens/common/onboarding.dart';
@@ -15,7 +17,6 @@ class CustomerLoginPage extends StatefulWidget {
   CustomerLoginPageState createState() => CustomerLoginPageState();
 }
 
-
 class CustomerLoginPageState extends State<CustomerLoginPage> {
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
@@ -24,34 +25,22 @@ class CustomerLoginPageState extends State<CustomerLoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  Scaffold(
+      appBar: const TAppBar(showBackArrow: true,),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding:const EdgeInsets.only(top: 20.0),
-                  child:TextButton(onPressed: (){
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => const OnBoarding()),
-                  );
-                },
-                    child: const Icon(Icons.arrow_back)
-                ),)
-              ),
-              Container(
+
+              const RoundedImage(
                 width: 250,
                 height: 250,
-                child: Image.asset(Images.logo),
+                imageUrl: Images.logo
               ),
               const Text(
-
                 "Ready to shop?",
                 style: TextStyle(
                   fontSize: 30,
@@ -66,7 +55,7 @@ class CustomerLoginPageState extends State<CustomerLoginPage> {
                   color: Colors.grey,
                 ),
               ),
-              SizedBox(height: 20,),
+              const SizedBox(height: 20,),
               Form(
                 key: _formKey,
                 child: Container(
@@ -142,7 +131,7 @@ class CustomerLoginPageState extends State<CustomerLoginPage> {
                           child: TextButton(
 
                             onPressed: () {
-                              Get.offAll(() => ForgetPassword());
+                              Get.to(() => const ForgetPassword());
                             },
                             child: const Text("Forgot Password?",
                               style: TextStyle(color: Colors.blue),),
@@ -174,33 +163,6 @@ class CustomerLoginPageState extends State<CustomerLoginPage> {
 
               //Login Button
 
-
-              const SizedBox(height: 10),
-              Column(
-                children: [
-                  const Text("OR"),
-                  const SizedBox(height: 30),
-                  SizedBox(
-                    width: double.infinity,
-
-                    child: OutlinedButton.icon(
-                        icon: const Image(
-                          image: AssetImage(Images.googleLogo),
-
-                          width: 30.0,
-
-                        ),
-                        onPressed: () {
-                          CustomerSignInController.instance.googleSignIn();
-                        },
-                        label: const Text("Sign in with Google",
-                        style:TextStyle(color: Colors.black)
-                        )),
-                  )
-                ],
-              ),
-
-
               TextButton(
                   onPressed: () {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -215,8 +177,6 @@ class CustomerLoginPageState extends State<CustomerLoginPage> {
                             text: "Signup",
                             style: TextStyle(color: Colors.blue))
                       ]))),
-
-
             ],
           ),
         ),

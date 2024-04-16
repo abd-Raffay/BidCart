@@ -1,5 +1,6 @@
 import 'package:bidcart/repository/authentication/customer_authentication_repository.dart';
 import 'package:bidcart/screens/admin/admin_navigationbar.dart';
+import 'package:bidcart/screens/common/onboarding.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,5 +39,10 @@ class CustomerSignInController extends GetxController {
     } catch (e) {
       print("apple ${e.toString()}");
     }
+  }
+
+  void Logout(){
+    CustomerAuthenticationRepository.instance.logout();
+    Get.offAll(()=> const OnBoarding());
   }
 }

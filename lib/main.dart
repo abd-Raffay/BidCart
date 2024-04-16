@@ -1,6 +1,8 @@
 import 'package:bidcart/repository/authentication/customer_authentication_repository.dart';
 import 'package:bidcart/repository/authentication/seller_authentication_repository.dart';
 import 'package:bidcart/repository/customer_repository/customer_home_repository.dart';
+import 'package:bidcart/repository/navigation/navigation.dart';
+import 'package:bidcart/screens/common/internet_connectivity.dart';
 import 'package:bidcart/screens/common/onboarding.dart';
 import 'package:bidcart/themes/theme.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -14,8 +16,9 @@ void main() async {
 
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate();
-  Get.put(CustomerAuthenticationRepository());
-  Get.put(SellerAuthenticationRepository());
+  //Get.put(CustomerAuthenticationRepository());
+  //Get.put(SellerAuthenticationRepository());
+  Get.put(Navigation());
   //Get.put(CustomerHomeRepository());
   runApp(const MyApp());
 }
@@ -31,7 +34,7 @@ class MyApp extends StatelessWidget {
       theme: BidcartTheme.lightTheme,
       darkTheme: BidcartTheme.darkTheme,
       themeMode: ThemeMode.light,
-      home: const OnBoarding(),
+      home: const ConnectivityCheck(),
     );
   }
 }

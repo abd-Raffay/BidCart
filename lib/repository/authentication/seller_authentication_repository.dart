@@ -1,10 +1,8 @@
 import 'package:bidcart/model/seller_model.dart';
 import 'package:bidcart/repository/exception/exceptions.dart';
 import 'package:bidcart/repository/seller_repository/seller_login_repository.dart';
-import 'package:bidcart/screens/admin/admin_navigationbar.dart';
 import 'package:bidcart/screens/common/onboarding.dart';
 import 'package:bidcart/screens/seller/approval_screen.dart';
-import 'package:bidcart/screens/seller/seller_homescreen.dart';
 import 'package:bidcart/screens/seller/seller_login.dart';
 import 'package:bidcart/screens/seller/seller_mail_verfication.dart';
 import 'package:bidcart/screens/seller/seller_rejected_screen.dart';
@@ -24,18 +22,22 @@ class SellerAuthenticationRepository extends GetxController {
   @override
 
   void onReady() {
+
     firebaseUser = Rx<User?>(_auth.currentUser);
     firebaseUser.bindStream(_auth.userChanges());
     FlutterNativeSplash.remove();
     setInitialScreen(firebaseUser.value);
     //ever(firebaseUser, setIntialScreen);
+
   }
 
   setInitialScreen(User? user) async {
 
+
     if (user == null) {
       //Get.offAll(()=> AdminNavigationBar());
       //print("User isssssssssssssssssssssss ${user}");
+
       Get.offAll(() => const OnBoarding());
     } else if (user.emailVerified) {
       //print("++++++++++++++++++++++++++++++++++++++++${sellerrepo.getApprovalStatus(user.uid).toString()}+++++++++++++++++++++++++++++++++");

@@ -2,6 +2,7 @@ import 'package:bidcart/const/images.dart';
 import 'package:bidcart/controllers/customer_controllers/customer_signup_controller.dart';
 import 'package:bidcart/model/customer_model.dart';
 import 'package:bidcart/repository/customer_repository/customer_repository.dart';
+import 'package:bidcart/widget/app_bar/appBar.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:bidcart/screens/customer/customer_login.dart';
@@ -29,17 +30,7 @@ class _CustomerSignupState extends State<CustomerSignup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: GestureDetector(
-            child: const Icon(Icons.arrow_back),
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => CustomerLoginPage()),
-              );
-            },
-          ),
-        ),
+        appBar: TAppBar(showBackArrow: true,),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),

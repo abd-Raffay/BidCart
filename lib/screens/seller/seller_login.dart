@@ -2,6 +2,7 @@ import 'package:bidcart/const/images.dart';
 import 'package:bidcart/controllers/seller_controllers/seller_login_controller.dart';
 import 'package:bidcart/screens/common/forget_password.dart';
 import 'package:bidcart/screens/seller/seller_signup.dart';
+import 'package:bidcart/widget/app_bar/appBar.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:bidcart/screens/common/onboarding.dart';
@@ -23,26 +24,15 @@ class _SLoginPageState extends State<SLoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: TAppBar(showBackArrow: true,),
       body: SingleChildScrollView(
+
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding:const EdgeInsets.only(top: 20.0),
-                    child:TextButton(onPressed: (){
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (_) => const OnBoarding()),
-                      );
-                    },
-                        child: const Icon(Icons.arrow_back)
-                    ),)
-              ),
               Container(
                 width: 250,
                 height: 250,
@@ -145,7 +135,7 @@ class _SLoginPageState extends State<SLoginPage> {
                           child: TextButton(
 
                             onPressed: () {
-                              Get.offAll(() => const ForgetPassword());
+                              Get.to(() => const ForgetPassword());
                             },
                             child: const Text("Forgot Password?",
                               style: TextStyle(color: Colors.blue),),

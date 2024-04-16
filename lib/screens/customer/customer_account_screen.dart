@@ -1,6 +1,8 @@
+import 'package:bidcart/controllers/customer_controllers/customer_signin_controller.dart';
 import 'package:bidcart/repository/authentication/customer_authentication_repository.dart';
 import 'package:bidcart/screens/common/onboarding.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CustomerAccountScreen extends StatefulWidget {
   const CustomerAccountScreen({super.key});
@@ -10,6 +12,7 @@ class CustomerAccountScreen extends StatefulWidget {
 }
 
 class _CustomerAccountScreenState extends State<CustomerAccountScreen> {
+  final signinController=Get.put(CustomerSignInController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,11 +35,8 @@ class _CustomerAccountScreenState extends State<CustomerAccountScreen> {
                           foregroundColor: Colors.white,
                         ),
                         onPressed: () {
-                          CustomerAuthenticationRepository.instance.logout();
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const OnBoarding()));
+signinController.Logout();
+
                         },
                         child: const Text("Logout")),
                   ),

@@ -1,4 +1,5 @@
 import 'package:bidcart/screens/admin/admin_navigationbar.dart';
+import 'package:bidcart/screens/common/internet_connectivity.dart';
 import 'package:bidcart/screens/customer/customer_navigation_bar.dart';
 import 'package:bidcart/model/customer_model.dart';
 import 'package:bidcart/repository/customer_repository/customer_repository.dart';
@@ -28,6 +29,7 @@ class CustomerAuthenticationRepository extends GetxController {
   }
 
   setIntialScreen(User? user) async {
+
     if (user == null) {
       //Get.offAll(()=> AdminNavigationBar());
       //print("User isssssssssssssssssssssss ${user}");
@@ -64,7 +66,6 @@ class CustomerAuthenticationRepository extends GetxController {
             : Get.to(() =>CustomerNavigationBar() );
     } on FirebaseAuthException catch (e) {
       final ex = Exceptions.code(e.code);
-
       Get.snackbar(e.code, ex.toString(),
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.red[800],

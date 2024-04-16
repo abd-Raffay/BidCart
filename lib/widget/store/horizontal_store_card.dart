@@ -70,7 +70,7 @@ class HorizontalStoreCard extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: (){
-              Get.to(SellerDetails(seller: seller));
+              Get.to(SellerDetails(seller: seller,));
             },
             child: Container(
 
