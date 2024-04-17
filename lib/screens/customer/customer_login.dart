@@ -1,11 +1,11 @@
 import 'package:bidcart/const/images.dart';
+import 'package:bidcart/const/sizes.dart';
 import 'package:bidcart/controllers/customer_controllers/customer_signin_controller.dart';
 import 'package:bidcart/screens/common/forget_password.dart';
 import 'package:bidcart/widget/app_bar/appBar.dart';
 import 'package:bidcart/widget/container/round_image.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:bidcart/screens/common/onboarding.dart';
 import 'package:bidcart/screens/customer/customer_signup.dart';
 import 'package:get/get.dart';
 
@@ -36,26 +36,25 @@ class CustomerLoginPageState extends State<CustomerLoginPage> {
             children: [
 
               const RoundedImage(
-                width: 250,
-                height: 250,
+                width: 200,
+                height: 200,
                 imageUrl: Images.logo
               ),
               const Text(
                 "Ready to shop?",
                 style: TextStyle(
-                  fontSize: 30,
+                  fontSize: Sizes.fontSizeLg,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const Text(
-                "Log in to continue your shopping journey with us.",
+                "Log in to continue your shopping journey.",
                 style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
+                  fontSize: Sizes.fontSizeMd,
                   color: Colors.grey,
                 ),
               ),
-              const SizedBox(height: 20,),
+              //const SizedBox(height: 20,),
               Form(
                 key: _formKey,
                 child: Container(

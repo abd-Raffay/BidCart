@@ -32,8 +32,8 @@ class _AddProductsState extends State<AddProducts> {
           children: [
             const TAppBar(
               showBackArrow: true,
-              title: Text(" storeController.getTitle()"),
-              actions: [CartCounterIcon()],
+              title: Text("Products"),
+              //actions: [CartCounterIcon()],
             ),
             const SearchContainer(
               text: 'Search here',

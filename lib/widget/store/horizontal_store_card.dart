@@ -36,7 +36,8 @@ class HorizontalStoreCard extends StatelessWidget {
       case 'pending':
         return Colors.blue;
       case 'blocked':
-      case 'deleted':
+        return Colors.red;
+      case 'rejected':
         return Colors.red;
       case 'approved':
         return Colors.green;
@@ -51,8 +52,8 @@ class HorizontalStoreCard extends StatelessWidget {
         return Icons.pending;
       case 'blocked':
         return Icons.block;
-      case 'deleted':
-        return Icons.delete_forever;
+      case 'rejected':
+        return Icons.cancel;
       case 'approved':
         return Icons.check_circle;
       default:

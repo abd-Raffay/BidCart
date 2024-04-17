@@ -32,7 +32,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
       body: Align(
         alignment: Alignment.topCenter,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 0),
           child: Obx(
                 () => Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -44,6 +44,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: GridLayout(
+                        mainAxisExtent: 250,
                         itemCount: homeController.rxInventory.length,
                         itemBuilder: (context, index) {
                           SellerProductModel product =

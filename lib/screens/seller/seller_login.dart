@@ -1,4 +1,5 @@
 import 'package:bidcart/const/images.dart';
+import 'package:bidcart/const/sizes.dart';
 import 'package:bidcart/controllers/seller_controllers/seller_login_controller.dart';
 import 'package:bidcart/screens/common/forget_password.dart';
 import 'package:bidcart/screens/seller/seller_signup.dart';
@@ -33,9 +34,10 @@ class _SLoginPageState extends State<SLoginPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: 250,
-                height: 250,
+              Container(//color: Colors.red,
+
+                width: 200,
+                height: 200,
                 child: Image.asset(Images.logo),
               ),
               const Align(
@@ -44,16 +46,16 @@ class _SLoginPageState extends State<SLoginPage> {
 
                   "Reconnect with your customers!",
                   style: TextStyle(
-                    fontSize: 25,
+                    fontSize: Sizes.fontSizeLg,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              const SizedBox(height: 10,),
+              //const SizedBox(height: 10,),
               const Text(
                 "Log in to your seller dashboard to engage with shoppers and grow your brand.",
                 style: TextStyle(
-                  //fontSize: 15,
+                 // fontSize: Sizes.fontSizeMd,
                   //fontWeight: FontWeight.bold,
                   color: Colors.grey,
                 ),

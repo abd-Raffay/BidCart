@@ -19,7 +19,7 @@ class StoresScreen extends StatelessWidget {
               Tab(child: Text("All")),
               Tab(child: Text("Pending")),
               Tab(child: Text("Approved")),
-              Tab(child: Text("Deleted")),
+              Tab(child: Text("Rejected")),
               Tab(child: Text("Blocked")),
             ],
           ),

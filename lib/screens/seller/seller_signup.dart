@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:get/get.dart';
 
+import '../../const/sizes.dart';
 import '../../repository/seller_repository/seller_login_repository.dart';
 
 
@@ -39,13 +40,13 @@ class _SSignupState extends State<SSignup> {
           Expanded(
             child:SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: Sizes.defaultSpace/2),
               child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  mainAxisSize: MainAxisSize.max,
+                  //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //mainAxisSize: MainAxisSize.max,
                   children: [
                     Container(
                       width: 200,
@@ -60,7 +61,7 @@ class _SSignupState extends State<SSignup> {
                         "Ready to start selling with us?",
                         style: TextStyle(
 
-                          fontSize: 30,
+                          fontSize: Sizes.fontSizeLg,
                           fontWeight: FontWeight.w400,
                           color: Colors.black,
                         ),
