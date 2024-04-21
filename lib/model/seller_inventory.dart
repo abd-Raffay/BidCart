@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class SellerProductModel {
+class Inventory {
   String? inventoryid;
   String productid;
   String name;
@@ -13,7 +13,7 @@ class SellerProductModel {
   String dateofexpiry;
   // Correctly defined as List<String>
 
-  SellerProductModel({
+  Inventory({
     required this.inventoryid,
     required this.productid,
     required this.name,
@@ -41,7 +41,7 @@ class SellerProductModel {
     };
   }
 
-  static SellerProductModel empty() => SellerProductModel(
+  static Inventory empty() => Inventory(
     productid: "",
     inventoryid: "",
     name: "",
@@ -56,9 +56,9 @@ class SellerProductModel {
 
   // MAP Products Fetch From FIREBASE to Model
 
-  factory SellerProductModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
+  factory Inventory.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
     final data = document.data()!;
-    return SellerProductModel(
+    return Inventory(
       inventoryid: document.id,
       productid: data["productid"] ?? "", // Use empty string as default value if null
       name: data["name"] ?? "", // Use empty string as default value if null

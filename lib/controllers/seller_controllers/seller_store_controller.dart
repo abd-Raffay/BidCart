@@ -2,7 +2,7 @@ import 'package:bidcart/const/images.dart';
 import 'package:bidcart/controllers/seller_controllers/seller_home_controller.dart';
 import 'package:bidcart/model/product_model.dart';
 import 'package:bidcart/model/seller_model.dart';
-import 'package:bidcart/model/seller_products_model.dart';
+import 'package:bidcart/model/seller_inventory.dart';
 import 'package:bidcart/repository/seller_repository/seller_store_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -86,11 +86,11 @@ class SellerStoreController extends GetxController{
   int index=0;
 
   List unfilteredList = [];
-  List<SellerProductModel> filteredList = [];
+  List<Inventory> filteredList = [];
 
-  late RxList<SellerProductModel> allproducts = <SellerProductModel>[].obs;
-  late RxList<SellerProductModel> inventory = <SellerProductModel>[].obs;
-  final RxList<SellerProductModel> rxSellerProducts = RxList<SellerProductModel>();
+  late RxList<Inventory> allproducts = <Inventory>[].obs;
+  late RxList<Inventory> inventory = <Inventory>[].obs;
+  final RxList<Inventory> rxSellerProducts = RxList<Inventory>();
 
 
   Future<void> setIndex(int indexx) async {
@@ -105,7 +105,7 @@ class SellerStoreController extends GetxController{
 
   }
 
-  addProducttoInventory(SellerProductModel product){
+  addProducttoInventory(Inventory product){
 
     homeController.rxInventory.add(product);
 
@@ -172,9 +172,9 @@ class SellerStoreController extends GetxController{
 
     print("products.length ${products.length}");
 
-    final List<SellerProductModel> sellerProducts = products.map((product) {
+    final List<Inventory> sellerProducts = products.map((product) {
       // Convert ProductModel to SellerProductModel
-      return SellerProductModel(
+      return Inventory(
         // Assign relevant fields accordingly
         name: product.name,
         imageUrl: product.imageUrl,

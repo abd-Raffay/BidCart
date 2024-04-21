@@ -3,6 +3,7 @@ import 'package:bidcart/repository/exception/exceptions.dart';
 import 'package:bidcart/repository/seller_repository/seller_login_repository.dart';
 import 'package:bidcart/screens/common/onboarding.dart';
 import 'package:bidcart/screens/seller/approval_screen.dart';
+import 'package:bidcart/screens/seller/seller_blocked_screen.dart';
 import 'package:bidcart/screens/seller/seller_login.dart';
 import 'package:bidcart/screens/seller/seller_mail_verfication.dart';
 import 'package:bidcart/screens/seller/seller_rejected_screen.dart';
@@ -46,13 +47,14 @@ class SellerAuthenticationRepository extends GetxController {
       if (await sellerrepo.getSeller(user.email.toString())==user.email.toString()) {
         //check if the seller is approved
         if(await sellerrepo.getApprovalStatus(user.uid)=="approved"){
-          //Get.offAll(() => const SellerHomeScreen());
-          Get.to(()=>SellerNavigationBar());
+          Get.to(()=>const SellerNavigationBar());
         }else if(await sellerrepo.getApprovalStatus(user.uid)=="rejected"){
-          Get.offAll(()=> RejectionScreen());
+          Get.to(()=> const RejectionScreen());
+        }else if(await sellerrepo.getApprovalStatus(user.uid)=="blocked"){
+          Get.to(()=> const SellerBlockScreen());
         }
         else{
-          Get.offAll(() => const ApprovalScreen());
+          Get.to(() => const ApprovalScreen());
         }
       }else{
         Get.offAll(()=> SLoginPage());
@@ -78,9 +80,9 @@ class SellerAuthenticationRepository extends GetxController {
 
       sellerrepo.createUser(seller);
       firebaseUser.value != null
-          ? Get.offAll(() => OnBoarding())
+          ? Get.offAll(() => const OnBoarding())
           //: Get.to(() => SellerHomeScreen());
-      :Get.to(()=>SellerNavigationBar());
+      :Get.to(()=>const SellerNavigationBar());
 
 
     } on FirebaseAuthException catch (e) {

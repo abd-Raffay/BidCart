@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 
 class SellerSignUpController extends GetxController {
   static SellerSignUpController get instance => Get.find();
-
+ final sellerAuthRepo=Get.put(SellerAuthenticationRepository());
 
 
 
@@ -24,10 +24,9 @@ class SellerSignUpController extends GetxController {
 
   Future<void> createUser(SellerModel seller,String password) async {
     print("*********************************************************Seller signup controller*********************************************************************");
-    Get.put(SellerAuthenticationRepository());
-    final auth = SellerAuthenticationRepository.instance;
-    await auth.createUserWithEmailAndPassword(seller.email, password,seller);
-    auth.setInitialScreen(auth.firebaseUser.value);
+
+    await sellerAuthRepo.createUserWithEmailAndPassword(seller.email, password,seller);
+   sellerAuthRepo.setInitialScreen(sellerAuthRepo.firebaseUser.value);
 
       print("*************************SellerAuthenticationRepository.instance**********************");
 

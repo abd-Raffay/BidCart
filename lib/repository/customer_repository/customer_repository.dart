@@ -1,5 +1,4 @@
 import 'package:bidcart/model/customer_model.dart';
-import 'package:bidcart/model/product_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,7 +7,7 @@ class CustomerRepository extends GetxController {
   static CustomerRepository get instance => Get.find();
 
   final _db = FirebaseFirestore.instance;
-  late CustomerModel customer=CustomerModel(id: "", name: "", email: "", phone: "");
+  late CustomerModel customer;
 
 
   @override

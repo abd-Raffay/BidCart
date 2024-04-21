@@ -20,16 +20,23 @@ class SellerRequestScreen extends StatelessWidget {
         padding: const EdgeInsets.all(Sizes.defaultSpace / 2),
         child: Obx(() {
           final orderRequests = requestController.rxOrderRequests;
-          return ListView.separated(
-            itemCount: orderRequests.length,
-            separatorBuilder: (BuildContext context, int index) => SizedBox(height: Sizes.defaultSpace),
-            itemBuilder: (BuildContext context, int index) {
-              final request = orderRequests[index];
-              return SellerRequestCards(
-                userName: request.customerName,
-                date: request.dateTime.toString(),
-              );
-            },
+          return GestureDetector(
+
+            child: ListView.separated(
+              itemCount: orderRequests.length,
+              separatorBuilder: (BuildContext context, int index) => SizedBox(height: Sizes.defaultSpace),
+              itemBuilder: (BuildContext context, int index) {
+                final request = orderRequests[index];
+
+                return SellerRequestCards(
+                  requests:request,
+                  index:index,
+                  total:requestController.totalProducts(index),
+                    available:requestController.totalAvailableProducts(index),
+
+                );
+              },
+            ),
           );
         }),
       ),

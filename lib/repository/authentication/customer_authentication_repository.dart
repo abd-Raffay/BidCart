@@ -59,13 +59,13 @@ class CustomerAuthenticationRepository extends GetxController {
           email: email, password: password);
       customer.id = (await _auth.currentUser?.uid)!;
 
-      if(firebaseUser.value!.emailVerified){
+      //if(firebaseUser.value!.emailVerified){
         customerrepo.createUser(customer);
-      }
+      //}
 
       firebaseUser.value != null
           ? Get.offAll(() => OnBoarding())
-          //: Get.to(() => CustomerScreen());
+
             : Get.to(() =>CustomerNavigationBar() );
     } on FirebaseAuthException catch (e) {
       final ex = Exceptions.code(e.code);

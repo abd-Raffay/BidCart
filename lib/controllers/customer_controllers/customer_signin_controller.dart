@@ -25,8 +25,7 @@ class CustomerSignInController extends GetxController {
     } else {
 
       final auth = CustomerAuthenticationRepository.instance;
-      await CustomerAuthenticationRepository.instance
-          .loginUserWithEmailAndPassword(email, password);
+      await customerAuthRepo.loginUserWithEmailAndPassword(email, password);
       auth.setIntialScreen(auth.firebaseUser.value);
     }
   }
@@ -42,7 +41,7 @@ class CustomerSignInController extends GetxController {
   }
 
   void Logout(){
-    CustomerAuthenticationRepository.instance.logout();
+    customerAuthRepo.logout();
     Get.offAll(()=> const OnBoarding());
   }
 }

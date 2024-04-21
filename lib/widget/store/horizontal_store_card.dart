@@ -12,24 +12,14 @@ import 'package:intl/intl.dart';
 class HorizontalStoreCard extends StatelessWidget {
   const HorizontalStoreCard({
     super.key,
-   // required this.storeName,
-    //required this.location,
-    //required this.Status,
-    //required this.storeid,
-    //required this.userid,
+
     required this.tab,
-    //required this.dateTime,
-    required this.seller, // Add this line
+    required this.seller,
   });
 
   final SellerModel seller;
-  //final String storeName;
- // final String location;
-  //final String Status;
-  //final String storeid;
-  //final String userid;
+
   final String tab;
-  //final Timestamp dateTime;
 
   Color _getStatusColor(String status) {
     switch (status) {
@@ -94,16 +84,24 @@ class HorizontalStoreCard extends StatelessWidget {
                         children: [
                           const Icon(Icons.store),
                           const SizedBox(width:3),
-                          Text(seller.storename,style: const TextStyle(fontSize: Sizes.fontSizeLg),),
+                          Text(seller.storename.length > 31 ? '${seller.storename.substring(0, 25)}...' : seller.storename,style: const TextStyle(fontSize: Sizes.fontSizeLg),),
+
                         ],
                       ),
 
                       Row(
                         children: [
-                          Icon(Icons.location_on_rounded,color: Colors.red.shade400,),
-                          Text(seller.address,style: const TextStyle(color:  Colors.grey),),
+                          Icon(Icons.location_on_rounded, color: Colors.red.shade400),
+                         Text(
+                              seller.address.length > 11 ? '${seller.address.substring(0, 31)}...' : seller.address,
+                              style: const TextStyle(color: Colors.grey),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+
                         ],
                       ),
+
 
                       Row(
                         children: [

@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 class SellerApprovalController extends GetxController {
   late Timer _timer;
 
+  final sellerAuthRepo=Get.put(SellerAuthenticationRepository());
+
   @override
   void onInit() {
     super.onInit();
@@ -19,25 +21,25 @@ class SellerApprovalController extends GetxController {
       final user = FirebaseAuth.instance.currentUser;
       if (user!.emailVerified) {
         timer.cancel();
-        SellerAuthenticationRepository.instance.setInitialScreen(user);
+        sellerAuthRepo.setInitialScreen(user);
       }
     });
   }
 
   Future<void> manuallyCheckStoreVerificationStatus() async {
     String status =
-    await SellerAuthenticationRepository.instance.GetApprovalStatus();
+    await sellerAuthRepo.GetApprovalStatus();
     final user = FirebaseAuth.instance.currentUser;
 
     if (status == "approved") {
-      SellerAuthenticationRepository.instance.setInitialScreen(user);
+      sellerAuthRepo.setInitialScreen(user);
     }
     if (status == "rejected") {
-      SellerAuthenticationRepository.instance.setInitialScreen(user);
+      sellerAuthRepo.setInitialScreen(user);
     }
   }
 
   Future<void> Logout() async {
-    await SellerAuthenticationRepository.instance.logout();
+    await sellerAuthRepo.logout();
   }
 }

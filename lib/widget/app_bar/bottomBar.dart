@@ -1,6 +1,6 @@
 import 'package:bidcart/controllers/customer_controllers/customer_cart_controller.dart';
 import 'package:bidcart/controllers/seller_controllers/seller_store_controller.dart';
-import 'package:bidcart/model/seller_products_model.dart';
+import 'package:bidcart/model/seller_inventory.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,7 +23,7 @@ class BottomBar extends StatelessWidget {
   final int? quantity;
  final String functionality;
 
- final SellerProductModel? product;
+ final Inventory? product;
 
 
   @override

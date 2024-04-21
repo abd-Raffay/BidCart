@@ -1,7 +1,7 @@
 import 'package:bidcart/model/cart_model.dart';
 import 'package:bidcart/model/product_model.dart';
 import 'package:bidcart/model/request_model.dart';
-import 'package:bidcart/model/seller_products_model.dart';
+import 'package:bidcart/model/seller_inventory.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
@@ -31,7 +31,7 @@ class SellerStoreRepository extends GetxController{
     }
   }
 
-  Future<void> saveToInventory(SellerProductModel product) async {
+  Future<void> saveToInventory(Inventory product) async {
     try {
 
       final CollectionReference inventoryCollection = _db.collection('inventory');
@@ -68,7 +68,7 @@ class SellerStoreRepository extends GetxController{
     }
   }
 
-  Future<List<SellerProductModel>> getProductsFromInventory() async {
+  Future<List<Inventory>> getProductsFromInventory() async {
     try {
       final String? userId = _auth.currentUser?.uid;
       if (userId != null) {
@@ -79,13 +79,13 @@ class SellerStoreRepository extends GetxController{
 
         final snapshot = await productsCollection.get();
 
-        List<SellerProductModel> products = [];
+        List<Inventory> products = [];
         //print()
 
         snapshot.docs.forEach((doc) {
           print(doc.data());
           print(doc.id);
-          SellerProductModel product = SellerProductModel.fromSnapshot(doc as DocumentSnapshot<Map<String, dynamic>>);
+          Inventory product = Inventory.fromSnapshot(doc as DocumentSnapshot<Map<String, dynamic>>);
           products.add(product);
           print(product.toJson());
         });

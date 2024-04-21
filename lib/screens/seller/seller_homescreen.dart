@@ -1,7 +1,7 @@
 import 'package:bidcart/const/images.dart';
 import 'package:bidcart/const/sizes.dart';
 import 'package:bidcart/controllers/seller_controllers/seller_home_controller.dart';
-import 'package:bidcart/model/seller_products_model.dart';
+import 'package:bidcart/model/seller_inventory.dart';
 import 'package:bidcart/repository/authentication/customer_authentication_repository.dart';
 import 'package:bidcart/repository/authentication/seller_authentication_repository.dart';
 import 'package:bidcart/screens/common/grid_layout.dart';
@@ -47,7 +47,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                         mainAxisExtent: 250,
                         itemCount: homeController.rxInventory.length,
                         itemBuilder: (context, index) {
-                          SellerProductModel product =
+                          Inventory product =
                           homeController.rxInventory[index];
                           return GestureDetector(
                             onTap: () {

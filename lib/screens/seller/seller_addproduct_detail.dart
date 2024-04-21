@@ -2,7 +2,7 @@ import 'package:bidcart/const/images.dart';
 import 'package:bidcart/const/sizes.dart';
 import 'package:bidcart/controllers/customer_controllers/customer_cart_controller.dart';
 import 'package:bidcart/controllers/seller_controllers/seller_store_controller.dart';
-import 'package:bidcart/model/seller_products_model.dart';
+import 'package:bidcart/model/seller_inventory.dart';
 import 'package:bidcart/widget/app_bar/appBar.dart';
 import 'package:bidcart/widget/app_bar/bottomBar.dart';
 import 'package:bidcart/widget/app_bar/cart_counter_icon.dart';
@@ -27,7 +27,7 @@ class SellerProductDetail extends StatefulWidget {
 
 
   List<String>? size;
-  final SellerProductModel product;
+  final Inventory product;
   //final List<String> sizes;
 
 }
@@ -45,7 +45,7 @@ class _SellerProductDetailState extends State<SellerProductDetail> {
       appBar: TAppBar(
         showBackArrow: true,
         title: Text(widget.product.name),
-        actions: const [CartCounterIcon()],
+        //actions: const [CartCounterIcon()],
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -61,7 +61,7 @@ class _SellerProductDetailState extends State<SellerProductDetail> {
                       RoundedImage(
                         imageUrl: widget.product.imageUrl,
                         isNetworkImage: true,
-                        height: 300,
+                        height: 200,
                       ),
                       const RoundedImage(
                         imageUrl: Images.split,

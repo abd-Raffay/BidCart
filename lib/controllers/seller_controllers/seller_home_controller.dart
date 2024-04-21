@@ -1,4 +1,4 @@
-import 'package:bidcart/model/seller_products_model.dart';
+import 'package:bidcart/model/seller_inventory.dart';
 import 'package:bidcart/repository/seller_repository/seller_store_repository.dart';
 import 'package:bidcart/widget/products/product_cards/product_card_vertical.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +16,11 @@ class SellerHomeController extends GetxController {
     super.onInit();
   }
 
-  late Future<List<SellerProductModel>> inventory;
-  RxList<SellerProductModel> rxInventory = <SellerProductModel>[].obs;
+  late Future<List<Inventory>> inventory;
+  RxList<Inventory> rxInventory = <Inventory>[].obs;
   int index = 0;
 
-  Future<List<SellerProductModel>> getInventory() async {
+  Future<List<Inventory>> getInventory() async {
     inventory = storeRepo.getProductsFromInventory();
     rxInventory.assignAll(await inventory);
     print(rxInventory.length);

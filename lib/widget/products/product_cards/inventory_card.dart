@@ -1,5 +1,5 @@
 import 'package:bidcart/controllers/seller_controllers/seller_home_controller.dart';
-import 'package:bidcart/model/seller_products_model.dart';
+import 'package:bidcart/model/seller_inventory.dart';
 import 'package:bidcart/widget/container/circular_container.dart';
 import 'package:bidcart/widget/container/rounded_container.dart';
 import 'package:bidcart/widget/container/round_image.dart';
@@ -15,7 +15,7 @@ class InventoryCardVertical extends StatelessWidget {
     required this.isNetworkImage,
   }) : super(key: key);
 
-  final SellerProductModel product;
+  final Inventory product;
   final bool isNetworkImage;
 
   @override

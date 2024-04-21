@@ -9,6 +9,8 @@ import 'package:get/get.dart';
 class SellerLogInController extends GetxController {
   static SellerLogInController get instance => Get.find();
 
+  final sellerAuthRepo=Get.put(SellerAuthenticationRepository());
+
   late final Rx<User?> firebaseUser;
 
   //TextFeild Controllers
@@ -22,9 +24,9 @@ class SellerLogInController extends GetxController {
   Future<void> loginUser (String email, String password) async {
 
     Get.put(SellerAuthenticationRepository());
-    final auth = SellerAuthenticationRepository.instance;
-    await SellerAuthenticationRepository.instance.loginUserWithEmailAndPassword(email, password);
-    auth.setInitialScreen(auth.firebaseUser.value);
+
+    await sellerAuthRepo.loginUserWithEmailAndPassword(email, password);
+    sellerAuthRepo.setInitialScreen(sellerAuthRepo.firebaseUser.value);
 
   }
 

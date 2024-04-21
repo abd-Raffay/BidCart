@@ -35,11 +35,11 @@ class CustomerMailVerificationController extends GetxController{
     _timer=Timer.periodic(const Duration(seconds: 5), (timer) {
       FirebaseAuth.instance.currentUser?.reload();
       final user=FirebaseAuth.instance.currentUser;
-      if(user!.emailVerified){
-        timer.cancel();
-        CustomerAuthenticationRepository.instance.setIntialScreen(user);
+      //if(user!.emailVerified){
+      //  timer.cancel();
+     //   CustomerAuthenticationRepository.instance.setIntialScreen(user);
 
-      }
+      //}
     });
   }
 

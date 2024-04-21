@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 class SellerMailVerificationController extends GetxController{
  late Timer _timer;
 
+ final sellerAuthRepo=Get.put(SellerAuthenticationRepository());
+
   @override
    void onInit(){
     super.onInit();
@@ -18,7 +20,7 @@ class SellerMailVerificationController extends GetxController{
 
   Future<void> sendVerificationEmail() async {
     try{
-      await SellerAuthenticationRepository.instance.sendEmailVerification();
+      await sellerAuthRepo.sendEmailVerification();
 
     }catch (e){
 
@@ -38,7 +40,7 @@ class SellerMailVerificationController extends GetxController{
       final user=FirebaseAuth.instance.currentUser;
       if(user!.emailVerified){
         timer.cancel();
-        SellerAuthenticationRepository.instance.setInitialScreen(user);
+        sellerAuthRepo.setInitialScreen(user);
 
       }
     });
@@ -48,7 +50,7 @@ class SellerMailVerificationController extends GetxController{
     FirebaseAuth.instance.currentUser?.reload();
     final user=FirebaseAuth.instance.currentUser;
     if(user!.emailVerified){
-      SellerAuthenticationRepository.instance.setInitialScreen(user);
+      sellerAuthRepo.setInitialScreen(user);
     }
   }
 
