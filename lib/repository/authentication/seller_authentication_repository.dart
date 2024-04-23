@@ -47,7 +47,7 @@ class SellerAuthenticationRepository extends GetxController {
       if (await sellerrepo.getSeller(user.email.toString())==user.email.toString()) {
         //check if the seller is approved
         if(await sellerrepo.getApprovalStatus(user.uid)=="approved"){
-          Get.to(()=>const SellerNavigationBar());
+          Get.offAll(()=>const SellerNavigationBar());
         }else if(await sellerrepo.getApprovalStatus(user.uid)=="rejected"){
           Get.to(()=> const RejectionScreen());
         }else if(await sellerrepo.getApprovalStatus(user.uid)=="blocked"){

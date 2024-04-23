@@ -13,36 +13,23 @@ class SellerRequestController extends GetxController {
   @override
   Future<void> onInit() async {
     super.onInit();
-    await getRequests();
+  getRequests();
   }
 
-  Future<RxList<RequestData>> getRequests() async {
+ RxList<RequestData> getRequests()   {
     // Listen to changes in the order requests
+
      storeRepo.getOrderRequests().listen((requests) {
       orderRequests = requests;
       rxOrderRequests.assignAll(orderRequests);
-      rxOrderRequests.sort((request1, request2) {
-        try {
-          // Parse the date strings into DateTime objects
-          DateTime parsedDate1 = DateTime.parse(request1.dateTime);
-          DateTime parsedDate2 = DateTime.parse(request2.dateTime);
-
-          // Debugging print to verify parsed dates
-          //print("Parsed Date 1: $parsedDate1, Parsed Date 2: $parsedDate2");
-
-          // Compare the DateTime objects
-          return parsedDate2.compareTo(parsedDate1);
-        } catch (e) {
-          // Error handling in case of invalid date strings
-          print("Error parsing dates: $e");
-          // Return 0 to maintain the current order if parsing fails
-          return 0;
-        }
-      });
     });
+
+
 
     return rxOrderRequests;
   }
+
+
 
   totalAvailableProducts(int index) {
     int availableProducts = 0;

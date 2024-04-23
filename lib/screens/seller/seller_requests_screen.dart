@@ -1,5 +1,6 @@
 import 'package:bidcart/const/sizes.dart';
 import 'package:bidcart/controllers/seller_controllers/seller_request_controller.dart';
+import 'package:bidcart/model/request_model.dart';
 import 'package:bidcart/widget/app_bar/appBar.dart';
 import 'package:bidcart/widget/seller/requestcards.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,6 +11,7 @@ class SellerRequestScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final requestController = Get.put(SellerRequestController());
+    late RxList<RequestData> orderRequests = <RequestData>[].obs;
 
     return Scaffold(
       appBar: const TAppBar(
@@ -19,7 +21,7 @@ class SellerRequestScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(Sizes.defaultSpace / 2),
         child: Obx(() {
-          final orderRequests = requestController.rxOrderRequests;
+          orderRequests.assignAll(requestController.getRequests());
           return GestureDetector(
 
             child: ListView.separated(

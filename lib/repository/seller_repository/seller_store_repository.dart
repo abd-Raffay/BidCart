@@ -140,12 +140,31 @@ class SellerStoreRepository extends GetxController{
           customerName: customerName,
           dateTime: dateTime,
         );
-      }).toList());
+      }).toList()
+      // Sort the list of RequestData objects by date
+        ..sort((request1, request2) {
+          try {
+            // Parse the date strings into DateTime objects
+            final parsedDate1 = DateTime.parse(request1.dateTime);
+            final parsedDate2 = DateTime.parse(request2.dateTime);
+
+            // Compare the DateTime objects
+            return parsedDate2.compareTo(parsedDate1);
+          } catch (e) {
+            // Error handling in case of invalid date strings
+            print("Error parsing dates: $e");
+            // Return 0 to maintain the current order if parsing fails
+            return 0;
+          }
+        })
+      );
     } catch (e) {
       print('Error getting order requests: $e');
       return Stream.empty();
     }
   }
+
+
 
 
 
