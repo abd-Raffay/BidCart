@@ -146,39 +146,39 @@ class _SLoginPageState extends State<SLoginPage> {
 
                           )
                       ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.cyan,
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                            vertical: 20,
-                            horizontal: MediaQuery.of(context).size.width * 0.4,
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.cyan,
+                            foregroundColor: Colors.white,
+
                           ),
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              setState(() {
+                                _isLoading = true; // Show loading indicator
+                              });
+
+
+                             await controller.loginUser(
+                                controller.email.text.trim(),
+                               controller.password.text.trim(),
+                             );
+
+                              setState(() {
+                                _isLoading = false; // Hide loading indicator
+                              });
+
+
+
+                                controller.password.clear();
+
+
+                            }
+                          },
+                          child: const Text('Login'),
                         ),
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            setState(() {
-                              _isLoading = true; // Show loading indicator
-                            });
-
-
-                           await controller.loginUser(
-                              controller.email.text.trim(),
-                             controller.password.text.trim(),
-                           );
-
-                            setState(() {
-                              _isLoading = false; // Hide loading indicator
-                            });
-
-
-
-                              controller.password.clear();
-
-
-                          }
-                        },
-                        child: const Text('Login'),
                       ),
 
 
