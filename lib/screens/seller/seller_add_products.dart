@@ -35,10 +35,7 @@ class _AddProductsState extends State<AddProducts> {
               title: Text("Products"),
               //actions: [CartCounterIcon()],
             ),
-            const SearchContainer(
-              text: 'Search here',
-              showBorder: false,
-            ),
+
             const SizedBox(
               height: 16,
             ),

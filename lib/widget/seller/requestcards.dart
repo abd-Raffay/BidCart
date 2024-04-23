@@ -78,7 +78,7 @@ class SellerRequestCards extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    if (available != null && available != 0) // Render buttons only if available is not null and not 0
+                    if (available != 0) // Render buttons only if available is not null and not 0
                       ElevatedButton(
                         onPressed: () {
                           // Handle accept action
@@ -91,9 +91,9 @@ class SellerRequestCards extends StatelessWidget {
                         ),
                         child: const Text("Accept"),
                       ),
-                    if (available != null && available != 0) // Render spacing only if available is not null and not 0
+                    if (available != 0) // Render spacing only if available is not null and not 0
                       const SizedBox(width: 8),
-                    if (available != null && available != 0) // Render buttons only if available is not null and not 0
+                    if (available != 0) // Render buttons only if available is not null and not 0
                       ElevatedButton(
                         onPressed: () {
                           // Handle reject action

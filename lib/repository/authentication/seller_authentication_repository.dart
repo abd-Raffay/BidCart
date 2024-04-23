@@ -100,41 +100,41 @@ class SellerAuthenticationRepository extends GetxController {
     }
   }
 
-  Future<void> loginUserWithEmailAndPassword(
-      String email, String password) async {
+  Future<bool> loginUserWithEmailAndPassword(String email, String password) async {
     try {
-      String emailformdb = await sellerrepo.getSeller(email);
-      //print("Email from customerrepo ${emailformdb}");
-      print("Coomparing Input Email: ${email} and DB Email ${emailformdb}");
-      if (email == emailformdb) {
+      String emailFromDB = await sellerrepo.getSeller(email);
+      print("Comparing Input Email: $email and DB Email $emailFromDB");
 
-        await _auth.signInWithEmailAndPassword(
-            email: email, password: password);
-      }
-      else{
-        Get.snackbar("User Not Found", "User the the provided Email doesn't exists",
-            snackPosition: SnackPosition.TOP,
-            backgroundColor: Colors.red[800],
-            colorText: Colors.white);
-      }
-
-    } on FirebaseAuthException catch (e) {
-      final ex = Exceptions.code(e.code);
-      Get.snackbar(e.code, ex.toString(),
+      if (email == emailFromDB) {
+        await _auth.signInWithEmailAndPassword(email: email, password: password);
+        return true; // Login successful
+      } else {
+        Get.snackbar(
+          "User Not Found",
+          "User with the provided Email doesn't exist",
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.red[800],
-          colorText: Colors.white);
-
-      // print('FIREBASE AUTH EXCEPTION - ${ex.message}');
+          colorText: Colors.white,
+        );
+        return false; // User not found
+      }
+    } on FirebaseAuthException catch (e) {
+      final ex = Exceptions.code(e.code);
+      Get.snackbar(
+        e.code,
+        ex.toString(),
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red[800],
+        colorText: Colors.white,
+      );
+      return false;
       throw ex;
-
-      // TODO
     } catch (_) {
-      // final ex = SignUpWithEmailAndPasswordFailure.code(e.code);
-      //print('FIREBASE AUTH EXCEPTION - ${ex.message}');
-      //throw ex;
+      // Handle other exceptions here
+      return false;
     }
   }
+
 
 
 

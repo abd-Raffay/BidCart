@@ -22,11 +22,12 @@ class CustomerSignInController extends GetxController {
     print("Email = ${email} && password = ${password}");
     if (email == "admin@gmail.com" && password == "admin") {
       Get.offAll(()=>const AdminNavigationBar());
-    } else {
+    } else {bool status =
+    await customerAuthRepo.loginUserWithEmailAndPassword(email, password);
+    if (status == true) {
+      customerAuthRepo.setIntialScreen(customerAuthRepo.firebaseUser.value,);
 
-      final auth = CustomerAuthenticationRepository.instance;
-      await customerAuthRepo.loginUserWithEmailAndPassword(email, password);
-      auth.setIntialScreen(auth.firebaseUser.value);
+    }
     }
   }
 

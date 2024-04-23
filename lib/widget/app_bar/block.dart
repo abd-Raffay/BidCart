@@ -27,6 +27,7 @@ class BlockSeller extends StatelessWidget {
             adminController.setStatus(storeId, "blocked"); // Block the seller
             status.value = "blocked";
           }
+          Get.back();
         },
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.all(10),

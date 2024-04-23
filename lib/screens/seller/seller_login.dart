@@ -2,6 +2,7 @@ import 'package:bidcart/const/images.dart';
 import 'package:bidcart/const/sizes.dart';
 import 'package:bidcart/controllers/seller_controllers/seller_login_controller.dart';
 import 'package:bidcart/screens/common/forget_password.dart';
+import 'package:bidcart/screens/common/loading.dart';
 import 'package:bidcart/screens/seller/seller_signup.dart';
 import 'package:bidcart/widget/app_bar/appBar.dart';
 import 'package:flutter/material.dart';
@@ -19,13 +20,14 @@ class SLoginPage extends StatefulWidget {
 class _SLoginPageState extends State<SLoginPage> {
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
-
+  bool _isLoading = false;
   final controller = Get.put(SellerLogInController());
 
   @override
   Widget build(BuildContext context) {
+    final logInController=Get.put(SellerLogInController());
     return Scaffold(
-      appBar: TAppBar(showBackArrow: true,),
+      appBar: const TAppBar(showBackArrow: true,),
       body: SingleChildScrollView(
 
         child: Padding(
@@ -144,25 +146,43 @@ class _SLoginPageState extends State<SLoginPage> {
 
                           )
                       ),
-                      SizedBox(
-                        width: double.infinity,
-                          child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.cyan,
-                            foregroundColor: Colors.white,
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.cyan,
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(
+                            vertical: 20,
+                            horizontal: MediaQuery.of(context).size.width * 0.4,
                           ),
-                          onPressed: () {
-                            if(_formKey.currentState!.validate()){
-                              SellerLogInController.instance.loginUser(controller.email.text.trim(), controller.password.text.trim());
+                        ),
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            setState(() {
+                              _isLoading = true; // Show loading indicator
+                            });
+
+
+                           await controller.loginUser(
+                              controller.email.text.trim(),
+                             controller.password.text.trim(),
+                           );
+
+                            setState(() {
+                              _isLoading = false; // Hide loading indicator
+                            });
+
+
 
                               controller.password.clear();
-                              //controller.email.clear();
-                             // controller.password.clear();
-                            }
-                          },
-                          child: const Text('Login'),
-                        ),
+
+
+                          }
+                        },
+                        child: const Text('Login'),
                       ),
+
+
+
                     ],
                   ),
                 ),
@@ -175,9 +195,8 @@ class _SLoginPageState extends State<SLoginPage> {
 
               TextButton(
                   onPressed: () {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (_) => const SSignup(),
-                    ));
+                    Get.to(const SSignup());
+
                   },
                   child: const Text.rich(TextSpan(
                       text: "Don't have an Account? ",
@@ -191,7 +210,9 @@ class _SLoginPageState extends State<SLoginPage> {
           ),
         ),
       ),
+      floatingActionButton: _isLoading ? LoadingScreen() : null, // Show loading screen overlay conditionally
     );
+
   }
 }
 

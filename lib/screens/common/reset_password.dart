@@ -54,7 +54,7 @@ class ResetPassword extends StatelessWidget {
                   child: ElevatedButton(
 
                     onPressed: () {
-                      Get.offAll(()=> const CustomerLoginPage());
+                      Get.back();
                     },
                     child: const Text(
                       "Done",

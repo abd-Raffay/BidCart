@@ -1,7 +1,6 @@
 import 'package:bidcart/const/images.dart';
 import 'package:bidcart/controllers/seller_controllers/seller_home_controller.dart';
 import 'package:bidcart/model/product_model.dart';
-import 'package:bidcart/model/seller_model.dart';
 import 'package:bidcart/model/seller_inventory.dart';
 import 'package:bidcart/repository/seller_repository/seller_store_repository.dart';
 import 'package:flutter/material.dart';

@@ -41,7 +41,6 @@ class StoresScreen extends StatelessWidget {
                   return ListView.builder(
                     itemCount: sellers.length,
                     itemBuilder: (context, index) {
-                      final seller = sellers[index];
                       return HorizontalStoreCard(
                         seller: sellers[index],
                         tab: "all",

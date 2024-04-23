@@ -2,6 +2,7 @@ import 'package:bidcart/const/images.dart';
 import 'package:bidcart/const/sizes.dart';
 import 'package:bidcart/controllers/customer_controllers/customer_signin_controller.dart';
 import 'package:bidcart/screens/common/forget_password.dart';
+import 'package:bidcart/screens/common/loading.dart';
 import 'package:bidcart/widget/app_bar/appBar.dart';
 import 'package:bidcart/widget/container/round_image.dart';
 import 'package:flutter/material.dart';
@@ -20,11 +21,14 @@ class CustomerLoginPage extends StatefulWidget {
 class CustomerLoginPageState extends State<CustomerLoginPage> {
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
+  bool _isLoading = false;
 
-  final signinController = Get.put(CustomerSignInController());
+
 
   @override
   Widget build(BuildContext context) {
+    final signinController = Get.put(CustomerSignInController());
+
     return  Scaffold(
       appBar: const TAppBar(showBackArrow: true,),
       body: SingleChildScrollView(
@@ -144,17 +148,36 @@ class CustomerLoginPageState extends State<CustomerLoginPage> {
                             backgroundColor: Colors.cyan,
                             foregroundColor: Colors.white,
                           ),
-                          onPressed: () {
-                            if(_formKey.currentState!.validate()){
-                              CustomerSignInController.instance.loginUser(signinController.email.text.trim(), signinController.password.text.trim());
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              // Show loading indicator
+                              setState(() {
+                                _isLoading = true; // Show loading indicator
+                              });
+                              // Call login asynchronously
+                              await signinController.loginUser(
+                                  signinController.email.text.trim(),
+                                  signinController.password.text.trim(),
+                              );
+                              setState(() {
+                                _isLoading = false; // Show loading indicator
+                              });
 
-                              signinController.email.clear();
-                              signinController.password.clear();
+                              // Hide loading indicator
+
+
+
+                                // Clear fields
+                                signinController.email.clear();
+                                signinController.password.clear();
+                                // Navigate to next screen or perform any other action
+
                             }
                           },
                           child: const Text('Login'),
                         ),
                       ),
+
                     ],
                   ),
                 ),
@@ -180,6 +203,7 @@ class CustomerLoginPageState extends State<CustomerLoginPage> {
           ),
         ),
       ),
+      floatingActionButton: _isLoading ? LoadingScreen() : null,
     );
   }
 }

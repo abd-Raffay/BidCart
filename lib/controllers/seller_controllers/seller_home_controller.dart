@@ -1,3 +1,4 @@
+import 'package:bidcart/model/product_model.dart';
 import 'package:bidcart/model/seller_inventory.dart';
 import 'package:bidcart/repository/seller_repository/seller_store_repository.dart';
 import 'package:bidcart/widget/products/product_cards/product_card_vertical.dart';
@@ -15,6 +16,8 @@ class SellerHomeController extends GetxController {
     await storeRepo.getOrderRequests();
     super.onInit();
   }
+  final RxString searchQuery = ''.obs;
+
 
   late Future<List<Inventory>> inventory;
   RxList<Inventory> rxInventory = <Inventory>[].obs;

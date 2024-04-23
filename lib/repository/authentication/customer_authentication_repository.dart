@@ -52,7 +52,7 @@ class CustomerAuthenticationRepository extends GetxController {
     }
   }
 
-  Future<void> createUserWithEmailAndPassword(String email, String password,
+  Future<bool> createUserWithEmailAndPassword(String email, String password,
       CustomerModel customer) async {
     try {
       await _auth.createUserWithEmailAndPassword(
@@ -61,27 +61,30 @@ class CustomerAuthenticationRepository extends GetxController {
 
       //if(firebaseUser.value!.emailVerified){
         customerrepo.createUser(customer);
+
       //}
 
       firebaseUser.value != null
           ? Get.offAll(() => OnBoarding())
 
             : Get.to(() =>CustomerNavigationBar() );
+      return true;
     } on FirebaseAuthException catch (e) {
       final ex = Exceptions.code(e.code);
       Get.snackbar(e.code, ex.toString(),
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.red[800],
           colorText: Colors.white);
+      return false ;
 
       throw ex;
     } catch (_) {
-      const ex = Exceptions();
-      throw ex;
+     return false;
+
     }
   }
 
-  Future<void> loginUserWithEmailAndPassword(String email,
+  Future<bool> loginUserWithEmailAndPassword(String email,
       String password) async {
     try {
       String emailformdb = (await customerrepo.getCustomer(email));
@@ -89,12 +92,14 @@ class CustomerAuthenticationRepository extends GetxController {
       if (email == emailformdb) {
         await _auth.signInWithEmailAndPassword(
             email: email, password: password);
+        return true;
       } else {
         Get.snackbar(
             "User Not Found", "User the the provided Email doesn't exists",
             snackPosition: SnackPosition.TOP,
             backgroundColor: Colors.red[800],
             colorText: Colors.white);
+        return false;
       }
     } on FirebaseAuthException catch (e) {
       final ex = Exceptions.code(e.code);
@@ -104,10 +109,12 @@ class CustomerAuthenticationRepository extends GetxController {
           colorText: Colors.white);
 
       // print('FIREBASE AUTH EXCEPTION - ${ex.message}');
+      return false;
       throw ex;
 
       // TODO
     } catch (_) {
+      return false;
       // final ex = SignUpWithEmailAndPasswordFailure.code(e.code);
       //print('FIREBASE AUTH EXCEPTION - ${ex.message}');
       //throw ex;
