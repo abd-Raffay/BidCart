@@ -65,8 +65,8 @@ class OrderDetails extends StatelessWidget {
                   tileColor: Colors.white.withOpacity(0.6),
                   leading: RoundedImage(
                     imageUrl: products[index].image,
-                    width: 70,
-                    height: 100,
+                    width: 50, // Adjust the width as needed
+                    height: 50, // Adjust the height as needed
                     isNetworkImage: true,
                   ),
                   title: HeadingText(title: products[index].name),
@@ -76,12 +76,14 @@ class OrderDetails extends StatelessWidget {
                       Row(
                         children: [
                           const LabelText(title: 'Qty: '),
-                          LabelText(title: products[index].quantity.toString()),
-                          const SizedBox(
-                            width: Sizes.spaceBtwItems,
+                          Flexible(
+                            child: LabelText(title: products[index].quantity.toString()),
                           ),
+
                           const LabelText(title: 'Size: '),
-                          LabelText(title: products[index].size),
+                          Flexible(
+                            child: LabelText(title: products[index].size),
+                          ),
                         ],
                       ),
                       SizedBox(height: 4), // Add some space between subtitles
@@ -90,6 +92,7 @@ class OrderDetails extends StatelessWidget {
                   ),
                 ),
               );
+
             },
           ),
         ),

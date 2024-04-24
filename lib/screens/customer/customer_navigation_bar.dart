@@ -4,7 +4,7 @@
 import 'package:bidcart/screens/customer/customer_account_screen.dart';
 
 import 'package:bidcart/screens/customer/customer_explore_screen.dart';
-import 'package:bidcart/screens/customer/customer_favourite.dart';
+import 'package:bidcart/screens/customer/customer_orderscreen.dart';
 import 'package:bidcart/screens/customer/customer_homescreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -29,7 +29,7 @@ class CustomerNavigationBar extends StatelessWidget {
           destinations: const [
             NavigationDestination(icon: Icon(Icons.home_outlined), label: "Home"),
             NavigationDestination(icon: Icon(Icons.explore_outlined), label: "Explore"),
-            NavigationDestination(icon: Icon(Icons.favorite_outline_outlined), label: "Favourite"),
+            NavigationDestination(icon: Icon(Icons.shopping_bag), label: "Order"),
             NavigationDestination(icon: Icon(Icons.account_balance_outlined), label: "Account"),
           ],
         ),
@@ -47,7 +47,7 @@ class NavigationController extends GetxController{
   final screens=[
    const CustomerScreen(),
     const CustomerExploreScreen(),
-    const CustomerFavouriteScreen(),
+    const CustomerOrderScreen(),
     const CustomerAccountScreen(),
   ];
 }

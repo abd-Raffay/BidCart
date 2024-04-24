@@ -1,6 +1,7 @@
 import 'package:bidcart/controllers/customer_controllers/customer_cart_controller.dart';
 import 'package:bidcart/controllers/seller_controllers/seller_store_controller.dart';
 import 'package:bidcart/model/seller_inventory.dart';
+import 'package:bidcart/screens/customer/customer_orderscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -42,6 +43,7 @@ class BottomBar extends StatelessWidget {
               cartController.addProductstoCart(productId, size, quantity);
             } else if (functionality == "sendrequest") {
               cartController.sendRequest();
+              Get.to(CustomerOrderScreen());
             }
             else if (functionality == "addsellerproduct") {
               if (sellerStoreController.quantityController.text.isEmpty ||

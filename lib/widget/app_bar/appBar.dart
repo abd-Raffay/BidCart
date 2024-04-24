@@ -35,9 +35,8 @@ class TAppBar extends StatelessWidget implements PreferredSizeWidget {
         centerTitle: true,
         titleTextStyle: const TextStyle(
           fontSize: 18.0,
-          fontWeight: FontWeight.w100,
+          fontWeight: FontWeight.w600,
           color: Colors.black,
-          fontFamily: "Preahvihear",
         ),
         automaticallyImplyLeading: false,
         leading: showBackArrow
