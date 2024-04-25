@@ -23,23 +23,30 @@ class SellerRequestScreen extends StatelessWidget {
         child: Obx(() {
           orderRequests.assignAll(requestController.getRequests());
           return GestureDetector(
-
-            child: ListView.separated(
+            child: orderRequests.isEmpty
+                ? Center(
+              child: Text(
+                'No request',
+                style: TextStyle(fontSize: 18),
+              ),
+            )
+                : ListView.separated(
               itemCount: orderRequests.length,
-              separatorBuilder: (BuildContext context, int index) => SizedBox(height: Sizes.defaultSpace),
+              separatorBuilder: (BuildContext context, int index) =>
+                  SizedBox(height: Sizes.defaultSpace),
               itemBuilder: (BuildContext context, int index) {
                 final request = orderRequests[index];
 
                 return SellerRequestCards(
-                  requests:request,
-                  index:index,
-                  total:requestController.totalProducts(index),
-                    available:requestController.totalAvailableProducts(index),
-
+                  requests: request,
+                  index: index,
+                  total: requestController.totalProducts(index),
+                  available: requestController.totalAvailableProducts(index),
                 );
               },
             ),
           );
+
         }),
       ),
     );
