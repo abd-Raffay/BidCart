@@ -139,12 +139,6 @@ class CartController extends GetxController {
       cartCount.value = 0;
       Get.back();
       //print("Cart Cleared ${cart.length}");
-      Get.snackbar("Success", "Cart Cleared Successfully",
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.cyan.withOpacity(0.1),
-        duration: const Duration(milliseconds: 1000),
-        colorText: Colors.cyan,
-      );
     } catch (e) {
       print("Error clearing cart: $e");
       Get.snackbar("Error", "An error occurred while clearing the cart",
@@ -156,7 +150,6 @@ class CartController extends GetxController {
     }
   }
 
-  removeProducts() {}
 
 
   increaseQuantity(id,size) {

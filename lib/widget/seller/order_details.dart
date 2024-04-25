@@ -10,12 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class OrderDetails extends StatelessWidget {
-  const OrderDetails({
+   OrderDetails({
     Key? key,
     required this.products,
+    this.showStock=true
   }) : super(key: key);
 
   final List<CartModel> products;
+  bool showStock;
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +61,7 @@ class OrderDetails extends StatelessWidget {
                   ? 'Available: ${requestController.availableProduct(products[index].id, products[index].size)}'
                   : 'Out of stock';
               Color textColor = requestController.availableProduct(products[index].id, products[index].size) > 0 ? Colors.green : Colors.red;
-              return GestureDetector(
-                onTap: () {},
-                child: ListTile(
+              return  ListTile(
                   tileColor: Colors.white.withOpacity(0.6),
                   leading: RoundedImage(
                     imageUrl: products[index].image,
@@ -86,11 +86,20 @@ class OrderDetails extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 4), // Add some space between subtitles
-                      LabelText(title: availabilityText,color: textColor,)
+                      if (showStock)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 4), // Add some space between subtitles
+                            LabelText(
+                              title: availabilityText,
+                              color: textColor,
+                            ),
+                          ],
+                        ),
                     ],
                   ),
-                ),
+
               );
 
             },

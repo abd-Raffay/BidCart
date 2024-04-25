@@ -1,5 +1,4 @@
-import 'package:bidcart/screens/admin/admin_navigationbar.dart';
-import 'package:bidcart/screens/common/internet_connectivity.dart';
+
 import 'package:bidcart/screens/customer/customer_navigation_bar.dart';
 import 'package:bidcart/model/customer_model.dart';
 import 'package:bidcart/repository/customer_repository/customer_repository.dart';
@@ -59,6 +58,8 @@ class CustomerAuthenticationRepository extends GetxController {
           email: email, password: password);
       customer.id = (await _auth.currentUser?.uid)!;
 
+
+
       //if(firebaseUser.value!.emailVerified){
         customerrepo.createUser(customer);
 
@@ -77,7 +78,7 @@ class CustomerAuthenticationRepository extends GetxController {
           colorText: Colors.white);
       return false ;
 
-      throw ex;
+
     } catch (_) {
      return false;
 
@@ -88,7 +89,7 @@ class CustomerAuthenticationRepository extends GetxController {
       String password) async {
     try {
       String emailformdb = (await customerrepo.getCustomer(email));
-      print("Email from customerrepo ${emailformdb}");
+      //print("Email from customerrepo ${emailformdb}");
       if (email == emailformdb) {
         await _auth.signInWithEmailAndPassword(
             email: email, password: password);
@@ -175,7 +176,6 @@ class CustomerAuthenticationRepository extends GetxController {
       const ex = Exceptions();
       throw ex.message;
     }
-
     }
 }
 

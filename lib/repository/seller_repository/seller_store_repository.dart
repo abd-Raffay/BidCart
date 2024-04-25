@@ -164,6 +164,76 @@ class SellerStoreRepository extends GetxController{
     }
   }
 
+  Stream<List<RequestData>> getOrder(String? userId) {
+    try {
+      final CollectionReference<Map<String, dynamic>> orderRequestCollection = FirebaseFirestore.instance.collection('orderrequest');
+
+      return orderRequestCollection.where('customerid', isEqualTo: userId).snapshots().map((snapshot) => snapshot.docs.map((doc) {
+        // Extract data from the document
+        String orderid=doc.id;
+        String customerId = doc['customerid'];
+        String customerName = doc['customerName'];
+        String dateTime = doc['dateTime'];
+        List<dynamic> itemsData = doc['items'];
+        List<CartModel> items = itemsData.map((item) => CartModel.fromJson(item)).toList();
+
+        // Create RequestData object
+        return RequestData(
+          orderId: orderid,
+          customerId: customerId,
+          items: items,
+          customerName: customerName,
+          dateTime: dateTime,
+        );
+      }).toList()
+      // Sort the list of RequestData objects by date
+        ..sort((request1, request2) {
+          try {
+            // Parse the date strings into DateTime objects
+            final parsedDate1 = DateTime.parse(request1.dateTime);
+            final parsedDate2 = DateTime.parse(request2.dateTime);
+
+            // Compare the DateTime objects
+            return parsedDate2.compareTo(parsedDate1);
+          } catch (e) {
+            // Error handling in case of invalid date strings
+            print("Error parsing dates: $e");
+            // Return 0 to maintain the current order if parsing fails
+            return 0;
+          }
+        })
+      );
+    } catch (e) {
+      print('Error getting order requests: $e');
+      return Stream.empty();
+    }
+  }
+
+
+
+    void removeOrder(String orderId) async {
+      try {
+        // Get a reference to the Firestore instance
+
+
+        // Reference the collection with the order ID
+        CollectionReference orders = _db.collection('orderrequest');
+
+        // Delete the document with the given order ID
+        await orders.doc(orderId).delete();
+
+        print('Order with ID $orderId successfully removed.');
+
+      } catch (e) {
+        print('Error removing order: $e');
+      }
+
+
+
+
+  }
+
+
 
 
 

@@ -43,7 +43,14 @@ class BottomBar extends StatelessWidget {
               cartController.addProductstoCart(productId, size, quantity);
             } else if (functionality == "sendrequest") {
               cartController.sendRequest();
-              Get.to(CustomerOrderScreen());
+              cartController.clearCart();
+              Get.to(const CustomerOrderScreen());
+              Get.snackbar("Sucess", "Product Added to Cart Successfully ",
+                snackPosition: SnackPosition.TOP,
+                backgroundColor: Colors.green.shade400,
+                duration: const Duration(milliseconds: 1500),
+                colorText: Colors.white,
+              );
             }
             else if (functionality == "addsellerproduct") {
               if (sellerStoreController.quantityController.text.isEmpty ||

@@ -16,8 +16,7 @@ class SellerRequestController extends GetxController {
   getRequests();
   }
 
- RxList<RequestData> getRequests()   {
-    // Listen to changes in the order requests
+ RxList<RequestData> getRequests()   {    // Listen to changes in the order requests
 
      storeRepo.getOrderRequests().listen((requests) {
       orderRequests = requests;
