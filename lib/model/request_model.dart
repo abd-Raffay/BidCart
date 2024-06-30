@@ -8,6 +8,8 @@ class RequestData {
   String customerName;
   String dateTime;
   String? orderId;
+  String status;
+  String? sellerId;
 
 
   RequestData({
@@ -15,7 +17,9 @@ class RequestData {
     required this.items,
     required this.customerName,
     required this.dateTime,
-    this.orderId
+    required this.status,
+    this.orderId,
+    this.sellerId
 
 
   });
@@ -27,6 +31,8 @@ class RequestData {
       "dateTime":dateTime,
       "orderId":orderId,
       "items": items.map((item) => item.toJson()).toList(),
+      "status":status,
+      "sellerId":sellerId
     };
   }
 
@@ -43,6 +49,8 @@ class RequestData {
       items: items,
       customerName: data["customerName"],
       dateTime: data["dateTime"],
+      status: data["status"],
+        sellerId:data["sellerId"],
     );
   }
 

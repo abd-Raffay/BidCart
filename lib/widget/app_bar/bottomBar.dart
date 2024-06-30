@@ -35,12 +35,17 @@ class BottomBar extends StatelessWidget {
       color: Colors.transparent,
       surfaceTintColor: Colors.transparent,
       child: ElevatedButton(
-        onPressed: () {
+        onPressed: () async {
+          print(productId);
 
+              int qty=0;
             if (functionality == "add") {
               //print("Size ${size}");
               // print("ID ${productId}");
-              cartController.addProductstoCart(productId, size, quantity);
+              qty=await cartController.getQuantity(productId, size);
+              print(qty);
+
+              cartController.addProductstoCart(productId, size, qty);
             } else if (functionality == "sendrequest") {
               cartController.sendRequest();
               cartController.clearCart();

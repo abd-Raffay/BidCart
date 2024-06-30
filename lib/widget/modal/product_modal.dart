@@ -1,6 +1,7 @@
 import 'package:bidcart/const/images.dart';
 import 'package:bidcart/const/sizes.dart';
 import 'package:bidcart/widget/app_bar/bottomBar.dart';
+import 'package:bidcart/widget/cart/add_remove_buttons.dart';
 import 'package:bidcart/widget/container/round_image.dart';
 import 'package:bidcart/widget/products/product_text/product_label_text.dart';
 import 'package:bidcart/widget/products/product_text/product_title_text.dart';
@@ -17,11 +18,14 @@ class Modal extends StatefulWidget {
     required this.title,
     required this.id,
     required this.sizes,
+    required this.quantity,
+
   }) : super(key: key);
 
   final String image;
   final String title;
   final String id;
+  final int quantity;
   final List<String> sizes;
 
   @override
@@ -99,10 +103,11 @@ class _ModalState extends State<Modal> {
                     ),
                   ],
                 ),
+                AddRemoveButtons(quantity: RxInt(widget.quantity),id: widget.id,size: size.toString()),
                 Expanded(child: Container()),
 
                 // BottomBar placed at the bottom with padding
-                BottomBar(buttontext: 'Add this Item',productId: widget.id,size:size,functionality: "add",),
+                BottomBar(buttontext: 'Add this Item',productId: widget.id,size:size,functionality: "add"),
               ],
             ),
           ),

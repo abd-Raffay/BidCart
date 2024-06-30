@@ -1,4 +1,5 @@
 import 'package:bidcart/const/sizes.dart';
+import 'package:bidcart/controllers/seller_controllers/seller_offer_controller.dart';
 import 'package:bidcart/controllers/seller_controllers/seller_request_controller.dart';
 import 'package:bidcart/model/request_model.dart';
 import 'package:bidcart/widget/app_bar/appBar.dart';
@@ -11,6 +12,8 @@ class SellerRequestScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final requestController = Get.put(SellerRequestController());
+    final orderController=Get.put(SellerOfferController());
+
     late RxList<RequestData> orderRequests = <RequestData>[].obs;
 
     return Scaffold(
@@ -18,37 +21,44 @@ class SellerRequestScreen extends StatelessWidget {
         showBackArrow: true,
         title: Text("Request Screen"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(Sizes.defaultSpace / 2),
-        child: Obx(() {
-          orderRequests.assignAll(requestController.getRequests());
-          return GestureDetector(
-            child: orderRequests.isEmpty
-                ? Center(
-              child: Text(
-                'No request',
-                style: TextStyle(fontSize: 18),
-              ),
-            )
-                : ListView.separated(
-              itemCount: orderRequests.length,
-              separatorBuilder: (BuildContext context, int index) =>
-                  SizedBox(height: Sizes.defaultSpace),
-              itemBuilder: (BuildContext context, int index) {
-                final request = orderRequests[index];
+      body: Obx(() {
+        orderRequests.assignAll(requestController.getRequests());
+        return GestureDetector(
+          child: orderRequests.isEmpty
+              ? const Center(
+                  child: Text(
+                    'No Order requests',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: orderRequests.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final request = orderRequests[index];
 
-                return SellerRequestCards(
-                  requests: request,
-                  index: index,
-                  total: requestController.totalProducts(index),
-                  available: requestController.totalAvailableProducts(index),
-                );
-              },
-            ),
-          );
+                    return SellerRequestCards(
+                      status: "",
+                      requests: request,
+                      //index: index,
+                      total: orderRequests[index].items.length,
+                      available:
+                          requestController.totalAvailableProducts(index),
 
-        }),
+                    );
+                  },
+                ),
+        );
+      }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          //requestController.filterOrders();
+
+        },
+        tooltip: 'Refresh',
+        child: const Icon(Icons.refresh),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation
+          .endFloat, // Adjust as per your preference
     );
   }
 }

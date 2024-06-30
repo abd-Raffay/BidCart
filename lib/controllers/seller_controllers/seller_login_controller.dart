@@ -23,6 +23,7 @@ class SellerLogInController extends GetxController {
     if (status == true) {
       sellerAuthRepo.setInitialScreen(sellerAuthRepo.firebaseUser.value,);
 
+
     }
 
   }

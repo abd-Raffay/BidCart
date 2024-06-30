@@ -1,4 +1,5 @@
 import 'package:bidcart/controllers/seller_controllers/seller_home_controller.dart';
+
 import 'package:bidcart/model/request_model.dart';
 import 'package:bidcart/repository/seller_repository/seller_store_repository.dart';
 import 'package:get/get.dart';
@@ -6,8 +7,11 @@ import 'package:get/get.dart';
 class SellerRequestController extends GetxController {
   final storeRepo = Get.put(SellerStoreRepository());
   final homeController = Get.put(SellerHomeController());
+
   late List<RequestData> orderRequests = [];
   late RxList<RequestData> rxOrderRequests = <RequestData>[].obs;
+
+
   late int index;
 
   @override
@@ -16,19 +20,13 @@ class SellerRequestController extends GetxController {
   getRequests();
   }
 
- RxList<RequestData> getRequests()   {    // Listen to changes in the order requests
-
+ RxList<RequestData> getRequests()   {
      storeRepo.getOrderRequests().listen((requests) {
       orderRequests = requests;
       rxOrderRequests.assignAll(orderRequests);
     });
-
-
-
     return rxOrderRequests;
   }
-
-
 
   totalAvailableProducts(int index) {
     int availableProducts = 0;
@@ -53,10 +51,6 @@ class SellerRequestController extends GetxController {
     return availableProducts;
   }
 
-  totalProducts(index) {
-    return orderRequests[index].items.length;
-  }
-
   availableProduct(String productid, String size) {
     int quantity=0;
     for (int i = 0; i < homeController.rxInventory.length; i++) {
@@ -69,4 +63,20 @@ class SellerRequestController extends GetxController {
     }
     return quantity;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

@@ -88,7 +88,7 @@ class SellerStoreController extends GetxController{
   List<Inventory> filteredList = [];
 
   late RxList<Inventory> allproducts = <Inventory>[].obs;
-  late RxList<Inventory> inventory = <Inventory>[].obs;
+  //late RxList<Inventory> inventory = <Inventory>[].obs;
   final RxList<Inventory> rxSellerProducts = RxList<Inventory>();
 
 
@@ -106,7 +106,10 @@ class SellerStoreController extends GetxController{
 
   addProducttoInventory(Inventory product){
 
-    homeController.rxInventory.add(product);
+
+    var inventory =homeController.rxInventory;
+
+    inventory.add(product);
 
 
     product.size=size;

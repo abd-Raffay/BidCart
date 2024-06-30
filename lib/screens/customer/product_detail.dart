@@ -128,7 +128,7 @@ class _ProductDetailState extends State<ProductDetail> {
       bottomNavigationBar: BottomBar(
         size: widget.sizee,
         productId: widget.id,
-        quantity: cartController.getQuantity(widget.id),
+        quantity: cartController.getQuantity(widget.id,widget.size),
         buttontext: 'Add to Cart',
         functionality: "add",
       ),

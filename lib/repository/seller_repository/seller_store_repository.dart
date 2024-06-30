@@ -1,14 +1,16 @@
 import 'package:bidcart/model/cart_model.dart';
+import 'package:bidcart/model/offer_model.dart';
 import 'package:bidcart/model/product_model.dart';
 import 'package:bidcart/model/request_model.dart';
 import 'package:bidcart/model/seller_inventory.dart';
+import 'package:bidcart/widget/snackbar/snackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SellerStoreRepository extends GetxController{
-
-  SellerStoreRepository get instance  => Get.find();
+class SellerStoreRepository extends GetxController {
+  SellerStoreRepository get instance => Get.find();
 
   final _db = FirebaseFirestore.instance;
   late final Rx<User?> firebaseUser;
@@ -22,7 +24,7 @@ class SellerStoreRepository extends GetxController{
       snapshot.docs.forEach((doc) {
         ProductModel product = ProductModel.fromSnapshot(doc);
         productList.add(product);
-    });
+      });
       return productList;
     } catch (e) {
       // Handle any errors that may occur during fetching data
@@ -33,8 +35,8 @@ class SellerStoreRepository extends GetxController{
 
   Future<void> saveToInventory(Inventory product) async {
     try {
-
-      final CollectionReference inventoryCollection = _db.collection('inventory');
+      final CollectionReference inventoryCollection =
+          _db.collection('inventory');
 
       // Access the current user's ID
       final String? userId = _auth.currentUser?.uid;
@@ -51,7 +53,8 @@ class SellerStoreRepository extends GetxController{
         final DocumentReference userDocRef = inventoryCollection.doc(userId);
 
         // Reference to the "products" subcollection under the user's document
-        final CollectionReference productsCollection = userDocRef.collection('products');
+        final CollectionReference productsCollection =
+            userDocRef.collection('products');
 
         // Save the product data to a document under the "products" subcollection
         await productsCollection.add(productData);
@@ -65,6 +68,7 @@ class SellerStoreRepository extends GetxController{
     } catch (e) {
       // Handle errors
       print('Error saving product to inventory: $e');
+
     }
   }
 
@@ -73,9 +77,11 @@ class SellerStoreRepository extends GetxController{
       final String? userId = _auth.currentUser?.uid;
       if (userId != null) {
         print(userId);
-        final CollectionReference inventoryCollection = _db.collection('inventory');
+        final CollectionReference inventoryCollection =
+            _db.collection('inventory');
         final DocumentReference userDocRef = inventoryCollection.doc(userId);
-        final CollectionReference productsCollection = userDocRef.collection('products');
+        final CollectionReference productsCollection =
+            userDocRef.collection('products');
 
         final snapshot = await productsCollection.get();
 
@@ -83,11 +89,12 @@ class SellerStoreRepository extends GetxController{
         //print()
 
         snapshot.docs.forEach((doc) {
-          print(doc.data());
-          print(doc.id);
-          Inventory product = Inventory.fromSnapshot(doc as DocumentSnapshot<Map<String, dynamic>>);
+          //print(doc.data());
+         // print(doc.id);
+          Inventory product = Inventory.fromSnapshot(
+              doc as DocumentSnapshot<Map<String, dynamic>>);
           products.add(product);
-          print(product.toJson());
+          //print(product.toJson());
         });
         return products;
       } else {
@@ -102,12 +109,14 @@ class SellerStoreRepository extends GetxController{
 
   Future<void> deleteProduct(String productId) async {
     try {
-      final CollectionReference inventoryCollection = FirebaseFirestore.instance.collection('inventory');
-
+      final CollectionReference inventoryCollection =
+          FirebaseFirestore.instance.collection('inventory');
 
       if (_auth.currentUser?.uid != null) {
-        final DocumentReference userDocRef = inventoryCollection.doc(_auth.currentUser?.uid);
-        final CollectionReference productsCollection = userDocRef.collection('products');
+        final DocumentReference userDocRef =
+            inventoryCollection.doc(_auth.currentUser?.uid);
+        final CollectionReference productsCollection =
+            userDocRef.collection('products');
 
         // Delete the document with the specified product ID
         await productsCollection.doc(productId).delete();
@@ -119,45 +128,49 @@ class SellerStoreRepository extends GetxController{
     }
   }
 
-
-
   Stream<List<RequestData>> getOrderRequests() {
     try {
-      final CollectionReference orderRequestCollection = FirebaseFirestore.instance.collection('orderrequest');
+      final CollectionReference orderRequestCollection =
+          FirebaseFirestore.instance.collection('orderrequest');
 
-      return orderRequestCollection.snapshots().map((snapshot) => snapshot.docs.map((doc) {
-        // Extract data from the document
-        String customerId = doc['customerid'];
-        String customerName = doc['customerName'];
-        String dateTime = doc['dateTime'];
-        List<dynamic> itemsData = doc['items'];
-        List<CartModel> items = itemsData.map((item) => CartModel.fromJson(item)).toList();
+      return orderRequestCollection
+          .snapshots()
+          .map((snapshot) => snapshot.docs.map((doc) {
+                // Extract data from the document
+                String orderid = doc.id;
+                String customerId = doc['customerid'];
+                String customerName = doc['customerName'];
+                String dateTime = doc['dateTime'];
+                String status = doc['status'];
+                List<dynamic> itemsData = doc['items'];
+                List<CartModel> items =
+                    itemsData.map((item) => CartModel.fromJson(item)).toList();
 
-        // Create RequestData object
-        return RequestData(
-          customerId: customerId,
-          items: items,
-          customerName: customerName,
-          dateTime: dateTime,
-        );
-      }).toList()
-      // Sort the list of RequestData objects by date
-        ..sort((request1, request2) {
-          try {
-            // Parse the date strings into DateTime objects
-            final parsedDate1 = DateTime.parse(request1.dateTime);
-            final parsedDate2 = DateTime.parse(request2.dateTime);
+                // Create RequestData object
+                return RequestData(
+                    status: status,
+                    customerId: customerId,
+                    items: items,
+                    customerName: customerName,
+                    dateTime: dateTime,
+                    orderId: orderid);
+              }).toList()
+                // Sort the list of RequestData objects by date
+                ..sort((request1, request2) {
+                  try {
+                    // Parse the date strings into DateTime objects
+                    final parsedDate1 = DateTime.parse(request1.dateTime);
+                    final parsedDate2 = DateTime.parse(request2.dateTime);
 
-            // Compare the DateTime objects
-            return parsedDate2.compareTo(parsedDate1);
-          } catch (e) {
-            // Error handling in case of invalid date strings
-            print("Error parsing dates: $e");
-            // Return 0 to maintain the current order if parsing fails
-            return 0;
-          }
-        })
-      );
+                    // Compare the DateTime objects
+                    return parsedDate2.compareTo(parsedDate1);
+                  } catch (e) {
+                    // Error handling in case of invalid date strings
+                    print("Error parsing dates: $e");
+                    // Return 0 to maintain the current order if parsing fails
+                    return 0;
+                  }
+                }));
     } catch (e) {
       print('Error getting order requests: $e');
       return Stream.empty();
@@ -166,71 +179,69 @@ class SellerStoreRepository extends GetxController{
 
   Stream<List<RequestData>> getOrder(String? userId) {
     try {
-      final CollectionReference<Map<String, dynamic>> orderRequestCollection = FirebaseFirestore.instance.collection('orderrequest');
+      final CollectionReference<Map<String, dynamic>> orderRequestCollection =
+          FirebaseFirestore.instance.collection('orderrequest');
 
-      return orderRequestCollection.where('customerid', isEqualTo: userId).snapshots().map((snapshot) => snapshot.docs.map((doc) {
-        // Extract data from the document
-        String orderid=doc.id;
-        String customerId = doc['customerid'];
-        String customerName = doc['customerName'];
-        String dateTime = doc['dateTime'];
-        List<dynamic> itemsData = doc['items'];
-        List<CartModel> items = itemsData.map((item) => CartModel.fromJson(item)).toList();
+      return orderRequestCollection
+          .where('customerid', isEqualTo: userId)
+          .snapshots()
+          .map((snapshot) => snapshot.docs.map((doc) {
+                // Extract data from the document
+                String orderid = doc.id;
+                String customerId = doc['customerid'];
+                String customerName = doc['customerName'];
+                String dateTime = doc['dateTime'];
+                String status = doc['status'];
+                List<dynamic> itemsData = doc['items'];
+                List<CartModel> items =
+                    itemsData.map((item) => CartModel.fromJson(item)).toList();
 
-        // Create RequestData object
-        return RequestData(
-          orderId: orderid,
-          customerId: customerId,
-          items: items,
-          customerName: customerName,
-          dateTime: dateTime,
-        );
-      }).toList()
-      // Sort the list of RequestData objects by date
-        ..sort((request1, request2) {
-          try {
-            // Parse the date strings into DateTime objects
-            final parsedDate1 = DateTime.parse(request1.dateTime);
-            final parsedDate2 = DateTime.parse(request2.dateTime);
+                // Create RequestData object
+                return RequestData(
+                  orderId: orderid,
+                  customerId: customerId,
+                  items: items,
+                  customerName: customerName,
+                  dateTime: dateTime,
+                  status: status,
+                );
+              }).toList()
+                // Sort the list of RequestData objects by date
+                ..sort((request1, request2) {
+                  try {
+                    // Parse the date strings into DateTime objects
+                    final parsedDate1 = DateTime.parse(request1.dateTime);
+                    final parsedDate2 = DateTime.parse(request2.dateTime);
 
-            // Compare the DateTime objects
-            return parsedDate2.compareTo(parsedDate1);
-          } catch (e) {
-            // Error handling in case of invalid date strings
-            print("Error parsing dates: $e");
-            // Return 0 to maintain the current order if parsing fails
-            return 0;
-          }
-        })
-      );
+                    // Compare the DateTime objects
+                    return parsedDate2.compareTo(parsedDate1);
+                  } catch (e) {
+                    // Error handling in case of invalid date strings
+                    print("Error parsing dates: $e");
+                    // Return 0 to maintain the current order if parsing fails
+                    return 0;
+                  }
+                }));
     } catch (e) {
       print('Error getting order requests: $e');
       return Stream.empty();
     }
   }
 
+  void removeOrder(String orderId) async {
+    try {
+      // Get a reference to the Firestore instance
 
+      // Reference the collection with the order ID
+      CollectionReference orders = _db.collection('orderrequest');
 
-    void removeOrder(String orderId) async {
-      try {
-        // Get a reference to the Firestore instance
+      // Delete the document with the given order ID
+      await orders.doc(orderId).delete();
 
-
-        // Reference the collection with the order ID
-        CollectionReference orders = _db.collection('orderrequest');
-
-        // Delete the document with the given order ID
-        await orders.doc(orderId).delete();
-
-        print('Order with ID $orderId successfully removed.');
-
-      } catch (e) {
-        print('Error removing order: $e');
-      }
-
-
-
-
+      print('Order with ID $orderId successfully removed.');
+    } catch (e) {
+      print('Error removing order: $e');
+    }
   }
 
 
@@ -238,14 +249,155 @@ class SellerStoreRepository extends GetxController{
 
 
 
+//========================================= OFERS ====================================================
+
+  Future<bool> postOffers(OfferData offer, String userId) async {
+    try {
+      // Reference to the "offers" collection in Firestore
+      final CollectionReference offersCollection = _db.collection('offers');
+
+      // Use orderId as the document ID when adding to Firestore
+      String orderId = offer.orderId; // Assuming orderId is a string in your OfferData
+      String customerId = offer.sellerId; // Assuming customerId is a string in your OfferData
+
+      // Reference to the specific orderId document in the "offers" collection
+      final DocumentReference orderDocRef = offersCollection.doc(orderId);
+
+      // Convert OfferData object to JSON format
+      Map<String, dynamic> offerData = offer.toJson();
+
+      // Add the offer data to the "offers" subcollection under orderId and use customerId as document ID
+      final DocumentReference customerOfferDocRef = orderDocRef.collection('offers').doc(customerId);
+
+      // Set the offer data under customerId document
+      await customerOfferDocRef.set(offerData);
+
+      print('Offer posted to Firestore under orderId: $orderId and customerId: $customerId');
+
+      // Show success snackbar
+      showSnackbar(
+        title: "Success",
+        message: "Offer sent!",
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+
+      return true; // Return true indicating success
+    } catch (e) {
+      // Handle errors
+      print('Error posting offer to Firestore: $e');
+
+      // Show error snackbar
+      showSnackbar(
+        title: "Error",
+        message: "Failed to post offer.",
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return false; // Return false indicating failure
+    }
+  }
+
+  Future<bool> Offerstoseller(OfferData offer, String userId) async {
+    try {
+      // Reference to the "offers" collection in Firestore
+      final CollectionReference offersCollection = _db.collection('selleroffers');
+
+      // Use orderId as the document ID when adding to Firestore
+      String orderId = offer.orderId; // Assuming orderId is a string in your OfferData
+      String sellerId = offer.sellerId; // Assuming customerId is a string in your OfferData
+
+      // Reference to the specific orderId document in the "offers" collection
+      final DocumentReference orderDocRef = offersCollection.doc(sellerId);
+
+      // Convert OfferData object to JSON format
+      Map<String, dynamic> offerData = offer.toJson();
+
+      // Add the offer data to the "offers" subcollection under orderId and use customerId as document ID
+      final DocumentReference customerOfferDocRef = orderDocRef.collection('offers').doc(orderId);
+
+      // Set the offer data under customerId document
+      await customerOfferDocRef.set(offerData);
+
+     // print('Offer posted to Firestore under orderId: $orderId and customerId: $customerId');
+
+      // Show success snackbar
+      showSnackbar(
+        title: "Success",
+        message: "Offer sent!",
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+
+      return true; // Return true indicating success
+    } catch (e) {
+      // Handle errors
+      print('Error posting offer to Firestore: $e');
+
+      // Show error snackbar
+      showSnackbar(
+        title: "Error",
+        message: "Failed to post offer.",
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return false; // Return false indicating failure
+    }
+  }
+
+  Stream<List<OfferData>> getOffersBySeller(String sellerId) {
+    try {
+      final CollectionReference offersCollection = FirebaseFirestore.instance
+          .collection('selleroffers');
+      final Stream<
+          QuerySnapshot<Map<String, dynamic>>> offerSnapshots = offersCollection
+          .doc(sellerId).collection('offers').snapshots();
+
+      return offerSnapshots.map((snapshot) {
+        List<OfferData> offers = [];
+
+        for (var doc in snapshot.docs) {
+          print('Document data: ${doc.data()}');
+          print('Document ID: ${doc.id}');
+          try {
+            OfferData offer = OfferData.fromSnapshot(doc);
+            offers.add(offer);
+            print('Converted offer: ${offer.toJson()}');
+          } catch (e) {
+            print('Error converting document to OfferData: $e');
+            // Print detailed information about each field to identify the problematic one
+            print('Fields in document:');
+            doc.data().forEach((key, value) {
+              print('$key: $value');
+            });
+          }
+        }
+        print('Offers list: ${offers.map((e) => e.toJson()).toList()}');
+        if (offers.isEmpty) {
+          showSnackbar(
+            title: "Offer Not Found!",
+            message: "No Offers were placed on this order.",
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+          );
+        }
+        return offers;
+      });
+    } catch (e) {
+      print('Error retrieving offers from Firestore: $e');
+
+      // Show error snackbar (ensure showSnackbar is defined)
+      showSnackbar(
+        title: "Error",
+        message: "Failed to retrieve offers.",
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+
+      return Stream.value([]); // Return an empty stream indicating failure
+    }
+  }
 
 
 
 }
-
-
-
-
-
-
-

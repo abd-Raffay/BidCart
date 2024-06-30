@@ -5,9 +5,10 @@ class CartModel {
   String name;
   String image;
   int quantity;
+  String size; // List of sizes
  // String dateTime;
 
-  String size; // List of sizes
+
 
   CartModel({
     required this.id,
@@ -15,6 +16,7 @@ class CartModel {
     required this.image,
     required this.quantity,
     required this.size,
+
    // required this.dateTime
   });
 

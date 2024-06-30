@@ -64,4 +64,23 @@ class SellerLoginRepository extends GetxController{
     return sellerData;
   }
 
+
+  Future<SellerModel?> getSellerData(String userid) async {
+    try {
+      final snapshot = await _db.collection("seller").where("Userid", isEqualTo: userid).get();
+
+      if (snapshot.docs.isNotEmpty) {
+        // Convert the first document to a SellerModel object
+        return SellerModel.fromSnapshot(snapshot.docs.first);
+      } else {
+        print("No Seller found with the provided userid.");
+        return null;
+      }
+    } catch (e) {
+      // Handle errors
+      print('Error fetching seller data: $e');
+      return null;
+    }
+  }
+
 }

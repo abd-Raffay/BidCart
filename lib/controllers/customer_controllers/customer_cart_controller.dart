@@ -86,7 +86,7 @@ class CartController extends GetxController {
             cart[i].quantity = cart[i].quantity + 1;
             Get.back();
             //cart[i].quantity = quantity;
-            break; // Once the item is found and updated, we can exit the loop
+            break;
           }
         }
       } else {
@@ -97,11 +97,11 @@ class CartController extends GetxController {
               image: productList[i].imageUrl,
               name: productList[i].name,
               size: selectedsize,
-              quantity: 1, // You may initialize it here or later based on your logic
+              quantity: 1,
             );
             cart.add(temp);
             Get.back();
-            break; // Once the item is found and updated, we can exit the loop
+            break;
           }
         }
       }
@@ -152,6 +152,7 @@ class CartController extends GetxController {
 
 
 
+
   increaseQuantity(id,size) {
     for (int i = 0; i < cart.length; i++) {
       if (cart[i].id == id && cart[i].size==size) {
@@ -166,15 +167,17 @@ class CartController extends GetxController {
       }
     }
   }
-  getQuantity(id) {
+  getQuantity(id,size) {
+    print("Getting Quantuty");
     for (int i = 0; i < quantities.length; i++) {
-      if (quantities[i].id == id ) {
+      print("Quantuty.length");
+      if (quantities[i].id == id && quantities[i].size == size ) {
        return quantities[i].quantity;
       }
     }
   }
-  setQuantity(id,quantity) {
-    if (quantities.any((item) => item.id == id  )) {
+  setQuantity(id,size,quantity) {
+    if (quantities.any((item) => item.id == id && item.size == size )) {
       for (int i = 0; i < quantities.length; i++) {
         if (quantities[i].id == id) {
           quantities[i].quantity = quantity;
@@ -186,7 +189,7 @@ class CartController extends GetxController {
         quantity: quantity,
         name: '',
         image: '',
-        size: '', // You may initialize it here or later based on your logic
+        size: size, // You may initialize it here or later based on your logic
       );
       quantities.add(temp);
     }
