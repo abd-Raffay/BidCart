@@ -113,7 +113,7 @@ class BidCard extends StatelessWidget {
                                 ),
                               ),
                             SizedBox(width: Sizes.spaceBtwItems / 2),
-                            if (offer.status != "rejected") // Show reject button if status is not "rejected"
+                            if (offer.status != "rejected")  // Show reject button if status is not "rejected"
                               ElevatedButton(
                                 onPressed: () {
                                   // Handle reject action
