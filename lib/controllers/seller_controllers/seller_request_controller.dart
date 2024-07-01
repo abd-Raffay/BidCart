@@ -98,18 +98,21 @@ class SellerRequestController extends GetxController {
   }
 
   getOrderStatus() {
-    rxOrderRequests.removeWhere((request) => request.status == "accepted");
+    //rxOrderRequests.removeWhere((request) => request.status == "accepted");
     for (int i = 0; i < rxOrderRequests.length; i++) {
       //print("Order id ${rxsellermadeoffers[i].orderId} ");
       for (int j = 0; j < rxsellermadeoffers.length; j++) {
         if (rxsellermadeoffers[j].orderId == rxOrderRequests[i].orderId) {
-          rxOrderRequests[i].status = rxsellermadeoffers[j].status;
+          if(rxsellermadeoffers[j] == "accepted"){
+            
+          }
+          else {
+            rxOrderRequests[i].status = rxsellermadeoffers[j].status;
+          }
         }
       }
     }
-    print(rxOrderRequests.length);
 
-    print(rxOrderRequests.length);
     rxOrderRequests.removeWhere((request) => request.status == "rejected");
 
     print(rxOrderRequests.length);
