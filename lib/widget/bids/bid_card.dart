@@ -28,12 +28,14 @@ class BidCard extends StatelessWidget {
     final orderController=Get.put(CustomerOrderController());
     return GestureDetector(
       onTap: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return BidDetails(bid: offer);
-          },
-        );
+        if(offer.status != "rejected") {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return BidDetails(bid: offer);
+            },
+          );
+        }
       },
       child: Container(
         height: 130,
@@ -70,7 +72,7 @@ class BidCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             LabelText(
-                              title: "Total Products: ${offer.items.length}/ ",
+                              title: "Total Products: ${offer.items.length} ",
 
                             ),
                             LabelText(
