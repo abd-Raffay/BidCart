@@ -40,7 +40,7 @@ class CartRepository extends GetxController{
           'customerid': userId,
           'items': itemsData,
           'dateTime':combinedDateTime,
-          'status':"pending",
+          'status':"null",
           'sellerId':"null"
           // You can add other fields to the document if needed
         });

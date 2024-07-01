@@ -1,8 +1,12 @@
 import 'package:bidcart/controllers/seller_controllers/seller_home_controller.dart';
+import 'package:bidcart/model/offer_model.dart';
 
 import 'package:bidcart/model/request_model.dart';
 import 'package:bidcart/repository/seller_repository/seller_store_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+
+
 
 class SellerRequestController extends GetxController {
   final storeRepo = Get.put(SellerStoreRepository());
@@ -10,7 +14,11 @@ class SellerRequestController extends GetxController {
 
   late List<RequestData> orderRequests = [];
   late RxList<RequestData> rxOrderRequests = <RequestData>[].obs;
+  late RxList<OfferData> rxsellermadeoffers = <OfferData>[].obs;
 
+
+
+  final _auth = FirebaseAuth.instance;
 
   late int index;
 
@@ -18,6 +26,8 @@ class SellerRequestController extends GetxController {
   Future<void> onInit() async {
     super.onInit();
   getRequests();
+    await getOffersbyseller();
+    getOrderStatus();
   }
 
  RxList<RequestData> getRequests()   {
@@ -25,6 +35,7 @@ class SellerRequestController extends GetxController {
       orderRequests = requests;
       rxOrderRequests.assignAll(orderRequests);
     });
+     getOffersbyseller();
     return rxOrderRequests;
   }
 
@@ -62,7 +73,46 @@ class SellerRequestController extends GetxController {
 
     }
     return quantity;
+
+
+
+
+
+
   }
+
+  getOffersbyseller() {
+    final String? sellerId = _auth.currentUser?.uid;
+    storeRepo.getOffersBySeller(sellerId!).listen((List<OfferData> offers) {
+      rxsellermadeoffers.assignAll(offers);
+      getOrderStatus();
+      //print("Offers ${rxsellermadeoffers.length}");
+    }, onError: (dynamic error) {
+      print('Error fetching offers: $error');
+      // Handle error (e.g., show a snackbar)
+    });
+  }
+
+  getOrderStatus() {
+    for (int i = 0; i < rxOrderRequests.length; i++) {
+      //print("Order id ${rxsellermadeoffers[i].orderId} ");
+      for (int j = 0; j < rxsellermadeoffers.length; j++) {
+        if (rxsellermadeoffers[j].orderId == rxOrderRequests[i].orderId) {
+          rxOrderRequests[i].status = rxsellermadeoffers[j].status;
+        }
+      }
+    }
+    print(rxOrderRequests.length);
+    rxOrderRequests.removeWhere((request) => request.status == "accepted");
+    print(rxOrderRequests.length);
+    rxOrderRequests.removeWhere((request) => request.status == "rejected");
+
+    print(rxOrderRequests.length);
+
+  }
+
+
+
 
 
 

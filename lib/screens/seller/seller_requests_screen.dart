@@ -22,7 +22,7 @@ class SellerRequestScreen extends StatelessWidget {
         title: Text("Request Screen"),
       ),
       body: Obx(() {
-        orderRequests.assignAll(requestController.getRequests());
+        orderRequests.assignAll(requestController.rxOrderRequests);
         return GestureDetector(
           child: orderRequests.isEmpty
               ? const Center(
@@ -37,7 +37,7 @@ class SellerRequestScreen extends StatelessWidget {
                     final request = orderRequests[index];
 
                     return SellerRequestCards(
-                      status: "",
+                      status: orderRequests[index].status,
                       requests: request,
                       //index: index,
                       total: orderRequests[index].items.length,
@@ -51,7 +51,7 @@ class SellerRequestScreen extends StatelessWidget {
       }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //requestController.filterOrders();
+          requestController.getOrderStatus();
 
         },
         tooltip: 'Refresh',

@@ -20,6 +20,7 @@ class SellerRequestCards extends StatelessWidget {
   }) : super(key: key);
 
   final RequestData requests;
+
   //final int index;
   final int total;
   final int available;
@@ -39,26 +40,22 @@ class SellerRequestCards extends StatelessWidget {
             },
           );
         },
-
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: SizedBox(
-
-              height: 100,
-              child: Card(
-
-                color: Colors.white,
-                shadowColor: Colors.black,
-                elevation: 4,
-                // Adding elevation for a raised effect
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                // Adding rounded corners
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                child:
-                Row(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: SizedBox(
+            height: 100,
+            child: Card(
+              color: Colors.white,
+              shadowColor: Colors.black,
+              elevation: 4,
+              // Adding elevation for a raised effect
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              // Adding rounded corners
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
@@ -67,25 +64,35 @@ class SellerRequestCards extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.person,size: Sizes.md,),
+                            const Icon(
+                              Icons.person,
+                              size: Sizes.md,
+                            ),
                             const SizedBox(width: 5),
                             HeadingText(title: requests.customerName),
                           ],
                         ),
-                        const SizedBox(height:4),
+                        const SizedBox(height: 4),
                         Row(
                           children: [
-                            const Icon(Icons.date_range_outlined,size: Sizes.md,),
+                            const Icon(
+                              Icons.date_range_outlined,
+                              size: Sizes.md,
+                            ),
                             const SizedBox(width: 5),
-                            LabelText(title:requests.dateTime),
+                            LabelText(title: requests.dateTime),
                           ],
                         ),
-                        const SizedBox(height:4),
+                        const SizedBox(height: 4),
                         Row(
                           children: [
-                            const Icon(CupertinoIcons.cart,size: Sizes.md,),
+                            const Icon(
+                              CupertinoIcons.cart,
+                              size: Sizes.md,
+                            ),
                             const SizedBox(width: 5),
-                            LabelText(title:"Product Available: $available/$total"),
+                            LabelText(
+                                title: "Product Available: $available/$total"),
                           ],
                         ),
                       ],
@@ -96,62 +103,61 @@ class SellerRequestCards extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            if (available !=
-                                0) // Render buttons only if available is not null and not 0
+                            if (requests.status != "pending" && available != 0)
                               ElevatedButton(
                                 onPressed: () {
                                   offerController.sendOffer(requests.orderId!);
+
                                   // Handle accept action
                                 },
                                 style: ElevatedButton.styleFrom(
                                   foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 15, horizontal: 10),
-                                  textStyle:
-                                      const TextStyle(fontSize: Sizes.fontSizeSm),
+                                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                                  textStyle: const TextStyle(fontSize: Sizes.fontSizeSm),
                                   backgroundColor: Colors.green[600],
                                 ),
                                 child: const Text("Accept"),
-
                               ),
-                            if (available !=
-                                0) // Render spacing only if available is not null and not 0
+
+                            if (requests.status != "pending" && available != 0)
                               const SizedBox(width: 8),
-                            if (available !=
-                                0) // Render buttons only if available is not null and not 0
+
+                            if (requests.status != "pending" && available != 0)
                               ElevatedButton(
                                 onPressed: () {
-                                  //offerController.rejectOffer(requests.orderId!);
+                                  offerController.rejectOffer(requests.orderId!);
                                   // Handle reject action
                                 },
                                 style: ElevatedButton.styleFrom(
                                   foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 15, horizontal: 10),
-                                  textStyle:
-                                      const TextStyle(fontSize: Sizes.fontSizeSm),
+                                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                                  textStyle: const TextStyle(fontSize: Sizes.fontSizeSm),
                                   backgroundColor: Colors.red[600],
                                 ),
                                 child: const Text("Reject"),
                               ),
-                            if (available ==
-                                0) // Render "No products to sell" message if available is null or 0
+
+                            if (requests.status != "pending" && available == 0)
                               const LabelText(
                                 title: "No Products to Sell",
                                 color: Colors.red,
-                              )
+                              ),
+
+                            if (requests.status == "pending")
+                              const LabelText(
+                                title: "Pending",
+                                color: Colors.grey, // Adjust color as needed
+                              ),
                           ],
                         ),
+
                       ],
                     ),
                   ],
                 ),
               ),
             ),
-                    ),
-
-
-          ));
-
+          ),
+        ));
   }
 }

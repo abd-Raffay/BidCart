@@ -112,6 +112,8 @@ class SellerOfferController extends GetxController {
 
     }
 
+
+
   void getOffersbyseller() {
     final String? sellerId = _auth.currentUser?.uid;
     storeRepo.getOffersBySeller(sellerId!).listen((List<OfferData> offers) {
