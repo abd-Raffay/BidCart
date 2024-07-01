@@ -100,7 +100,7 @@ class SellerOfferController extends GetxController {
       OfferData offer = OfferData(
           sellerId: seller!.userId,
           items: [],
-          sellerName: "",
+          sellerName: seller.storename,
           dateTime: DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
           orderId: orderid,
           status: 'rejected',

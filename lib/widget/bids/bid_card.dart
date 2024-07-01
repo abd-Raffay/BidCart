@@ -89,54 +89,62 @@ class BidCard extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.all(10),
+                            if (offer.status != "rejected") // Show buttons if status is not "rejected"
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Handle accept action
+                                  orderController.acceptOrder(offer.sellerId, offer.orderId);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.all(10),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.check_circle,
+                                      size: Sizes.fontSizeMd,
+                                    ),
+                                    SizedBox(width: 2),
+                                    Text(
+                                      'Accept',
+                                      style: TextStyle(fontSize: Sizes.fontSizeSm),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              onPressed: () {
-
-                                orderController.acceptOrder(offer.sellerId, offer.orderId);
-
-                              },
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.check_circle,
-                                    size: Sizes.fontSizeMd,
-                                  ),
-                                  SizedBox(width: 2),
-                                  Text(
-                                    'Accept',
-                                    style:
-                                        TextStyle(fontSize: Sizes.fontSizeSm),
-                                  ),
-                                ],
-                              ),
-                            ),
                             SizedBox(width: Sizes.spaceBtwItems / 2),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.all(10),
-                                backgroundColor: Colors.red.shade800,
+                            if (offer.status != "rejected") // Show reject button if status is not "rejected"
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Handle reject action
+                                  orderController.rejectOrder();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.all(10),
+                                  backgroundColor: Colors.red.shade800,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.cancel,
+                                      size: Sizes.fontSizeMd,
+                                    ),
+                                    SizedBox(width: 2),
+                                    Text(
+                                      'Reject',
+                                      style: TextStyle(fontSize: Sizes.fontSizeSm),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              onPressed: () {
-                               orderController.rejectOrder();
-                              },
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.cancel,
-                                    size: Sizes.fontSizeMd,
-                                  ),
-                                  SizedBox(width: 2),
-                                  Text(
-                                    'Reject',
-                                    style:
-                                        TextStyle(fontSize: Sizes.fontSizeSm),
-                                  ),
-                                ],
+                            if (offer.status == "rejected") // Show "Rejected" text if status is "rejected"
+                              Text(
+                                'Rejected',
+                                style: TextStyle(
+                                  fontSize: Sizes.fontSizeSm,
+                                  color: Colors.red,
+                                ),
                               ),
-                            ),
                           ],
                         ),
                       ],
