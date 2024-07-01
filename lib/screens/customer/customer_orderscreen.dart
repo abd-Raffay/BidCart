@@ -49,7 +49,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                   return ListView.separated(
                     itemBuilder: (BuildContext context, int index) {
                       final order = orders[index];
-                      if (order.status == "pending") {
+                      if (order.status == "null") {
                         return GestureDetector(
                           onTap: () {
                             showDialog(
