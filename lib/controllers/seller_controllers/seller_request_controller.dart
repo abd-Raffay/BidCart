@@ -26,18 +26,22 @@ class SellerRequestController extends GetxController {
   Future<void> onInit() async {
     super.onInit();
   getRequests();
-    await getOffersbyseller();
+    getOffersbyseller();
     getOrderStatus();
   }
 
- RxList<RequestData> getRequests()   {
-     storeRepo.getOrderRequests().listen((requests) {
+  RxList<RequestData> getRequests() {
+    storeRepo.getOrderRequests().listen((requests) {
       orderRequests = requests;
       rxOrderRequests.assignAll(orderRequests);
+
+      // Call getOrderStatus after updating rxOrderRequests
+      getOrderStatus();
     });
-     getOffersbyseller();
+
     return rxOrderRequests;
   }
+
 
   totalAvailableProducts(int index) {
     int availableProducts = 0;
@@ -94,6 +98,7 @@ class SellerRequestController extends GetxController {
   }
 
   getOrderStatus() {
+    rxOrderRequests.removeWhere((request) => request.status == "accepted");
     for (int i = 0; i < rxOrderRequests.length; i++) {
       //print("Order id ${rxsellermadeoffers[i].orderId} ");
       for (int j = 0; j < rxsellermadeoffers.length; j++) {
@@ -103,7 +108,7 @@ class SellerRequestController extends GetxController {
       }
     }
     print(rxOrderRequests.length);
-    rxOrderRequests.removeWhere((request) => request.status == "accepted");
+
     print(rxOrderRequests.length);
     rxOrderRequests.removeWhere((request) => request.status == "rejected");
 
