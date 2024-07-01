@@ -138,11 +138,19 @@ class BidCard extends StatelessWidget {
                                 ),
                               ),
                             if (offer.status == "rejected") // Show "Rejected" text if status is "rejected"
-                              Text(
-                                'Rejected',
-                                style: TextStyle(
-                                  fontSize: Sizes.fontSizeSm,
-                                  color: Colors.red,
+                              Padding(
+                                padding: const EdgeInsets.all(11.0),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.cancel_outlined,size: Sizes.md,color: Colors.red,),
+                                    Text(
+                                      'Rejected',
+                                      style: TextStyle(
+                                        fontSize: Sizes.fontSizeSm,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                           ],
