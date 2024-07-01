@@ -25,7 +25,7 @@ class SellerRequestController extends GetxController {
   @override
   Future<void> onInit() async {
     super.onInit();
-  getRequests();
+    getRequests();
     getOffersbyseller();
     getOrderStatus();
   }
@@ -35,6 +35,7 @@ class SellerRequestController extends GetxController {
       orderRequests = requests;
       rxOrderRequests.assignAll(orderRequests);
 
+      getOffersbyseller();
       // Call getOrderStatus after updating rxOrderRequests
       getOrderStatus();
     });
@@ -43,19 +44,25 @@ class SellerRequestController extends GetxController {
   }
 
 
-  totalAvailableProducts(int index) {
+  totalAvailableProducts(String orderid) {
     int availableProducts = 0;
+    int index =0;
+
+    for (int j = 0; j < orderRequests.length; j++) {
+      if(orderid == orderRequests[j].orderId){
+        index=j;
+        break;
+      }
+
+    }
+
+
     for (int j = 0; j < orderRequests[index].items.length; j++) {
-      //CartModel item = orderRequest.items[j];
-      // Check if the current item's ID and size match with any inventory item
 
       for (int k = 0; k < homeController.rxInventory.length; k++) {
         //Inventory inventoryItem = homeController.rxInventory[k];
 
-        if (orderRequests[index].items[j].id ==
-                homeController.rxInventory[k].productid &&
-            orderRequests[index].items[j].size ==
-                homeController.rxInventory[k].size) {
+        if (orderRequests[index].items[j].id == homeController.rxInventory[k].productid && orderRequests[index].items[j].size == homeController.rxInventory[k].size) {
           // If a match is found, add the product to available products
           availableProducts++;
           // Add other properties of Product if needed
@@ -74,14 +81,8 @@ class SellerRequestController extends GetxController {
           quantity= homeController.rxInventory[i].quantity;
           break;
         }
-
     }
     return quantity;
-
-
-
-
-
 
   }
 
@@ -103,22 +104,19 @@ class SellerRequestController extends GetxController {
       //print("Order id ${rxsellermadeoffers[i].orderId} ");
       for (int j = 0; j < rxsellermadeoffers.length; j++) {
         if (rxsellermadeoffers[j].orderId == rxOrderRequests[i].orderId) {
-          if(rxsellermadeoffers[j] == "accepted"){
-            
-          }
-          else {
+          if (rxOrderRequests[i].status != "accepted") {
             rxOrderRequests[i].status = rxsellermadeoffers[j].status;
           }
         }
       }
+      rxOrderRequests.removeWhere((request) => request.status == "rejected");
+      //print(rxOrderRequests.length);
+      for (int i = 0; i < rxOrderRequests.length; i++) {
+        print("${i} Order id ${rxOrderRequests[i].orderId} :: Status ${rxOrderRequests[i].status} ");
+
+      }
     }
-
-    rxOrderRequests.removeWhere((request) => request.status == "rejected");
-
-    print(rxOrderRequests.length);
-
   }
-
 
 
 

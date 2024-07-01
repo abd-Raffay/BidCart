@@ -20,7 +20,11 @@ class SellerRequestScreen extends StatelessWidget {
         length: 2, // Number of tabs
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('Order Requests'),
+            title: const Text(
+              'Order Requests',
+              style: TextStyle(fontSize: Sizes.fontSizeLg),
+              textAlign: TextAlign.center,
+            ),
             bottom: const TabBar(
               tabs: [
                 Tab(text: 'Pending Requests'),
@@ -32,10 +36,8 @@ class SellerRequestScreen extends StatelessWidget {
             children: [
               // Tab 1: Pending Requests
               Obx(() {
-                List<RequestData> pendingRequests = requestController
-                    .rxOrderRequests
-                    .where((request) => request.status == 'null')
-                    .toList();
+                RxList<RequestData> pendingRequests = <RequestData>[].obs;
+                pendingRequests.assignAll(requestController.rxOrderRequests);
                 return pendingRequests.isEmpty
                     ? const Center(
                         child: Text(
@@ -44,15 +46,20 @@ class SellerRequestScreen extends StatelessWidget {
                         ),
                       )
                     : ListView.builder(
-                        itemCount: pendingRequests.length,
+                        itemCount: pendingRequests
+                            .where((request) => request.status != "accepted")
+                            .length,
                         itemBuilder: (BuildContext context, int index) {
-                          final request = pendingRequests[index];
+                          final filteredRequests = pendingRequests
+                              .where((request) => request.status != "accepted")
+                              .toList();
+                          final request = filteredRequests[index];
+
                           return SellerRequestCards(
-                            status: request.status,
                             requests: request,
                             total: request.items.length,
-                            available:
-                                requestController.totalAvailableProducts(index),
+                            available: requestController
+                                .totalAvailableProducts(request.orderId!),
                           );
                         },
                       );
@@ -75,11 +82,10 @@ class SellerRequestScreen extends StatelessWidget {
                         itemBuilder: (BuildContext context, int index) {
                           final request = completedRequests[index];
                           return SellerRequestCards(
-                            status: request.status,
                             requests: request,
                             total: request.items.length,
-                            available:
-                                requestController.totalAvailableProducts(index),
+                            available: requestController
+                                .totalAvailableProducts(request.orderId!),
                           );
                         },
                       );
