@@ -85,14 +85,12 @@ class CustomerAuthenticationRepository extends GetxController {
     }
   }
 
-  Future<bool> loginUserWithEmailAndPassword(String email,
-      String password) async {
+  Future<bool> loginUserWithEmailAndPassword(String email, String password) async {
     try {
       String emailformdb = (await customerrepo.getCustomer(email));
-      //print("Email from customerrepo ${emailformdb}");
+      print("EMAIL FROOOMMMMMMMMM DBBBBBBBBBBBBBBBB ${emailformdb}");
       if (email == emailformdb) {
-        await _auth.signInWithEmailAndPassword(
-            email: email, password: password);
+        await _auth.signInWithEmailAndPassword(email: email, password: password);
         return true;
       } else {
         Get.snackbar(
@@ -122,30 +120,7 @@ class CustomerAuthenticationRepository extends GetxController {
     }
   }
 
-  Future<UserCredential?> signInWithGoogle() async {
-    try {
-      print(
-          "+++++++++++++++++++++++++++++++++1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      print(
-          "+++++++++++++++++++++++++++++++++2 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-      print(
-          "+++++++++++++++++++++++++++++++++3 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-      final credential = GoogleAuthProvider.credential(accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
-      print(
-          "+++++++++++++++++++++++++++++++++4 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-      return await FirebaseAuth.instance.signInWithCredential(credential);
-    } on FirebaseAuthException catch (e) {
-      print(e);
-      final ex = Exceptions.code(e.code);
-      throw ex.message;
-      // TODO
-    } catch (_) {
-      const ex = Exceptions();
-      throw ex.message;
-    }
-  }
+
 
   Future<void> logout() async {
     await _auth.signOut();

@@ -6,6 +6,7 @@ import 'package:bidcart/screens/seller/approval_screen.dart';
 import 'package:bidcart/screens/seller/seller_blocked_screen.dart';
 import 'package:bidcart/screens/seller/seller_login.dart';
 import 'package:bidcart/screens/seller/seller_mail_verfication.dart';
+import 'package:bidcart/screens/seller/seller_maps_screen.dart';
 import 'package:bidcart/screens/seller/seller_rejected_screen.dart';
 import 'package:bidcart/screens/seller/seller_navigation_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,6 +20,8 @@ class SellerAuthenticationRepository extends GetxController {
   final _auth = FirebaseAuth.instance;
   late final Rx<User?> firebaseUser;
   final sellerrepo = Get.put(SellerLoginRepository());
+
+
 
   @override
 
@@ -44,10 +47,26 @@ class SellerAuthenticationRepository extends GetxController {
       //print("++++++++++++++++++++++++++++++++++++++++${sellerrepo.getApprovalStatus(user.uid).toString()}+++++++++++++++++++++++++++++++++");
 
       //checks if the user is seller
-      if (await sellerrepo.getSeller(user.email.toString())==user.email.toString()) {
+      if (await sellerrepo.gettempSellerEmail(user.email.toString())==user.email.toString()) {
+        print("++++++++++++++++++++++++++User ID is ${user.uid}++++++++++++++++");
+
+        SellerModel seller = await sellerrepo.getSellerData(user.uid);
+
+
+        if (!await sellerrepo.checkSeller(user.uid)) {
+          sellerrepo.createUser(seller,user.uid);
+        }
+
         //check if the seller is approved
         if(await sellerrepo.getApprovalStatus(user.uid)=="approved"){
-          Get.offAll(()=>const SellerNavigationBar());
+          print("Seller location ${seller.location.latitude} == ${0}");
+          if(seller.location.longitude==0.0 && seller.location.latitude==0.0){
+            print("Seller id is ${seller.userId}");
+            print("Seller's location is at coordinates ${seller.location.longitude}, ${seller.location.latitude}");
+            Get.offAll(()=> const MapScreen());
+          }else {
+            Get.offAll(() => const SellerNavigationBar());
+          }
         }else if(await sellerrepo.getApprovalStatus(user.uid)=="rejected"){
           Get.to(()=> const RejectionScreen());
         }else if(await sellerrepo.getApprovalStatus(user.uid)=="blocked"){
@@ -65,24 +84,22 @@ class SellerAuthenticationRepository extends GetxController {
     }
   }
 
-  Future<void> createUserWithEmailAndPassword(
-      String email, String password, SellerModel seller) async {
+  Future<void> createTempUserWithEmailAndPassword(String email, String password, SellerModel seller) async {
     try {
-      print("*********************************************************Creating user with email and password*********************************************************************");
+      print("*********************************************************Creating Temp user with email and password*********************************************************************");
 
-      await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-
-      seller.userId = (await _auth.currentUser?.uid)!;
+      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      seller.userId = (_auth.currentUser?.uid)!;
       seller.status="pending";
       seller.dateTime=Timestamp.now();
 
 
-      sellerrepo.createUser(seller);
+      sellerrepo.createtempUser(seller,seller.userId);
+
       firebaseUser.value != null
           ? Get.offAll(() => const OnBoarding())
-          //: Get.to(() => SellerHomeScreen());
-      :Get.to(()=>const SellerNavigationBar());
+      //: Get.to(() => SellerHomeScreen());
+          :Get.to(()=>const SellerNavigationBar());
 
 
     } on FirebaseAuthException catch (e) {
@@ -100,9 +117,10 @@ class SellerAuthenticationRepository extends GetxController {
     }
   }
 
+
   Future<bool> loginUserWithEmailAndPassword(String email, String password) async {
     try {
-      String emailFromDB = await sellerrepo.getSeller(email);
+      String emailFromDB = await sellerrepo.gettempSellerEmail(email);
       print("Comparing Input Email: $email and DB Email $emailFromDB");
 
       if (email == emailFromDB) {
@@ -134,6 +152,8 @@ class SellerAuthenticationRepository extends GetxController {
       return false;
     }
   }
+
+
 
 
 

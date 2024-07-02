@@ -3,6 +3,7 @@
 import 'package:bidcart/model/cart_model.dart';
 import 'package:bidcart/model/product_model.dart';
 import 'package:bidcart/repository/customer_repository/cart_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'customer_home_controller.dart';
@@ -15,7 +16,7 @@ class CartController extends GetxController {
     print('Controller initialized');
     super.onInit();
   }
-
+late GeoPoint location;
   static CartController get instance => Get.find();
 
   final homecontroller = Get.put(CustomerHomeController());
@@ -30,9 +31,9 @@ class CartController extends GetxController {
   int quantity = 0;
 
 
-  sendRequest(){
+  sendRequest(GeoPoint location){
 
-    cartRepo.saveOrderRequest(cart);
+    cartRepo.saveOrderRequest(cart,location);
 
   }
   //CartModel temp =CartModel.empty();

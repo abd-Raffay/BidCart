@@ -20,28 +20,23 @@ class SellerOfferController extends GetxController {
   final _auth = FirebaseAuth.instance;
 
   late List<Inventory> rxOffers = <Inventory>[].obs;
-
-
+  late List<OfferData> returnOffers=<OfferData>[].obs;
   late RxList<OfferData> rxsellermadeoffers = <OfferData>[].obs;
 
 
   void sendOffer(String orderid) async {
     int price=0;
     var orderRequests = requestController.rxOrderRequests;
-    var inventoryItems = homeController.rxInventory;
+    //var inventoryItems = homeController.rxInventory;
     //print(orderRequests[0].items.length);
     for (var order in orderRequests) {
      // print("ORders id = ${order.orderId} && Orderid = ${orderid}");
       if (order.orderId == orderid) {
         for (var orderItem in order.items) {
-          for (var item in inventoryItems) {
+          for (var item in homeController.rxInventory) {
             if (orderItem.id == item.productid && orderItem.size == item.size) {
-              print(
-                  "Orderitemid == ${orderItem.id} Inventoryid == ${item.productid}");
-              print("Order Quantity ${orderItem.quantity}");
               price=price+(item.price * orderItem.quantity);
-
-
+              item.quantity -= orderItem.quantity;
               var modifiedItem = Inventory(
                 productid: item.productid,
                 name: item.name,
@@ -111,6 +106,60 @@ class SellerOfferController extends GetxController {
 
 
     }
+
+  void resetOffer(String orderid) async {
+
+    final String? userId = _auth.currentUser?.uid;
+    SellerModel? seller = await sellerRepo.getSellerData(userId!);
+    // Create an OfferData instance with all required fields filled
+    OfferData offer = OfferData(
+        sellerId: seller!.userId,
+        items: [],
+        sellerName: seller.storename,
+        dateTime: DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+        orderId: orderid,
+        status: 'null',
+        totalPrice: 0
+    );
+    await storeRepo.postOffers(offer, orderid);
+    await storeRepo.Offerstoseller(offer, orderid);
+
+
+  }
+
+  void cancelOffer(String orderid) async {
+    try {
+      final String? sellerId = _auth.currentUser?.uid;
+
+      List<OfferData> offers = await storeRepo.cancelOffer(orderid, sellerId!);
+      // Assuming returnOffers is a RxList or similar to store fetched offers
+      returnOffers.assignAll(offers);
+      if (returnOffers.isNotEmpty) {
+        for (int i = 0; i < returnOffers.length; i++) {
+          if (returnOffers[i].orderId == orderid) {
+            for (int j = 0; j < returnOffers[i].items.length; j++) {
+              for (int k = 0; k < homeController.rxInventory.length; k++) {
+                if (returnOffers[i].items[j].productid == homeController.rxInventory[k].productid &&
+                    returnOffers[i].items[j].batch == homeController.rxInventory[k].batch &&
+                    returnOffers[i].items[j].size == homeController.rxInventory[k].size) {
+                  homeController.rxInventory[k].quantity += returnOffers[i].items[j].quantity;
+                }
+              }
+            }
+          }
+        }
+        resetOffer(orderid);
+        print("Returned Goods ${returnOffers[0].sellerId}");
+      } else {
+        print("No offers returned.");
+        // Handle case where no offers were returned
+      }
+    } catch (error) {
+      print('Error fetching offers: $error');
+      // Handle error (e.g., show a snackbar)
+    }
+
+  }
 
 
 

@@ -1,7 +1,11 @@
+
+
 import 'package:bidcart/model/customer_model.dart';
 import 'package:bidcart/repository/authentication/customer_authentication_repository.dart';
-import 'package:bidcart/repository/authentication/seller_authentication_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
 class CustomerSignUpController extends GetxController {
@@ -14,14 +18,41 @@ class CustomerSignUpController extends GetxController {
   final password = TextEditingController();
   final name = TextEditingController();
   final phone = TextEditingController();
+ late final address = TextEditingController();
+  late GeoPoint location;
 
+  late Position position;
 
-
-
-
-  Future<void> createUser(CustomerModel customer,String password) async {
-    await customerAuthRepo.createUserWithEmailAndPassword(customer.email, password,customer);
-    customerAuthRepo.setIntialScreen(customerAuthRepo.firebaseUser.value);
+  void getCurrentLocation() async {
+    position = await deteminePosition();
+    location = GeoPoint(position.latitude, position.longitude);
   }
 
+  Future<Position> deteminePosition() async {
+    LocationPermission permission;
+    permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location Permissions are denied');
+      }
+    }
+    return await Geolocator.getCurrentPosition();
+  }
+
+  void convertLocation(Position position) async {
+    List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude,position.longitude);
+    address.text = '${placemarks[0].subLocality}, ${placemarks[0].locality}';
+    
+  }
+
+
+
+
+  Future<void> createUser(CustomerModel customer, String password) async {
+    await customerAuthRepo.createUserWithEmailAndPassword(
+        customer.email, password, customer);
+    customerAuthRepo.setIntialScreen(customerAuthRepo.firebaseUser.value);
+  }
 }

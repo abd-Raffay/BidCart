@@ -103,8 +103,7 @@ class SellerRequestCards extends StatelessWidget {
                               ElevatedButton(
                                 onPressed: () {
                                   offerController.sendOffer(requests.orderId!);
-                                  print(
-                                      "Accepted %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+
                                   // Handle accept action
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -191,20 +190,44 @@ class SellerRequestCards extends StatelessWidget {
                                 ),
                               ]),
                             if (requests.status == "pending")
-                              Row(
+                              Column(
                                 children: [
-                                  Icon(
-                                    Icons.pending,
-                                    size: Sizes.md,
-                                    color: Colors.orange,
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.pending,
+                                        size: Sizes.md,
+                                        color: Colors.orange,
+                                      ),
+                                      SizedBox(
+                                        width: 2,
+                                      ),
+                                      const LabelText(
+                                        title: "Pending",
+                                        color:
+                                            Colors.orange, // Adjust color as needed
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(
-                                    width: 2,
-                                  ),
-                                  const LabelText(
-                                    title: "Pending",
-                                    color:
-                                        Colors.orange, // Adjust color as needed
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      offerController.cancelOffer(requests.orderId!);
+
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.block,size: Sizes.md,color: Colors.red,),
+                                        Text(
+                                          "Cancel",
+                                          style: TextStyle(
+                                              fontSize: Sizes.fontSizeSm,color: Colors.red),
+                                        ),
+                                      ],
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.all(10),
+                                      backgroundColor: Colors.white,
+                                    ),
                                   ),
                                 ],
                               ),

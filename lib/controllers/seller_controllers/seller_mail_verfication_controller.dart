@@ -31,7 +31,6 @@ class SellerMailVerificationController extends GetxController{
       );
       print("Error from catch send verfication ${e.toString()}");
     }
-
   }
 
   Future<void> setTimerForAutoRedirect() async{

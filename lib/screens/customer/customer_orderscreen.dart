@@ -41,9 +41,9 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
               // Pending Orders Tab
               Obx(() {
                 final orders = orderController.rxOrderRequests;
-                if (orders.isEmpty) {
+                if (orders.where((p0) => p0.status == "null").isEmpty) {
                   return const Center(
-                    child: Text('No pending orders'),
+                    child: Text('No Orders Were Placed.'),
                   );
                 } else {
                   return ListView.separated(
@@ -63,9 +63,11 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                             );
                           },
                           child: OrderDetailCard(
+                            status: order.status,
                             orderId: order.orderId!,
-                            totalProucts: order.items.length,
-                            date: order.dateTime, // Ensure date format is correct
+                            totalProducts: order.items.length,
+                            date: order.dateTime,
+                            height: 110,// Ensure date format is correct
                           ),
                         );
                       }
@@ -104,9 +106,11 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                             );
                           },
                           child: OrderDetailCard(
+                            status: order.status,
                             orderId: order.orderId!,
-                            totalProucts: order.items.length,
-                            date: order.dateTime, // Ensure date format is correct
+                            totalProducts: order.items.length,
+                            date: order.dateTime,
+                            height: 140,// Ensure date format is correct
                           ),
                         );
                       }

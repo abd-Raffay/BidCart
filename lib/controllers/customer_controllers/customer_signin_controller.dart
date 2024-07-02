@@ -21,28 +21,24 @@ class CustomerSignInController extends GetxController {
   Future<void> loginUser(String email, String password) async {
     print("Email = ${email} && password = ${password}");
     if (email == "admin@gmail.com" && password == "admin") {
-      Get.offAll(()=>const AdminNavigationBar());
-    } else {bool status =
-    await customerAuthRepo.loginUserWithEmailAndPassword(email, password);
-    if (status == true) {
-      customerAuthRepo.setIntialScreen(customerAuthRepo.firebaseUser.value,);
-
-    }
-    }
-  }
-
-  Future<void> googleSignIn() async {
-    try {
-      //final auth=CustomerAuthenticationRepository.instance;
-      await customerAuthRepo.signInWithGoogle();
-      customerAuthRepo.setIntialScreen(customerAuthRepo.firebaseUser.value);
-    } catch (e) {
-      print("apple ${e.toString()}");
+      Get.offAll(() => const AdminNavigationBar());
+    } else {
+      bool status =
+          await customerAuthRepo.loginUserWithEmailAndPassword(email, password);
+      print(
+          "Statusssssssssssssssssssssssssssss isssssssssssssssssssss ${status}");
+      if (status == true) {
+        print(
+            "Statusssssssssssssssssssssssssssss isssssssssssssssssssss trueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+        customerAuthRepo.setIntialScreen(
+          customerAuthRepo.firebaseUser.value,
+        );
+      }
     }
   }
 
-  void Logout(){
+  void Logout() {
     customerAuthRepo.logout();
-    Get.offAll(()=> const OnBoarding());
+    Get.offAll(() => const OnBoarding());
   }
 }

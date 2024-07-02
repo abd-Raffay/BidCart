@@ -14,18 +14,21 @@ class OrderDetailCard extends StatelessWidget {
     super.key,
     required this.orderId,
     required this.date,
-    required this.totalProucts,
+    required this.totalProducts,
+    required this.status,
+    required this.height,
   });
-
+  double height;
   String orderId;
   String date;
-  int totalProucts;
+  int totalProducts;
+  String status;
 
   @override
   Widget build(BuildContext context) {
     final orderController = Get.put(CustomerOrderController());
     return SizedBox(
-      height: 130, // Fixed height for the card
+      height: 140, // Fixed height for the card
       child: Card(
         color: Colors.white,
         shadowColor: Colors.black,
@@ -71,85 +74,108 @@ class OrderDetailCard extends StatelessWidget {
                         width: 6,
                       ),
                       const LabelText(title: "Total Products : "),
-                      LabelText(title: (totalProucts).toString()),
+                      LabelText(title: (totalProducts).toString()),
                     ],
                   ),
                 ],
               ),
               // Right side button
               Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(10),
-                        backgroundColor: Colors.red.shade800),
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Confirmation'),
-                              content: const Text(
-                                  'Are you sure you want to delete this item?'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .pop(); // Close the dialog
-                                  },
-                                  child: const Text('Cancel'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    // Perform deletion logic here
-                                    orderController.removeOrder(orderId!);
-                                    Navigator.of(context)
-                                        .pop(); // Close the dialog
-                                  },
-                                  child: const Text('Delete'),
-                                ),
-                              ],
+                  if (status == "accepted")
+                    Row(
+                      children: [
+                        Icon(Icons.check_circle_outline,size: Sizes.md,color: Colors.green,),
+                        const Text(
+                          'Completed',
+                          style: TextStyle(
+                            fontSize: Sizes.fontSizeSm,
+                            color: Colors.green,
+                          ),
+                        ),
+                      ],
+                    )
+                  else
+                    Column(
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.all(10),
+                            backgroundColor: Colors.red.shade800,
+                          ),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Confirmation'),
+                                  content: const Text('Are you sure you want to delete this item?'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(); // Close the dialog
+                                      },
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        // Perform deletion logic here
+                                        orderController.removeOrder(orderId!);
+                                        Navigator.of(context).pop(); // Close the dialog
+                                      },
+                                      child: const Text('Delete'),
+                                    ),
+                                  ],
+                                );
+                              },
                             );
-                          });
 
-                      // Add your onPressed logic here
-                    },
-                    child: const Row(
-                      children: [
-                        Icon(
-                          Icons.cancel,
-                          size: Sizes.fontSizeMd,
+                            // Add your onPressed logic here
+                          },
+                          child: const Row(
+                            children: [
+                              Icon(
+                                Icons.cancel,
+                                size: Sizes.fontSizeMd,
+                              ),
+                              SizedBox(
+                                width: 2,
+                              ),
+                              Text(
+                                'Cancel',
+                                style: TextStyle(fontSize: Sizes.fontSizeSm),
+                              ),
+                            ],
+                          ),
                         ),
-                        SizedBox(
-                          width: 2,
-                        ),
-                        Text(
-                          'Cancel',
-                          style: TextStyle(fontSize: Sizes.fontSizeSm),
+                        SizedBox(width: Sizes.spaceBtwItems / 2),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(padding: const EdgeInsets.all(10)),
+                          child: Row(
+                            children: [
+                              Icon(Icons.remove_red_eye, size: Sizes.md),
+                              const Text(
+                                "View Bids",
+                                style: TextStyle(fontSize: Sizes.fontSizeSm),
+                              ),
+                            ],
+                          ),
+                          onPressed: () {
+                            Get.to(BidScreen(orderid: orderId, totalProducts: totalProducts));
+                            orderController.getOffers(orderId);
+                          },
                         ),
                       ],
                     ),
-                  ),
-                  ElevatedButton(
-                    style:
-                        ElevatedButton.styleFrom(padding: const EdgeInsets.all(10)),
-                    child: Row(
-                      children: [
-                        Icon(Icons.remove_red_eye,size: Sizes.md,),
-                        const Text("View Bids",
-                            style: TextStyle(fontSize: Sizes.fontSizeSm)),
-                      ],
-                    ),
-                    onPressed: () {
-                      Get.to(BidScreen(orderid: orderId,totalProducts: totalProucts));
-                      orderController.getOffers(orderId);
 
-
-                    },
-                  ),
                 ],
-              )
-            ],
+                    ),
+
+                ],
+
+
           ),
         ),
       ),

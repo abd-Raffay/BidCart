@@ -18,7 +18,7 @@ class CartRepository extends GetxController{
 
   final customerRepo=Get.put(CustomerRepository());
 
-  Future<void> saveOrderRequest(RxList<CartModel> items) async {
+  Future<void> saveOrderRequest(RxList<CartModel> items,GeoPoint location) async {
     try {
       final CollectionReference orderRequestCollection = _db.collection('orderrequest');
 
@@ -41,7 +41,8 @@ class CartRepository extends GetxController{
           'items': itemsData,
           'dateTime':combinedDateTime,
           'status':"null",
-          'sellerId':"null"
+          'sellerId':"null",
+          'location':location
           // You can add other fields to the document if needed
         });
 

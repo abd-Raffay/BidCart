@@ -10,6 +10,7 @@ class RequestData {
   String? orderId;
   String status;
   String? sellerId;
+  GeoPoint location;
 
 
   RequestData({
@@ -19,7 +20,8 @@ class RequestData {
     required this.dateTime,
     required this.status,
     this.orderId,
-    this.sellerId
+    this.sellerId,
+    required this.location,
 
 
   });
@@ -32,7 +34,8 @@ class RequestData {
       "orderId":orderId,
       "items": items.map((item) => item.toJson()).toList(),
       "status":status,
-      "sellerId":sellerId
+      "sellerId":sellerId,
+      "location":location
     };
   }
 
@@ -51,6 +54,7 @@ class RequestData {
       dateTime: data["dateTime"],
       status: data["status"],
         sellerId:data["sellerId"],
+      location: data["location"],
     );
   }
 

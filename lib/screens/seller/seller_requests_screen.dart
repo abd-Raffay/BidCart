@@ -38,7 +38,7 @@ class SellerRequestScreen extends StatelessWidget {
               Obx(() {
                 RxList<RequestData> pendingRequests = <RequestData>[].obs;
                 pendingRequests.assignAll(requestController.rxOrderRequests);
-                return pendingRequests.isEmpty
+                return pendingRequests.where((request) => request.status != "accepted").isEmpty
                     ? const Center(
                         child: Text(
                           'No Pending Requests',
@@ -68,7 +68,7 @@ class SellerRequestScreen extends StatelessWidget {
               Obx(() {
                 List<RequestData> completedRequests = requestController
                     .rxOrderRequests
-                    .where((request) => request.status == 'accepted')
+                    .where((request) => request.status == 'accepted' && requestController.userid == request.sellerId)
                     .toList();
                 return completedRequests.isEmpty
                     ? const Center(

@@ -9,11 +9,12 @@ class SellerLoginRepository extends GetxController{
   static SellerLoginRepository get instance => Get.find();
   final _db = FirebaseFirestore.instance;
 
-  createUser(SellerModel user) async {
+  createtempUser(SellerModel user,String sellerid) async {
     try {
       await _db
-          .collection("seller")
-          .add(user.toJson());
+          .collection("tempseller")
+          .doc(sellerid)
+          .set(user.toJson());
       /*Get.snackbar( "Please", "Your Account Has been created.",
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.green[400],
@@ -28,9 +29,54 @@ class SellerLoginRepository extends GetxController{
     }
   }
 
-  getSeller(String email) async {
+  createUser(SellerModel user,String sellerid) async {
+    try {
+      await _db
+          .collection("seller")
+          .doc(sellerid)
+          .set(user.toJson());
+      /*Get.snackbar( "Please", "Your Account Has been created.",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.green[400],
+          colorText: Colors.white
+      );*/
+    } on Exception catch (e) {
+      Get.snackbar("Error", "Something went wrong. Try again",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent.withOpacity(0.1),
+          colorText: Colors.red);
 
-    final snapshot = await _db.collection("seller").where("Email",isEqualTo: email).get();
+    }
+  }
+  Future<void> updateSellerLocation(String sellerid, GeoPoint newLocation) async {
+    try {
+      await _db.collection("seller").doc(sellerid).update({'location': newLocation, });
+      await _db.collection("tempseller").doc(sellerid).update({'location': newLocation, });
+
+
+      Get.snackbar(
+        "Success",
+        "Location updated successfully.",
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.green[400],
+        colorText: Colors.white,
+      );
+    } catch (e) {
+
+      Get.snackbar(
+        "Error",
+        "Failed to update location. Try again",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent.withOpacity(0.1),
+        colorText: Colors.red,
+      );
+      print("Error: $e");
+    }
+  }
+
+  gettempSellerEmail(String email) async {
+
+    final snapshot = await _db.collection("tempseller").where("Email",isEqualTo: email).get();
     if (snapshot.docs.isNotEmpty) {
       final email = snapshot.docs.first.get("Email");
       //print("Email: $email");
@@ -43,12 +89,22 @@ class SellerLoginRepository extends GetxController{
     // return customerData;
   }
 
+  Future<SellerModel?> gettempUser(String userid) async {
+    final snapshot = await _db.collection("tempseller").doc(userid).get();
+
+    if (snapshot.exists && snapshot.data() != null) {
+      return SellerModel.fromSnapshot(snapshot);
+    } else {
+      print("No Seller found with the provided ID.");
+      return null;
+    }
+  }
+
   getApprovalStatus(String id) async {
 
     final snapshot = await _db.collection("seller").where("Userid",isEqualTo: id).get();
     if (snapshot.docs.isNotEmpty) {
       final approval = snapshot.docs.first.get("Status");
-      //print("Email: $approval");
       return approval;
     } else {
       print("No Seller found with the provided email.");
@@ -65,21 +121,36 @@ class SellerLoginRepository extends GetxController{
   }
 
 
-  Future<SellerModel?> getSellerData(String userid) async {
+   getSellerData(String userid) async {
     try {
-      final snapshot = await _db.collection("seller").where("Userid", isEqualTo: userid).get();
+      print(userid);
+      final snapshot = await _db.collection("tempseller").get();
 
-      if (snapshot.docs.isNotEmpty) {
-        // Convert the first document to a SellerModel object
-        return SellerModel.fromSnapshot(snapshot.docs.first);
-      } else {
-        print("No Seller found with the provided userid.");
-        return null;
+      for (var doc in snapshot.docs) {
+        if (doc.id == userid) {
+          return SellerModel.fromSnapshot(doc);
+        }
       }
     } catch (e) {
       // Handle errors
       print('Error fetching seller data: $e');
       return null;
+    }
+  }
+
+  Future<bool> checkSeller(String userid) async {
+    try {
+      final snapshot = await _db.collection("seller").get();
+      for (var doc in snapshot.docs) {
+        if (doc.id == userid) {
+          return true;
+        }
+      }
+      return false;
+    } catch (e) {
+      // Handle errors
+      print('Error fetching seller data: $e');
+      return false;
     }
   }
 

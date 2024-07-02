@@ -2,8 +2,11 @@ import 'package:bidcart/controllers/seller_controllers/seller_home_controller.da
 import 'package:bidcart/model/offer_model.dart';
 
 import 'package:bidcart/model/request_model.dart';
+import 'package:bidcart/model/seller_model.dart';
+import 'package:bidcart/repository/seller_repository/seller_login_repository.dart';
 import 'package:bidcart/repository/seller_repository/seller_store_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_map_math/flutter_geo_math.dart';
 import 'package:get/get.dart';
 
 
@@ -11,6 +14,7 @@ import 'package:get/get.dart';
 class SellerRequestController extends GetxController {
   final storeRepo = Get.put(SellerStoreRepository());
   final homeController = Get.put(SellerHomeController());
+  final sellerrepo = Get.put(SellerLoginRepository());
 
   late List<RequestData> orderRequests = [];
   late RxList<RequestData> rxOrderRequests = <RequestData>[].obs;
@@ -20,7 +24,10 @@ class SellerRequestController extends GetxController {
 
   final _auth = FirebaseAuth.instance;
 
+  late String? userid= _auth.currentUser?.uid;
+
   late int index;
+
 
   @override
   Future<void> onInit() async {
@@ -38,6 +45,7 @@ class SellerRequestController extends GetxController {
       getOffersbyseller();
       // Call getOrderStatus after updating rxOrderRequests
       getOrderStatus();
+      calculatedistance();
     });
 
     return rxOrderRequests;
@@ -115,6 +123,25 @@ class SellerRequestController extends GetxController {
         print("${i} Order id ${rxOrderRequests[i].orderId} :: Status ${rxOrderRequests[i].status} ");
 
       }
+    }
+  }
+
+  calculatedistance() async {
+    SellerModel seller = await sellerrepo.getSellerData(_auth.currentUser!.uid);
+    FlutterMapMath mapMath = FlutterMapMath();
+    for(int i=0 ;i<rxOrderRequests.length;i++) {
+      double distance = mapMath.distanceBetween(
+        seller.location.latitude,
+        seller.location.longitude,
+        rxOrderRequests[i].location.latitude,
+        rxOrderRequests[i].location.longitude,
+        "meters",
+      );
+      if(distance > 1000){
+        rxOrderRequests.removeAt(i);
+      }
+      print(
+          "Distance is +++++++++++++++++++++++++++++++++++++++++++++++++++++++ ${distance}");
     }
   }
 

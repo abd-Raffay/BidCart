@@ -1,4 +1,5 @@
 import 'package:bidcart/const/images.dart';
+import 'package:bidcart/const/sizes.dart';
 import 'package:bidcart/controllers/customer_controllers/customer_signup_controller.dart';
 import 'package:bidcart/model/customer_model.dart';
 import 'package:bidcart/repository/customer_repository/customer_repository.dart';
@@ -53,7 +54,7 @@ class _CustomerSignupState extends State<CustomerSignup> {
                       "Join our grocery Community",
                       style: TextStyle(
 
-                        fontSize: 30,
+                        fontSize: Sizes.lg,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
@@ -64,45 +65,41 @@ class _CustomerSignupState extends State<CustomerSignup> {
                     child: Text(
                       "Create your account to start Shopping",
                       style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
+                        fontSize: Sizes.fontSizeMd,
                         color: Colors.grey,
                       ),
                     ),
                   ),
 
-                  const SizedBox(height: 20.0),
+                  const SizedBox(height:Sizes.spaceBtwInputFields),
 
                   //Username Feild
                   TextFormField(
                     controller: controller.name,
-
                     decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.person),
-                        labelText: 'Full Name',
+                        labelText: 'Name',
                         labelStyle: TextStyle(color: Colors.black),
                         focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(width: 2.0,color: Colors.cyan)
                         ),
                         border: OutlineInputBorder()),
                   ),
-                  const SizedBox(height: 10.0),
+                  const SizedBox(height:Sizes.spaceBtwInputFields),
 
                   TextFormField(
                     controller: controller.phone,
 
                     decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.phone),
-                        labelText: 'Phone Number'
-                            ''
-                            '',
+                        labelText: 'Phone Number',
                         labelStyle: TextStyle(color: Colors.black),
                         focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(width: 2.0,color: Colors.cyan)
                         ),
                         border: OutlineInputBorder()),
                   ),
-                  const SizedBox(height: 10.0),
+                  const SizedBox(height:Sizes.spaceBtwInputFields),
 
 
                   //Email Feild
@@ -127,7 +124,7 @@ class _CustomerSignupState extends State<CustomerSignup> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 10.0),
+                  const SizedBox(height:Sizes.spaceBtwInputFields),
 
                   //password Feild
                   TextFormField(
@@ -170,41 +167,75 @@ class _CustomerSignupState extends State<CustomerSignup> {
 
                   ),
 
+                  const SizedBox(height:Sizes.spaceBtwInputFields),
 
-                  const SizedBox(height: 32.0),
+
+                  TextFormField(
+                    controller: controller.address,
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.location_on_rounded),
+                      labelText: 'Location',
+                      labelStyle: const TextStyle(color: Colors.black),
+                      focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(width: 2.0, color: Colors.cyan),
+                      ),
+                      border: const OutlineInputBorder(),
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.my_location),
+                        onPressed: (){
+                          controller.getCurrentLocation();
+                          print(controller.position.toString());
+
+                          controller.convertLocation(controller.position);
+                        },
+                      ),
+                    ),
+                  ),
+
+
 
                 // SignUp Button
-                  SizedBox(
-                    width: double.infinity,
 
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.cyan,
-                        foregroundColor: Colors.white,
+                  Container(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: SizedBox(
+                        width: double.infinity,
+
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.cyan,
+                            foregroundColor: Colors.white,
+                          ),
+
+                          onPressed: () {
+                            final customer=CustomerModel(
+
+                              address: controller.address.text.trim(),
+                                name: controller.name.text.trim(),
+                                email: controller.email.text.trim(),
+                                //password: controller.password.text.trim(),
+                                phone: controller.phone.text.trim(),
+                                id:"",
+                               location: controller.location
+                            );
+
+                            if (_formKey.currentState!.validate()) {
+                              CustomerSignUpController.instance.createUser(customer,controller.password.text);
+                              //SignUpController.instance.registerUser(controller.email.text.trim(), controller.password.text.trim());
+                              controller.email.clear();
+                              controller.password.clear();
+
+                            }
+
+
+
+                           // await _signUp();
+                          },
+                          child: const Text('Sign Up'),
+                        ),
                       ),
-
-                      onPressed: () {
-                        final customer=CustomerModel(
-                            name: controller.name.text.trim(),
-                            email: controller.email.text.trim(),
-                            //password: controller.password.text.trim(),
-                            phone: controller.phone.text.trim(),
-                            id:"",
-                        );
-
-                        if (_formKey.currentState!.validate()) {
-                          CustomerSignUpController.instance.createUser(customer,controller.password.text);
-                          //SignUpController.instance.registerUser(controller.email.text.trim(), controller.password.text.trim());
-                          controller.email.clear();
-                          controller.password.clear();
-
-                        }
-
-
-
-                       // await _signUp();
-                      },
-                      child: const Text('Sign Up'),
                     ),
                   ),
                 ],

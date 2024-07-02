@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class SellerModel {
   String userId;
@@ -11,6 +12,8 @@ class SellerModel {
   String status;
   final String storeId;
    Timestamp dateTime;
+   final GeoPoint location;
+
 
   SellerModel({
     required this.userId,
@@ -23,6 +26,7 @@ class SellerModel {
     required this.status,
     required this.storeId,
     required this.dateTime,
+    required this.location,
   });
 
   factory SellerModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
@@ -38,6 +42,7 @@ class SellerModel {
       address: data["Address"],
       status: data["Status"],
       dateTime: data["DateTime"],
+      location: data["location"]
     );
   }
 
@@ -52,7 +57,8 @@ class SellerModel {
       "Address": address,
       "Status": status,
       "StoreId": storeId,
-      "DateTime": dateTime // Server timestamp
+      "DateTime": dateTime ,
+      "location":location// Server timestamp
     };
   }
 }

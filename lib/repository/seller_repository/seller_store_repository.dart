@@ -145,6 +145,7 @@ class SellerStoreRepository extends GetxController {
                 List<dynamic> itemsData = doc['items'];
                 List<CartModel> items =
                     itemsData.map((item) => CartModel.fromJson(item)).toList();
+                GeoPoint location = doc['location'];
 
                 // Create RequestData object
                 return RequestData(
@@ -153,6 +154,7 @@ class SellerStoreRepository extends GetxController {
                     items: items,
                     customerName: customerName,
                     dateTime: dateTime,
+                    location: location,
                     orderId: orderid);
               }).toList()
                 // Sort the list of RequestData objects by date
@@ -195,9 +197,11 @@ class SellerStoreRepository extends GetxController {
                 List<dynamic> itemsData = doc['items'];
                 List<CartModel> items =
                     itemsData.map((item) => CartModel.fromJson(item)).toList();
+                GeoPoint location=doc['location'];
 
                 // Create RequestData object
                 return RequestData(
+                  location: location,
                   orderId: orderid,
                   customerId: customerId,
                   items: items,
@@ -398,6 +402,57 @@ class SellerStoreRepository extends GetxController {
     }
   }
 
+  Future<List<OfferData>> cancelOffer(String orderId,String sellerid) async {
+    try {
+      final CollectionReference offersCollection = FirebaseFirestore.instance.collection('offers');
+      final QuerySnapshot<Map<String, dynamic>> offerSnapshot = await offersCollection
+          .doc(orderId)
+          .collection('offers')
+          .get();
+
+      List<OfferData> offers = [];
+
+      for (var doc in offerSnapshot.docs) {
+        try {
+          OfferData offer = OfferData.fromSnapshot(doc);
+          offers.add(offer);
+          // print('Converted offer: ${offer.toJson()}');
+        } catch (e) {
+          print('Error converting document to OfferData: $e');
+          // Print detailed information about each field to identify the problematic one
+          // print('Fields in document:');
+          doc.data().forEach((key, value) {
+            print('$key: $value');
+          });
+        }
+      }
+
+      // print('Offers retrieved for orderId: $orderId');
+      // print('Offers list: ${offers.map((e) => e.toJson()).toList()}');
+      if (offers.isEmpty) {
+        showSnackbar(
+          title: "Offer Not Found!",
+          message: "No Offers were placed on this order.",
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+      }
+
+      return offers;
+    } catch (e) {
+      print('Error retrieving offers from Firestore: $e');
+
+      // Show error snackbar (ensure showSnackbar is defined)
+      showSnackbar(
+        title: "Error",
+        message: "Failed to retrieve offers.",
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+
+      return []; // Return an empty list indicating failure
+    }
+  }
 
 
 }

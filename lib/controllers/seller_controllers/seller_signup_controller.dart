@@ -1,13 +1,16 @@
 import 'package:bidcart/model/seller_model.dart';
 import 'package:bidcart/repository/authentication/seller_authentication_repository.dart';
+import 'package:bidcart/repository/seller_repository/seller_login_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 
 class SellerSignUpController extends GetxController {
   static SellerSignUpController get instance => Get.find();
  final sellerAuthRepo=Get.put(SellerAuthenticationRepository());
-
+ final sellerReop=Get.put(SellerLoginRepository());
 
 
   //TextFeild Controllers
@@ -19,19 +22,20 @@ class SellerSignUpController extends GetxController {
   final address=TextEditingController();
   final cnic=TextEditingController();
 
-
-
+late LatLng location;
 
   Future<void> createUser(SellerModel seller,String password) async {
-    print("*********************************************************Seller signup controller*********************************************************************");
-
-    await sellerAuthRepo.createUserWithEmailAndPassword(seller.email, password,seller);
+    print("Creating User ${seller}");
+    await sellerAuthRepo.createTempUserWithEmailAndPassword(seller.email, password,seller);
    sellerAuthRepo.setInitialScreen(sellerAuthRepo.firebaseUser.value);
-
-      print("*************************SellerAuthenticationRepository.instance**********************");
-
-
-
   }
+
+  setLocation(String? sellerid,GeoPoint newLocation){
+    sellerReop.updateSellerLocation(sellerid!, newLocation);
+    print("Location isss ${location}");
+  }
+
+
+
 
 }

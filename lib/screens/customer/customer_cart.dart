@@ -80,7 +80,7 @@ class CustomerCartScreen extends StatelessWidget {
         final cartItems = cartController.cartItems;
         return Visibility(
           visible: cartItems().isNotEmpty,
-          child: const BottomBar(buttontext: 'Send Request',functionality: "sendrequest",),
+          child: const BottomBar(buttontext: 'Confirm Cart',functionality: "selectlocation",),
         );
       }),
     );
