@@ -9,6 +9,8 @@ import 'package:bidcart/widget/Text/heading.dart';
 import 'package:bidcart/widget/Text/labeltext.dart';
 import 'package:get/get.dart';
 
+import '../modal/distance.dart';
+
 class OrderDetailCard extends StatelessWidget {
   OrderDetailCard({
     super.key,
@@ -17,16 +19,20 @@ class OrderDetailCard extends StatelessWidget {
     required this.totalProducts,
     required this.status,
     required this.height,
+    required this.distance
+
   });
   double height;
   String orderId;
   String date;
   int totalProducts;
   String status;
+  int distance;
 
   @override
   Widget build(BuildContext context) {
     final orderController = Get.put(CustomerOrderController());
+
     return SizedBox(
       height: 140, // Fixed height for the card
       child: Card(
@@ -75,7 +81,28 @@ class OrderDetailCard extends StatelessWidget {
                       ),
                       const LabelText(title: "Total Products : "),
                       LabelText(title: (totalProducts).toString()),
+
                     ],
+                  ),
+
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.social_distance,
+                        size: Sizes.md,
+                      ),
+                      const SizedBox(width: 5),
+                      LabelText(
+                          title:
+                          "Distance: ${distance.toString()} meters"),
+                      IconButton(onPressed: () async {
+                        int newdistance=0;
+                        newdistance =  await showRadiusDialog(context);
+                        orderController.updateDistance(newdistance,orderId);
+
+                      }, icon: Icon(CupertinoIcons.add_circled,size: Sizes.md,),)
+                    ],
+
                   ),
                 ],
               ),

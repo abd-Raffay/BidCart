@@ -7,7 +7,9 @@ import 'package:bidcart/widget/Text/heading.dart'; // Replace with your HeadingT
 import 'package:bidcart/widget/Text/labeltext.dart'; // Replace with your LabelText widget import
 import 'package:bidcart/const/sizes.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart'; // Replace with your Sizes constants
+import 'package:intl/intl.dart';
+
+import '../../controllers/seller_controllers/seller_offer_controller.dart'; // Replace with your Sizes constants
 
 class BidCard extends StatelessWidget {
   final OfferData offer;
@@ -119,6 +121,8 @@ class BidCard extends StatelessWidget {
                               ElevatedButton(
                                 onPressed: () {
                                   // Handle reject action
+                                  //final offerController = Get.put(SellerOfferController());
+                                  //offerController.cancelOffer(offer.orderId, offer.sellerId);
                                   orderController.rejectOrder();
                                 },
                                 style: ElevatedButton.styleFrom(

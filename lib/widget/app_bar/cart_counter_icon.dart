@@ -11,7 +11,7 @@ class CartCounterIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cardController = Get.put(CartController());
+    final cartController = Get.put(CartController());
 
     return Stack(
       children: [
@@ -33,7 +33,7 @@ class CartCounterIcon extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  '${cardController.cartCount.value}',
+                  '${cartController.getCartCounter()}',
                   style: const TextStyle(color: Colors.white70),
                 ),
               ),

@@ -127,21 +127,21 @@ class SellerRequestController extends GetxController {
   }
 
   calculatedistance() async {
+
     SellerModel seller = await sellerrepo.getSellerData(_auth.currentUser!.uid);
     FlutterMapMath mapMath = FlutterMapMath();
     for(int i=0 ;i<rxOrderRequests.length;i++) {
-      double distance = mapMath.distanceBetween(
+      double tempdistance = mapMath.distanceBetween(
         seller.location.latitude,
         seller.location.longitude,
         rxOrderRequests[i].location.latitude,
         rxOrderRequests[i].location.longitude,
         "meters",
       );
-      if(distance > 1000){
+      if(tempdistance > rxOrderRequests[i].distance){
         rxOrderRequests.removeAt(i);
       }
-      print(
-          "Distance is +++++++++++++++++++++++++++++++++++++++++++++++++++++++ ${distance}");
+
     }
   }
 

@@ -67,6 +67,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                             orderId: order.orderId!,
                             totalProducts: order.items.length,
                             date: order.dateTime,
+                            distance: order.distance,
                             height: 110,// Ensure date format is correct
                           ),
                         );
@@ -107,6 +108,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                           },
                           child: OrderDetailCard(
                             status: order.status,
+                            distance: order.distance,
                             orderId: order.orderId!,
                             totalProducts: order.items.length,
                             date: order.dateTime,

@@ -11,6 +11,7 @@ class RequestData {
   String status;
   String? sellerId;
   GeoPoint location;
+  int distance;
 
 
   RequestData({
@@ -22,6 +23,7 @@ class RequestData {
     this.orderId,
     this.sellerId,
     required this.location,
+    required this.distance,
 
 
   });
@@ -35,7 +37,8 @@ class RequestData {
       "items": items.map((item) => item.toJson()).toList(),
       "status":status,
       "sellerId":sellerId,
-      "location":location
+      "location":location,
+      "distance":distance
     };
   }
 
@@ -55,6 +58,7 @@ class RequestData {
       status: data["status"],
         sellerId:data["sellerId"],
       location: data["location"],
+      distance: data["distance"],
     );
   }
 

@@ -37,7 +37,7 @@ final String id;
             if (quantity.value > 1) {
               cartController.decreaseQuantity(id,size);
               quantity.value--;
-              cartController.setQuantity(id,size,quantity.value,);
+              //cartController.setQuantity(id,size,quantity.value,);
             }
           },
         ),
@@ -55,8 +55,9 @@ final String id;
           onPressed: () {
             // Increase the quantity when the add button is pressed
             quantity.value++;
-            cartController.setQuantity(id,size,quantity.value,);
             cartController.increaseQuantity(id,size);
+            //cartController.setQuantity(id,size,quantity.value,);
+
           },
         ),
       ],

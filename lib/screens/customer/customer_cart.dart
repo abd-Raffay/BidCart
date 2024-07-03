@@ -62,7 +62,7 @@ class CustomerCartScreen extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: AddRemoveButtons(
-                          quantity: RxInt(item.quantity),
+                          quantity: RxInt(cartController.getQuantity(item.id, item.size)),
                           id: item.id,
                           size: item.size,
                         ),

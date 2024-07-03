@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:bidcart/controllers/customer_controllers/customer_cart_controller.dart';
 import 'package:bidcart/controllers/customer_controllers/customer_signup_controller.dart';
 import 'package:bidcart/controllers/seller_controllers/seller_signup_controller.dart';
+import 'package:bidcart/model/location.dart';
 import 'package:bidcart/widget/app_bar/appBar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,68 +17,105 @@ import 'dart:ui' as ui;
 import '../../widget/app_bar/bottomBar.dart';
 
 class CustomerMapScreen extends StatefulWidget {
-  const CustomerMapScreen({super.key});
+  CustomerMapScreen({super.key});
 
   @override
   State<CustomerMapScreen> createState() => _MapScreenState();
+
+  LatLng currentlocation = LatLng(33.5409533, 73.0807394);
+  late GoogleMapController mapController;
+  Map<String, Marker> markers = {};
+  Uint8List? markericon;
+  final _auth = FirebaseAuth.instance;
+
+  Future<Uint8List> getMarkerIcon(String image, int size) async {
+    ByteData data = await rootBundle.load(image);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetHeight: size);
+    ui.FrameInfo info = await codec.getNextFrame();
+    return (await info.image.toByteData(format: ui.ImageByteFormat.png))!
+        .buffer
+        .asUint8List();
+  }
 }
 
-LatLng currentlocation = LatLng(33.5409533, 73.0807394);
-late GoogleMapController mapController;
-Map<String, Marker> markers = {};
-Uint8List? markericon;
-final _auth = FirebaseAuth.instance;
+RxList<Location> locationList = <Location>[].obs;
+final sellerController = Get.put(SellerSignUpController());
+final customersignupController = Get.put(CustomerSignUpController());
 
 class _MapScreenState extends State<CustomerMapScreen> {
+  @override
+  void initState() {
+    super.initState();
+    getCurrentLocation();
+    setMarkers();
+  }
+
+  setMarkers() async {
+    locationList.assignAll(await sellerController.getLocations());
+    for (int i = 0; i < locationList.length; i++) {
+      addMarker(
+          locationList[i].sellerid,
+          locationList[i],
+          LatLng(locationList[i].location.latitude,
+              locationList[i].location.longitude));
+    }
+  }
+
+  getCurrentLocation() async {
+    Position position = await customersignupController.deteminePosition();
+    widget.currentlocation = LatLng(position.latitude, position.longitude);
+    widget.mapController.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(
+            target: LatLng(position.latitude, position.longitude), zoom: 14)));
+  }
+
   @override
   Widget build(BuildContext context) {
     final signupController = Get.put(SellerSignUpController());
     final cartController = Get.put(CartController());
-    final customersignupController = Get.put(CustomerSignUpController());
     return Scaffold(
       appBar: TAppBar(
         title: Text('Select Your Location'),
         showBackArrow: true,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.check),
-            onPressed: () {
-              if (currentlocation != null) {
-                signupController.setLocation(
-                    _auth.currentUser?.uid,
-                    GeoPoint(
-                        currentlocation.latitude, currentlocation.longitude));
-                signupController.location = LatLng(
-                  currentlocation.latitude,
-                  currentlocation!.longitude,
-                );
-                //Navigator.pop(context); // Go back after saving
-              } else {
-                // Show a message or alert that location is not selected
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Please select a location')),
-                );
-              }
-            },
+      ),
+      body: Stack(children: [
+        GoogleMap(
+          myLocationButtonEnabled: true,
+          myLocationEnabled: true,
+          zoomControlsEnabled: false,
+          initialCameraPosition: CameraPosition(
+            target: widget.currentlocation,
+            zoom: 14,
           ),
-        ],
-      ),
-      body: GoogleMap(
-        initialCameraPosition: CameraPosition(
-          target: currentlocation,
-          zoom: 14,
+          onCameraMove: (CameraPosition? position) {
+            if (widget.currentlocation != position!.target) {
+              setState(() {
+                widget.currentlocation = position.target;
+
+              });
+            }
+          },
+          onMapCreated: (controller) {
+            widget.mapController = controller;
+          },
+          markers: widget.markers.values.toSet(),
         ),
-        onMapCreated: (controller) {
-          mapController = controller;
-        },
-        onTap: (location) {
-          setState(() {
-            currentlocation = location;
-            addMarker("selected_marker", location);
-          });
-        },
-        markers: markers.values.toSet(),
-      ),
+
+
+
+        Align(
+          alignment: Alignment.center,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 35),
+            child: Image.asset(
+              'assets/logo/mapmarker.png',
+              height: 55,
+              width: 55,
+            ),
+          ),
+        )
+      ]),
       bottomNavigationBar: Obx(() {
         final cartItems = cartController.cartItems;
         return Visibility(
@@ -85,40 +123,29 @@ class _MapScreenState extends State<CustomerMapScreen> {
           child: BottomBar(
             buttontext: 'Send Request',
             functionality: "sendrequest",
-            location:
-                GeoPoint(currentlocation.latitude, currentlocation.longitude),
+            location: GeoPoint(widget.currentlocation.latitude,
+                widget.currentlocation.longitude),
           ),
         );
       }),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          Position position = await customersignupController.deteminePosition();
-          mapController.animateCamera(CameraUpdate.newCameraPosition(
-              CameraPosition(
-                  target: LatLng(position.latitude, position.longitude),
-                  zoom: 14)));
-          markers.clear();
-          addMarker(_auth.currentUser!.uid, LatLng(position.latitude, position.longitude));
-        },
-        label: Text("Current Location"),
-        icon: Icon(Icons.location_history),
-      ),
     );
   }
 
-  addMarker(String markerid, LatLng location) async {
+  addMarker(String? markerid, Location data, LatLng location) async {
+    final Uint8List newIcon =
+        await widget.getMarkerIcon('assets/logo/storelogo.png', 100);
     var marker = Marker(
-      markerId: MarkerId(markerid),
+      icon: BitmapDescriptor.fromBytes(newIcon),
+      markerId: MarkerId(markerid!),
       position: location,
       infoWindow: InfoWindow(
-        title: "Store Location",
+        title: data.storename,
         snippet:
-            "Latitude: ${location.latitude}, Longitude: ${location.longitude}",
+            "Latitude: ${data.location.latitude}, Longitude: ${data.location.longitude}",
       ),
-      draggable: true,
     );
 
-    markers[markerid] = marker;
+    widget.markers[markerid] = marker;
     setState(() {});
   }
 }

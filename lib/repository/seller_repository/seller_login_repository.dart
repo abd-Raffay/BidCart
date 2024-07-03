@@ -1,3 +1,4 @@
+import 'package:bidcart/model/location.dart';
 import 'package:bidcart/model/seller_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -87,6 +88,36 @@ class SellerLoginRepository extends GetxController{
     }
     //final customerData = snapshot.docs.map((e) => CustomerModel.fromSnapshot(e)).single;
     // return customerData;
+  }
+  saveLocation(Location location,String sellerid) async {
+    try {
+      await _db
+          .collection("locations")
+          .doc(sellerid)
+          .set(location.toJson());
+      /*Get.snackbar( "Please", "Your Account Has been created.",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.green[400],
+          colorText: Colors.white
+      );*/
+    } on Exception catch (e) {
+      Get.snackbar("Error", "Something went wrong. Try again",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent.withOpacity(0.1),
+          colorText: Colors.red);
+    }
+
+  }
+  Future<List<Location>> getAllLocations() async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> snapshot =
+      await _db.collection("locations").get();
+
+      return snapshot.docs.map((doc) => Location.fromJson(doc.data())).toList();
+    } catch (e) {
+      print("Error getting locations: $e");
+      return [];
+    }
   }
 
   Future<SellerModel?> gettempUser(String userid) async {

@@ -8,6 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../modal/distance.dart';
+
 class BottomBar extends StatelessWidget {
   const BottomBar({
     super.key,
@@ -30,8 +32,10 @@ final GeoPoint? location;
  final Inventory? product;
 
 
+
   @override
   Widget build(BuildContext context) {
+    int distance=0;
     final cartController=Get.put(CartController());
     final sellerStoreController=Get.put(SellerStoreController());
     return BottomAppBar(
@@ -46,20 +50,30 @@ final GeoPoint? location;
               //print("Size ${size}");
               // print("ID ${productId}");
               qty=await cartController.getQuantity(productId, size);
-              print(qty);
+              //print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ${qty} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 
               cartController.addProductstoCart(productId, size, qty);
             }
             else if (functionality == "sendrequest") {
-              cartController.sendRequest(location!);
-              cartController.clearCart();
-              Get.to(const CustomerOrderScreen());
-              Get.snackbar("Sucess", "Order Request Sent ",
-                snackPosition: SnackPosition.TOP,
-                backgroundColor: Colors.green.shade400,
-                duration: const Duration(milliseconds: 1500),
-                colorText: Colors.white,
-              );
+              int distance;
+
+
+
+
+              distance =  await showRadiusDialog(context);
+              if(distance > 0) {
+                cartController.sendRequest(location!, distance);
+                cartController.clearCart();
+                Get.to(const CustomerOrderScreen());
+
+
+                Get.snackbar("Sucess", "Order Request Sent ",
+                  snackPosition: SnackPosition.TOP,
+                  backgroundColor: Colors.green.shade400,
+                  duration: const Duration(milliseconds: 1500),
+                  colorText: Colors.white,
+                );
+              }
             }
             else if (functionality == "addsellerproduct") {
               if (sellerStoreController.quantityController.text.isEmpty ||
@@ -117,6 +131,11 @@ final GeoPoint? location;
         ),
       ),
 
+
     );
+
   }
+
+
+
 }

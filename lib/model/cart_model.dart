@@ -64,4 +64,5 @@ class CartModel {
       size: data["size"] // Convert size data to list of strings
     );
   }
+
 }

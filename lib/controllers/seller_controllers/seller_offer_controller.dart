@@ -18,6 +18,7 @@ class SellerOfferController extends GetxController {
 
 
   final _auth = FirebaseAuth.instance;
+  late String? sellerId = _auth.currentUser?.uid;
 
   late List<Inventory> rxOffers = <Inventory>[].obs;
   late List<OfferData> returnOffers=<OfferData>[].obs;
@@ -127,9 +128,9 @@ class SellerOfferController extends GetxController {
 
   }
 
-  void cancelOffer(String orderid) async {
+  void cancelOffer(String orderid,String selerId) async {
     try {
-      final String? sellerId = _auth.currentUser?.uid;
+
 
       List<OfferData> offers = await storeRepo.cancelOffer(orderid, sellerId!);
       // Assuming returnOffers is a RxList or similar to store fetched offers

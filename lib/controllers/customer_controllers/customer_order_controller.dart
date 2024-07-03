@@ -47,6 +47,10 @@ class CustomerOrderController extends GetxController{
     storeRepo.removeOrder(orderId);
 
   }
+
+  Future<void> updateDistance(int distance,String orderid) async {
+    await cartRepo.updateDistance(distance,orderid);
+  }
   void getOffers(String orderId) {
     cartRepo.getOffersByOrderId(orderId).listen((List<OfferData> offers) {
       rxorderOffers.assignAll(offers);

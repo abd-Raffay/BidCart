@@ -61,4 +61,5 @@ class SellerModel {
       "location":location// Server timestamp
     };
   }
+
 }

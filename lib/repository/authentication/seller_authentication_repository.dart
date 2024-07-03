@@ -63,7 +63,7 @@ class SellerAuthenticationRepository extends GetxController {
           if(seller.location.longitude==0.0 && seller.location.latitude==0.0){
             print("Seller id is ${seller.userId}");
             print("Seller's location is at coordinates ${seller.location.longitude}, ${seller.location.latitude}");
-            Get.offAll(()=> const MapScreen());
+            Get.offAll(()=>  MapScreen());
           }else {
             Get.offAll(() => const SellerNavigationBar());
           }

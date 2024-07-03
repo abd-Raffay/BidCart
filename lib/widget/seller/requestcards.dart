@@ -89,6 +89,7 @@ class SellerRequestCards extends StatelessWidget {
                                 title: "Product Available: $available/$total"),
                           ],
                         ),
+
                       ],
                     ),
                     Column(
@@ -111,11 +112,15 @@ class SellerRequestCards extends StatelessWidget {
                                 ),
                                 child: Row(
                                   children: [
-                                    Icon(Icons.check_circle_outline,size:Sizes.md),
-                                    SizedBox(width: 2,),
+                                    Icon(Icons.check_circle_outline,
+                                        size: Sizes.md),
+                                    SizedBox(
+                                      width: 2,
+                                    ),
                                     const Text(
                                       "Accept",
-                                      style: TextStyle(fontSize: Sizes.fontSizeSm),
+                                      style:
+                                          TextStyle(fontSize: Sizes.fontSizeSm),
                                     ),
                                   ],
                                 ),
@@ -139,11 +144,14 @@ class SellerRequestCards extends StatelessWidget {
                                 ),
                                 child: Row(
                                   children: [
-                                    Icon(Icons.cancel_outlined,size:Sizes.md),
-                                    SizedBox(width: 2,),
+                                    Icon(Icons.cancel_outlined, size: Sizes.md),
+                                    SizedBox(
+                                      width: 2,
+                                    ),
                                     const Text(
                                       "Reject",
-                                      style: TextStyle(fontSize: Sizes.fontSizeSm),
+                                      style:
+                                          TextStyle(fontSize: Sizes.fontSizeSm),
                                     ),
                                   ],
                                 ),
@@ -175,7 +183,10 @@ class SellerRequestCards extends StatelessWidget {
                                   },
                                   child: Row(
                                     children: [
-                                      Icon(Icons.delete_forever,size: Sizes.md,),
+                                      Icon(
+                                        Icons.delete_forever,
+                                        size: Sizes.md,
+                                      ),
                                       Text(
                                         "Remove",
                                         style: TextStyle(
@@ -204,23 +215,29 @@ class SellerRequestCards extends StatelessWidget {
                                       ),
                                       const LabelText(
                                         title: "Pending",
-                                        color:
-                                            Colors.orange, // Adjust color as needed
+                                        color: Colors
+                                            .orange, // Adjust color as needed
                                       ),
                                     ],
                                   ),
                                   ElevatedButton(
                                     onPressed: () {
-                                      offerController.cancelOffer(requests.orderId!);
-
+                                      offerController.cancelOffer(
+                                          requests.orderId!,
+                                          requests.sellerId!);
                                     },
                                     child: Row(
                                       children: [
-                                        Icon(Icons.block,size: Sizes.md,color: Colors.red,),
+                                        Icon(
+                                          Icons.block,
+                                          size: Sizes.md,
+                                          color: Colors.red,
+                                        ),
                                         Text(
                                           "Cancel",
                                           style: TextStyle(
-                                              fontSize: Sizes.fontSizeSm,color: Colors.red),
+                                              fontSize: Sizes.fontSizeSm,
+                                              color: Colors.red),
                                         ),
                                       ],
                                     ),

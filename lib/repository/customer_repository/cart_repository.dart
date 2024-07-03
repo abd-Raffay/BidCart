@@ -18,7 +18,7 @@ class CartRepository extends GetxController{
 
   final customerRepo=Get.put(CustomerRepository());
 
-  Future<void> saveOrderRequest(RxList<CartModel> items,GeoPoint location) async {
+  Future<void> saveOrderRequest(RxList<CartModel> items,GeoPoint location,int distance) async {
     try {
       final CollectionReference orderRequestCollection = _db.collection('orderrequest');
 
@@ -42,7 +42,8 @@ class CartRepository extends GetxController{
           'dateTime':combinedDateTime,
           'status':"null",
           'sellerId':"null",
-          'location':location
+          'location':location,
+          'distance':distance
           // You can add other fields to the document if needed
         });
 
@@ -136,6 +137,28 @@ class CartRepository extends GetxController{
     } catch (e) {
       showSnackbar(title: "Failed ", message: "Error accepting order: $e", backgroundColor: Colors.red);
       print('Error accepting order: $e');
+    }
+  }
+
+  Future<void> updateDistance(int distance, String orderId) async {
+    try {
+      // Get a reference to the specific order document in the Firestore collection
+      DocumentReference orderRef = FirebaseFirestore.instance.collection('orderrequest').doc(orderId);
+
+      // Define the fields you want to update
+      Map<String, dynamic> updatedFields = {
+        'distance': distance,
+      };
+
+      // Update the document with the new fields
+      await orderRef.update(updatedFields);
+
+      print('Distance updated successfully.');
+      Get.back(); // Close the dialog or navigate back
+      showSnackbar(title: "Success", message: "Distance updated successfully", backgroundColor: Colors.green);
+    } catch (e) {
+      showSnackbar(title: "Failed", message: "Error updating distance: $e", backgroundColor: Colors.red);
+      print('Error updating distance: $e');
     }
   }
 
