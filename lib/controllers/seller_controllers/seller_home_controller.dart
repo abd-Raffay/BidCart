@@ -2,6 +2,7 @@ import 'package:bidcart/model/product_model.dart';
 import 'package:bidcart/model/seller_inventory.dart';
 import 'package:bidcart/repository/seller_repository/seller_store_repository.dart';
 import 'package:bidcart/widget/products/product_cards/product_card_vertical.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,21 +13,22 @@ class SellerHomeController extends GetxController {
 
   @override
   Future<void> onInit() async {
-    await getInventory();
-    await storeRepo.getOrderRequests();
+    await getInventory(_auth.currentUser!.uid);
+     storeRepo.getOrderRequests();
     super.onInit();
   }
   final RxString searchQuery = ''.obs;
 
+  final _auth = FirebaseAuth.instance;
 
   late Future<List<Inventory>> inventory;
   RxList<Inventory> rxInventory = <Inventory>[].obs;
   int index = 0;
 
-  Future<List<Inventory>> getInventory() async {
-    inventory = storeRepo.getProductsFromInventory();
+  Future<List<Inventory>> getInventory(String sellerId) async {
+    inventory = storeRepo.getProductsFromInventory(sellerId);
     rxInventory.assignAll(await inventory);
-    print(rxInventory.length);
+    //print(rxInventory.length);
     return rxInventory;
   }
 

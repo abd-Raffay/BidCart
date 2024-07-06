@@ -31,15 +31,26 @@ class _BidScreenState extends State<BidScreen> {
         title: Text("BIDS"),
       ),
       body: Obx(
-        () => ListView.builder(
-          itemCount: orderController.rxorderOffers.length,
-          itemBuilder: (context, index) {
-            final offer = orderController.rxorderOffers[index];
-            return BidCard(offer:offer,totalproducts: widget.totalProducts,); // Replace with your BidCard widget
-          },
-        ),
+            () {
+          if (orderController.rxorderOffers == null || orderController.rxorderOffers.isEmpty) {
+            return Center(
+              child: Text("No bids placed"),
+            );
+          }
+          return ListView.builder(
+            itemCount: orderController.rxorderOffers.length,
+            itemBuilder: (context, index) {
+              final offer = orderController.rxorderOffers[index];
+              return BidCard(
+                offer: offer,
+                totalproducts: widget.totalProducts,
+              ); // Replace with your BidCard widget
+            },
+          );
+        },
       ),
-      floatingActionButton: FloatingActionButton(
+
+        floatingActionButton: FloatingActionButton(
         onPressed: () {
           print(widget.orderid);
           orderController.getOffers(widget.orderid);

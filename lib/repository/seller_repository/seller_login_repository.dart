@@ -165,7 +165,7 @@ class SellerLoginRepository extends GetxController{
     } catch (e) {
       // Handle errors
       print('Error fetching seller data: $e');
-      return null;
+
     }
   }
 

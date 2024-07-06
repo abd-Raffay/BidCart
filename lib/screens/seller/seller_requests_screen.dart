@@ -41,7 +41,7 @@ class SellerRequestScreen extends StatelessWidget {
                 return pendingRequests.where((request) => request.status != "accepted").isEmpty
                     ? const Center(
                         child: Text(
-                          'No Pending Requests',
+                          'No Order Requests',
                           style: TextStyle(fontSize: 18),
                         ),
                       )
@@ -58,8 +58,7 @@ class SellerRequestScreen extends StatelessWidget {
                           return SellerRequestCards(
                             requests: request,
                             total: request.items.length,
-                            available: requestController
-                                .totalAvailableProducts(request.orderId!),
+                            available: requestController.totalAvailableProducts(request.orderId!),
                           );
                         },
                       );

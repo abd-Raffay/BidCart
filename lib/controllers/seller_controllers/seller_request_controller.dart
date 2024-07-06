@@ -41,7 +41,6 @@ class SellerRequestController extends GetxController {
     storeRepo.getOrderRequests().listen((requests) {
       orderRequests = requests;
       rxOrderRequests.assignAll(orderRequests);
-
       getOffersbyseller();
       // Call getOrderStatus after updating rxOrderRequests
       getOrderStatus();
@@ -63,8 +62,6 @@ class SellerRequestController extends GetxController {
       }
 
     }
-
-
     for (int j = 0; j < orderRequests[index].items.length; j++) {
 
       for (int k = 0; k < homeController.rxInventory.length; k++) {
@@ -138,10 +135,10 @@ class SellerRequestController extends GetxController {
         rxOrderRequests[i].location.longitude,
         "meters",
       );
-      if(tempdistance > rxOrderRequests[i].distance){
+      print("TEMP DISTANCE ${tempdistance} && ORDER DISTANCE ${rxOrderRequests[i].distance}");
+      if(tempdistance >= rxOrderRequests[i].distance){
         rxOrderRequests.removeAt(i);
       }
-
     }
   }
 

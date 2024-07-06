@@ -72,14 +72,16 @@ class SellerStoreRepository extends GetxController {
     }
   }
 
-  Future<List<Inventory>> getProductsFromInventory() async {
+
+
+  Future<List<Inventory>> getProductsFromInventory(String sellerId) async {
     try {
-      final String? userId = _auth.currentUser?.uid;
-      if (userId != null) {
-        print(userId);
+      //final String? userId = _auth.currentUser?.uid;
+      if (sellerId != null) {
+        print(sellerId);
         final CollectionReference inventoryCollection =
             _db.collection('inventory');
-        final DocumentReference userDocRef = inventoryCollection.doc(userId);
+        final DocumentReference userDocRef = inventoryCollection.doc(sellerId);
         final CollectionReference productsCollection =
             userDocRef.collection('products');
 
@@ -104,6 +106,24 @@ class SellerStoreRepository extends GetxController {
     } catch (e) {
       print('Error getting products from inventory: $e');
       return [];
+    }
+  }
+
+  void updateInventory(String sellerId, String inventoryId, int quantity) async {
+    try {
+
+      final CollectionReference inventoryCollection = _db.collection('inventory');
+      final DocumentReference sellerDocRef = inventoryCollection.doc(sellerId);
+      final CollectionReference productsCollection = sellerDocRef.collection('products');
+
+      // Update the specific product document
+      await productsCollection.doc(inventoryId).update({
+        'quantity': quantity,
+        // Add other fields to update here if necessary
+      });
+      print('Inventory updated successfully.');
+    } catch (e) {
+      print('Error updating inventory: $e');
     }
   }
 
@@ -407,13 +427,10 @@ class SellerStoreRepository extends GetxController {
     }
   }
 
-  Future<List<OfferData>> cancelOffer(String orderId,String sellerid) async {
+  Future<List<OfferData>> cancelOffer(String orderId,String status) async {
     try {
       final CollectionReference offersCollection = FirebaseFirestore.instance.collection('offers');
-      final QuerySnapshot<Map<String, dynamic>> offerSnapshot = await offersCollection
-          .doc(orderId)
-          .collection('offers')
-          .get();
+      final QuerySnapshot<Map<String, dynamic>> offerSnapshot = await offersCollection.doc(orderId).collection('offers').get();
 
       List<OfferData> offers = [];
 
@@ -434,30 +451,88 @@ class SellerStoreRepository extends GetxController {
 
       // print('Offers retrieved for orderId: $orderId');
       // print('Offers list: ${offers.map((e) => e.toJson()).toList()}');
-      if (offers.isEmpty) {
-        showSnackbar(
-          title: "Offer Not Found!",
-          message: "No Offers were placed on this order.",
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-        );
-      }
 
       return offers;
     } catch (e) {
-      print('Error retrieving offers from Firestore: $e');
-
-      // Show error snackbar (ensure showSnackbar is defined)
-      showSnackbar(
-        title: "Error",
-        message: "Failed to retrieve offers.",
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
-
       return []; // Return an empty list indicating failure
     }
   }
 
+  Future<void> deleteOffer(String orderId,String sellerId) async {
+    try {
+      // Reference to the "offers" collection in Firestore
+      final CollectionReference offersCollection = _db.collection('offers');
 
+
+      // Reference to the specific orderId document in the "offers" collection
+      final DocumentReference orderDocRef = offersCollection.doc(orderId);
+
+      // Add the offer data to the "offers" subcollection under orderId and use customerId as document ID
+      final DocumentReference customerOfferDocRef = orderDocRef.collection('offers').doc(sellerId);
+
+      // Set the offer data under customerId document
+      await customerOfferDocRef.delete();
+
+
+      // Show success snackbar
+      showSnackbar(
+        title: "Success",
+        message: "Offer Canceled",
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+    } catch (e) {
+      // Handle errors
+      print('Error posting offer to Firestore: $e');
+
+      // Show error snackbar
+      showSnackbar(
+        title: "Error",
+        message: "Failed to Cancel Offer.",
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    }
+  }
+
+  Future<void> deleteOfferSeller(String orderId,String sellerId,String status) async {
+    try {
+      // Reference to the "offers" collection in Firestore
+      final CollectionReference offersCollection = _db.collection('selleroffers');
+
+
+      // Reference to the specific orderId document in the "offers" collection
+      final DocumentReference orderDocRef = offersCollection.doc(sellerId);
+
+      // Add the offer data to the "offers" subcollection under orderId and use customerId as document ID
+      final CollectionReference customerOfferDocRef = orderDocRef.collection('offers');
+
+      // Set the offer data under customerId document
+      await customerOfferDocRef.doc(orderId).update({
+        'status': status,
+        // Add other fields to update here if necessary
+      });
+
+
+
+      // Show success snackbar
+      showSnackbar(
+        title: "Success",
+        message: "Offer Canceled",
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+    } catch (e) {
+      // Handle errors
+      print('Error posting offer to Firestore: $e');
+
+      // Show error snackbar
+      showSnackbar(
+        title: "Error",
+        message: "Failed to Cancel Offer.",
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    }
+  }
 }

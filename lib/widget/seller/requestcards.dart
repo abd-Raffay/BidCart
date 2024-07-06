@@ -5,9 +5,12 @@ import 'package:bidcart/model/request_model.dart';
 import 'package:bidcart/widget/Text/heading.dart';
 import 'package:bidcart/widget/Text/labeltext.dart';
 import 'package:bidcart/widget/seller/order_details.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../repository/seller_repository/seller_store_repository.dart';
 
 class SellerRequestCards extends StatelessWidget {
   const SellerRequestCards({
@@ -125,13 +128,9 @@ class SellerRequestCards extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                            if (requests.status != "pending" &&
-                                available != 0 &&
-                                requests.status != "accepted")
+                            if (requests.status != "pending" && available != 0 && requests.status != "accepted")
                               const SizedBox(width: 8),
-                            if (requests.status != "pending" &&
-                                available != 0 &&
-                                requests.status != "accepted")
+                            if (requests.status != "pending" && available != 0 && requests.status != "accepted")
                               ElevatedButton(
                                 onPressed: () {
                                   offerController
@@ -156,9 +155,7 @@ class SellerRequestCards extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                            if (requests.status != "pending" &&
-                                available == 0 &&
-                                requests.status != "accepted")
+                            if (requests.status != "pending" && available == 0 && requests.status != "accepted")
                               Column(children: [
                                 Row(
                                   children: [
@@ -221,10 +218,19 @@ class SellerRequestCards extends StatelessWidget {
                                     ],
                                   ),
                                   ElevatedButton(
-                                    onPressed: () {
-                                      offerController.cancelOffer(
-                                          requests.orderId!,
-                                          requests.sellerId!);
+                                    onPressed: () async {
+                                      final storeRepo = Get.put(SellerStoreRepository());
+                                      final _auth = FirebaseAuth.instance;
+                                      String? sellerId=_auth.currentUser?.uid;
+                                      //print("REQUEST ID ${requests.orderId} && SELLER ID ${requests.sellerId}");
+                                      if (requests.orderId != null ) {
+                                        await offerController.cancelOffer(requests.orderId!,sellerId!,"cancelled");
+
+                                      } else {
+                                        // Handle the case where requests.orderId or requests.sellerId is null
+                                        print('Error: orderId or sellerId is null.');
+                                      }
+
                                     },
                                     child: Row(
                                       children: [

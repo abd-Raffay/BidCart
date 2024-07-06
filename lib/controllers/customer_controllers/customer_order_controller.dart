@@ -1,4 +1,5 @@
 
+import 'package:bidcart/controllers/seller_controllers/seller_offer_controller.dart';
 import 'package:bidcart/model/offer_model.dart';
 import 'package:bidcart/model/request_model.dart';
 import 'package:bidcart/repository/customer_repository/cart_repository.dart';
@@ -75,9 +76,11 @@ class CustomerOrderController extends GetxController{
    //print("Seller ID : ${sellerId} && Order ID : ${orderId}");
     cartRepo.acceptOrder(sellerId, orderId);
 
-
   }
-  void rejectOrder(){
+
+  void rejectOrder(String orderid,String sellerId){
+    final sellerOfferController=Get.put( SellerOfferController());
+    sellerOfferController.cancelOffer(orderid, sellerId, "rejected");
 
   }
 

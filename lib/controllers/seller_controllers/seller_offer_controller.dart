@@ -20,8 +20,8 @@ class SellerOfferController extends GetxController {
   final _auth = FirebaseAuth.instance;
   late String? sellerId = _auth.currentUser?.uid;
 
-  late List<Inventory> rxOffers = <Inventory>[].obs;
-  late List<OfferData> returnOffers=<OfferData>[].obs;
+  late RxList<Inventory> rxOffers = <Inventory>[].obs;
+  late RxList<OfferData> returnOffers=<OfferData>[].obs;
   late RxList<OfferData> rxsellermadeoffers = <OfferData>[].obs;
 
 
@@ -38,6 +38,11 @@ class SellerOfferController extends GetxController {
             if (orderItem.id == item.productid && orderItem.size == item.size) {
               price=price+(item.price * orderItem.quantity);
               item.quantity -= orderItem.quantity;
+
+              print("Seller Id ${sellerId!} PRODUCT IDDDDDDDDDD ${item.inventoryid}  QUNATITYYYYYYYYY ${item.quantity}");
+
+              storeRepo.updateInventory(sellerId!, item.inventoryid, item.quantity);
+
               var modifiedItem = Inventory(
                 productid: item.productid,
                 name: item.name,
@@ -87,14 +92,13 @@ class SellerOfferController extends GetxController {
     }
   }
 
-
   void rejectOffer(String orderid) async {
 
       final String? userId = _auth.currentUser?.uid;
-      SellerModel? seller = await sellerRepo.getSellerData(userId!);
+      SellerModel seller = await sellerRepo.getSellerData(userId!);
       // Create an OfferData instance with all required fields filled
       OfferData offer = OfferData(
-          sellerId: seller!.userId,
+          sellerId: seller.userId,
           items: [],
           sellerName: seller.storename,
           dateTime: DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
@@ -109,7 +113,6 @@ class SellerOfferController extends GetxController {
     }
 
   void resetOffer(String orderid) async {
-
     final String? userId = _auth.currentUser?.uid;
     SellerModel? seller = await sellerRepo.getSellerData(userId!);
     // Create an OfferData instance with all required fields filled
@@ -128,29 +131,41 @@ class SellerOfferController extends GetxController {
 
   }
 
-  void cancelOffer(String orderid,String selerId) async {
+  Future<void> cancelOffer(String orderid,String sellerId,String status) async {
     try {
-
-
-      List<OfferData> offers = await storeRepo.cancelOffer(orderid, sellerId!);
       // Assuming returnOffers is a RxList or similar to store fetched offers
-      returnOffers.assignAll(offers);
+      await getOffersbyseller(sellerId);
+       RxList<OfferData> returnOffers=<OfferData>[].obs;
+       returnOffers.assignAll(rxsellermadeoffers);
+      RxList<Inventory> inventory=<Inventory>[].obs;
+      inventory.assignAll(await homeController.getInventory(sellerId));
+      print("INVENTORY LENGTH +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ${inventory.length}");
+       print("+++++++++++++++++++++++++++++++++++ ${returnOffers.length}");
+       print("+++++++++++++++++++++++++++++++++++ ${rxsellermadeoffers.length}");
       if (returnOffers.isNotEmpty) {
         for (int i = 0; i < returnOffers.length; i++) {
           if (returnOffers[i].orderId == orderid) {
             for (int j = 0; j < returnOffers[i].items.length; j++) {
-              for (int k = 0; k < homeController.rxInventory.length; k++) {
+              for (int k = 0; k < inventory.length; k++) {
                 if (returnOffers[i].items[j].productid == homeController.rxInventory[k].productid &&
-                    returnOffers[i].items[j].batch == homeController.rxInventory[k].batch &&
-                    returnOffers[i].items[j].size == homeController.rxInventory[k].size) {
-                  homeController.rxInventory[k].quantity += returnOffers[i].items[j].quantity;
+                    returnOffers[i].items[j].batch == inventory[k].batch &&
+                    returnOffers[i].items[j].size == inventory[k].size) {
+
+                  inventory[k].quantity += returnOffers[i].items[j].quantity;
+                  print("Seller Id ${sellerId} PRODUCT IDDDDDDDDDD ${inventory[k].inventoryid}  QUNATITYYYYYYYYY ${inventory[k].quantity}");
+                  storeRepo.updateInventory(sellerId, inventory[k].inventoryid, inventory[k].quantity);
+
                 }
               }
             }
           }
         }
-        resetOffer(orderid);
-        print("Returned Goods ${returnOffers[0].sellerId}");
+        await storeRepo.deleteOffer(orderid, sellerId);
+        await storeRepo.deleteOfferSeller(orderid, sellerId,status);
+
+        //await storeRepo.cancelOffer(orderid,status);
+
+        //resetOffer(orderid);
       } else {
         print("No offers returned.");
         // Handle case where no offers were returned
@@ -164,17 +179,12 @@ class SellerOfferController extends GetxController {
 
 
 
-  void getOffersbyseller() {
-    final String? sellerId = _auth.currentUser?.uid;
-    storeRepo.getOffersBySeller(sellerId!).listen((List<OfferData> offers) {
+  Future<void> getOffersbyseller(String sellerId) async {
+    storeRepo.getOffersBySeller(sellerId).listen((List<OfferData> offers) {
       rxsellermadeoffers.assignAll(offers);
-
-      print("Offers ${rxsellermadeoffers.length}");
-    }, onError: (dynamic error) {
-      print('Error fetching offers: $error');
-      // Handle error (e.g., show a snackbar)
     });
   }
+
 
 
 

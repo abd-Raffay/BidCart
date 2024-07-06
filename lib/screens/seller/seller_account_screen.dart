@@ -1,6 +1,7 @@
 import 'package:bidcart/repository/authentication/seller_authentication_repository.dart';
 import 'package:bidcart/screens/common/onboarding.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SellerAccountScreen extends StatefulWidget {
   const SellerAccountScreen({super.key});
@@ -33,10 +34,7 @@ class _SellerAccountScreenState extends State<SellerAccountScreen> {
                         ),
                         onPressed: () {
                           SellerAuthenticationRepository.instance.logout();
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const OnBoarding()));
+                          Get.offAll(()=> const OnBoarding());
                         },
                         child: const Text("Logout")),
                   ),
