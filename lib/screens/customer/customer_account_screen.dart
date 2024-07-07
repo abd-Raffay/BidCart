@@ -34,8 +34,7 @@ class _CustomerAccountScreenState extends State<CustomerAccountScreen> {
                           backgroundColor: Colors.cyan,
                           foregroundColor: Colors.white,
                         ),
-                        onPressed: () {
-signinController.Logout();
+                        onPressed: () {signinController.Logout();
 
                         },
                         child: const Text("Logout")),

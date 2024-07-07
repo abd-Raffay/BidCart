@@ -8,6 +8,9 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
+import '../../model/review_model.dart';
+import '../../model/review_model.dart';
+
 
 class CartRepository extends GetxController{
   static CartRepository get instance => Get.find();
@@ -43,7 +46,8 @@ class CartRepository extends GetxController{
           'status':"null",
           'sellerId':"null",
           'location':location,
-          'distance':distance
+          'distance':distance,
+          'price':0
           // You can add other fields to the document if needed
         });
 
@@ -115,7 +119,7 @@ class CartRepository extends GetxController{
     }
   }
 
-  Future<void> acceptOrder(String sellerId, String orderId) async {
+  Future<void> acceptOrder(String sellerId, String orderId,int price) async {
     try {
       // Get a reference to the specific order document in the Firestore collection
       DocumentReference orderRef = FirebaseFirestore.instance.collection('orderrequest').doc(orderId);
@@ -124,6 +128,7 @@ class CartRepository extends GetxController{
       Map<String, dynamic> updatedFields = {
         'status': 'accepted',
         'sellerId': sellerId,
+        'price':price
         // Add any other fields you want to update here
       };
 
@@ -161,6 +166,68 @@ class CartRepository extends GetxController{
       print('Error updating distance: $e');
     }
   }
+
+
+
+
+  Future<void> saveReview(Review review) async {
+    try {
+
+      final CollectionReference reviewCollection = FirebaseFirestore.instance.collection('reviews');
+
+      final DateTime now = DateTime.now();
+      final String combinedDateTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
+
+      // Convert review to a Map
+      Map<String, dynamic> reviewData = {
+        'customerId': review.customerId,
+        'offer': review.offer.toJson(), // Convert OfferData to JSON format
+        'reviewDateTime': combinedDateTime,
+        'review': review.review,
+        'customerName': review.customerName,
+      };
+
+      // Add review data to Firestore
+      await reviewCollection.add(reviewData);
+
+      DocumentReference orderRef = FirebaseFirestore.instance.collection('orderrequest').doc(review.offer.orderId);
+      Map<String, dynamic> updatedFields = {
+        'status': 'reviewed',
+        // Add any other fields you want to update here
+      };
+      await orderRef.update(updatedFields);
+
+
+      print('Review saved successfully');
+
+    } catch (e) {
+      // Handle errors
+      print('Error saving review: $e');
+    }
+  }
+
+  Future<void> completeOrder(String orderId) async {
+    try {
+
+      DocumentReference orderRef = FirebaseFirestore.instance.collection('orderrequest').doc(orderId);
+      Map<String, dynamic> updatedFields = {
+        'status': 'completed',
+        // Add any other fields you want to update here
+      };
+      await orderRef.update(updatedFields);
+
+
+      print('Review saved successfully');
+
+    } catch (e) {
+      // Handle errors
+      print('Error saving review: $e');
+    }
+  }
+
+
+
+
 
 
 

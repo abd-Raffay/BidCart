@@ -12,6 +12,7 @@ class RequestData {
   String? sellerId;
   GeoPoint location;
   int distance;
+  int price;
 
 
   RequestData({
@@ -21,9 +22,10 @@ class RequestData {
     required this.dateTime,
     required this.status,
     this.orderId,
-    this.sellerId,
+    required this.sellerId,
     required this.location,
     required this.distance,
+    required this.price,
 
 
   });
@@ -38,7 +40,8 @@ class RequestData {
       "status":status,
       "sellerId":sellerId,
       "location":location,
-      "distance":distance
+      "distance":distance,
+      "price":price
     };
   }
 
@@ -59,6 +62,7 @@ class RequestData {
         sellerId:data["sellerId"],
       location: data["location"],
       distance: data["distance"],
+      price: data["price"]
     );
   }
 

@@ -167,6 +167,8 @@ class SellerStoreRepository extends GetxController {
                     itemsData.map((item) => CartModel.fromJson(item)).toList();
                 GeoPoint location = doc['location'];
                 int distance=doc['distance'];
+                int price=doc['price'];
+                String sellerId=doc['sellerId'];
 
                 // Create RequestData object
                 return RequestData(
@@ -177,7 +179,9 @@ class SellerStoreRepository extends GetxController {
                     dateTime: dateTime,
                     location: location,
                     orderId: orderid,
-                  distance: distance
+                  distance: distance,
+                  price: price,
+                    sellerId: sellerId,
                 );
               }).toList()
                 // Sort the list of RequestData objects by date
@@ -222,6 +226,8 @@ class SellerStoreRepository extends GetxController {
                     itemsData.map((item) => CartModel.fromJson(item)).toList();
                 GeoPoint location=doc['location'];
                 int distance=doc['distance'];
+                int price=doc['price'];
+                String sellerId=doc['sellerId'];
 
                 // Create RequestData object
                 return RequestData(
@@ -232,7 +238,9 @@ class SellerStoreRepository extends GetxController {
                   customerName: customerName,
                   dateTime: dateTime,
                   status: status,
-                  distance: distance
+                  distance: distance,
+                  price: price,
+                    sellerId: sellerId
                 );
               }).toList()
                 // Sort the list of RequestData objects by date

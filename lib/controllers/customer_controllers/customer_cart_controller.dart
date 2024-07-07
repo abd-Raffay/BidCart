@@ -87,6 +87,10 @@ late GeoPoint location;
     await prefs.remove('quantities');
   }
 
+  completeOrder(String orderId){
+    cartRepo.completeOrder(orderId);
+  }
+
 
 
 
