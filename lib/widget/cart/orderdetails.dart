@@ -65,7 +65,6 @@ class OrderDetailCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-
                   // Left side text
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,7 +111,7 @@ class OrderDetailCard extends StatelessWidget {
                           const SizedBox(width: 5),
                           LabelText(
                               title:
-                              "Distance: ${distance.toString()} meters"),
+                              "Distance: ${(distance/1000).toString()} km"),
                           IconButton(onPressed: () async {
                             int newdistance=0;
                             newdistance =  await showRadiusDialog(context);
@@ -270,7 +269,7 @@ class OrderDetailCard extends StatelessWidget {
                             const SizedBox(width: 5),
                             LabelText(
                                 title:
-                                "Distance: ${distance.toString()} meters"),
+                                "Distance: ${(distance/1000).toString()} km"),
                           ],
 
                         ),
@@ -369,6 +368,9 @@ class OrderDetailCard extends StatelessWidget {
       ),
     );
   }
+
+
+
   void _showReviewDialog(BuildContext context,OfferData offer) {
     showDialog(
       context: context,

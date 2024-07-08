@@ -16,7 +16,7 @@ Future<int> showRadiusDialog(BuildContext context) async {
           controller: distanceController,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
-            hintText: "Enter distance in meters",
+            hintText: "Enter distance in Kilo meters ",
           ),
         ),
         actions: <Widget>[
@@ -31,7 +31,8 @@ Future<int> showRadiusDialog(BuildContext context) async {
             onPressed: () {
               String radiusText = distanceController.text;
               if (radiusText.isNotEmpty) {
-                int radius = int.parse(radiusText);
+
+                int radius = int.parse(radiusText) * 1000;
                 Navigator.of(context).pop(radius);
               } else {
                 Navigator.of(context).pop(0);

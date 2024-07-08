@@ -324,13 +324,7 @@ class SellerStoreRepository extends GetxController {
       // Handle errors
       print('Error posting offer to Firestore: $e');
 
-      // Show error snackbar
-      showSnackbar(
-        title: "Error",
-        message: "Failed to post offer.",
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      //
       return false; // Return false indicating failure
     }
   }
@@ -359,12 +353,7 @@ class SellerStoreRepository extends GetxController {
      // print('Offer posted to Firestore under orderId: $orderId and customerId: $customerId');
 
       // Show success snackbar
-      showSnackbar(
-        title: "Success",
-        message: "Offer sent!",
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-      );
+
 
       return true; // Return true indicating success
     } catch (e) {
@@ -372,12 +361,7 @@ class SellerStoreRepository extends GetxController {
       print('Error posting offer to Firestore: $e');
 
       // Show error snackbar
-      showSnackbar(
-        title: "Error",
-        message: "Failed to post offer.",
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+
       return false; // Return false indicating failure
     }
   }
@@ -410,26 +394,13 @@ class SellerStoreRepository extends GetxController {
           }
         }
         print('Offers list: ${offers.map((e) => e.toJson()).toList()}');
-        if (offers.isEmpty) {
-          showSnackbar(
-            title: "Offer Not Found!",
-            message: "No Offers were placed on this order.",
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-          );
-        }
         return offers;
       });
     } catch (e) {
       print('Error retrieving offers from Firestore: $e');
 
       // Show error snackbar (ensure showSnackbar is defined)
-      showSnackbar(
-        title: "Error",
-        message: "Failed to retrieve offers.",
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+
 
       return Stream.value([]); // Return an empty stream indicating failure
     }
@@ -524,23 +495,13 @@ class SellerStoreRepository extends GetxController {
 
 
       // Show success snackbar
-      showSnackbar(
-        title: "Success",
-        message: "Offer Canceled",
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-      );
+
     } catch (e) {
       // Handle errors
       print('Error posting offer to Firestore: $e');
 
       // Show error snackbar
-      showSnackbar(
-        title: "Error",
-        message: "Failed to Cancel Offer.",
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+
     }
   }
 }

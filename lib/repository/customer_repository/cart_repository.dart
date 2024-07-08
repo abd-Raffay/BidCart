@@ -106,15 +106,6 @@ class CartRepository extends GetxController{
       });
     } catch (e) {
       print('Error retrieving offers from Firestore: $e');
-
-      // Show error snackbar (ensure showSnackbar is defined)
-      showSnackbar(
-        title: "Error",
-        message: "Failed to retrieve offers.",
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
-
       return Stream.value([]); // Return an empty stream indicating failure
     }
   }
@@ -137,10 +128,10 @@ class CartRepository extends GetxController{
 
       print('Order accepted successfully.');
       Get.back();
-      showSnackbar(title: "Success", message: "Order has been Places Successfully", backgroundColor: Colors.green);
+
 
     } catch (e) {
-      showSnackbar(title: "Failed ", message: "Error accepting order: $e", backgroundColor: Colors.red);
+
       print('Error accepting order: $e');
     }
   }
@@ -160,9 +151,9 @@ class CartRepository extends GetxController{
 
       print('Distance updated successfully.');
       Get.back(); // Close the dialog or navigate back
-      showSnackbar(title: "Success", message: "Distance updated successfully", backgroundColor: Colors.green);
+
     } catch (e) {
-      showSnackbar(title: "Failed", message: "Error updating distance: $e", backgroundColor: Colors.red);
+
       print('Error updating distance: $e');
     }
   }
