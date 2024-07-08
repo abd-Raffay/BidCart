@@ -133,7 +133,7 @@ class SellerRequestController extends GetxController {
         seller.location.longitude,
         rxOrderRequests[i].location.latitude,
         rxOrderRequests[i].location.longitude,
-        "meters",
+        "kilometers",
       );
       print("TEMP DISTANCE ${tempdistance} && ORDER DISTANCE ${rxOrderRequests[i].distance}");
       if(tempdistance >= rxOrderRequests[i].distance){

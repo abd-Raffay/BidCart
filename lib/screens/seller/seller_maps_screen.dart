@@ -86,18 +86,11 @@ class _MapScreenState extends State<MapScreen> {
           IconButton(
             icon: Icon(Icons.check),
             onPressed: () {
-              if (widget.currentlocation != null) {
-                //signupController.setLocation(widget._auth.currentUser?.uid,GeoPoint(widget.currentlocation.latitude,widget.currentlocation.longitude));
-              signupController.saveLocation(GeoPoint(widget.currentlocation.latitude, widget.currentlocation.longitude));
-
-                Get.offAll(()=> const SellerNavigationBar()); // Go back after saving
-              } else {
-                // Show a message or alert that location is not selected
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Please select a location')),
-                );
-              }
-            },
+              //signupController.setLocation(widget._auth.currentUser?.uid,GeoPoint(widget.currentlocation.latitude,widget.currentlocation.longitude));
+            signupController.saveLocation(GeoPoint(widget.currentlocation.latitude, widget.currentlocation.longitude));
+            print(widget.currentlocation);
+              Get.offAll(()=> const SellerNavigationBar()); // Go back after saving
+                        },
           ),
         ],
       ),
@@ -115,6 +108,7 @@ class _MapScreenState extends State<MapScreen> {
               setState(() {
                 widget.currentlocation=position.target;
                 signupController.saveLocation(GeoPoint(widget.currentlocation.latitude, widget.currentlocation.longitude));
+                print(widget.currentlocation);
                 //addMarker(widget._auth.currentUser?.uid, currentlocation);
 
               });

@@ -4,6 +4,7 @@ import 'package:bidcart/controllers/customer_controllers/customer_signup_control
 import 'package:bidcart/model/customer_model.dart';
 import 'package:bidcart/repository/customer_repository/customer_repository.dart';
 import 'package:bidcart/widget/app_bar/appBar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:bidcart/screens/customer/customer_login.dart';
@@ -170,28 +171,7 @@ class _CustomerSignupState extends State<CustomerSignup> {
                   const SizedBox(height:Sizes.spaceBtwInputFields),
 
 
-                  TextFormField(
-                    controller: controller.address,
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.location_on_rounded),
-                      labelText: 'Location',
-                      labelStyle: const TextStyle(color: Colors.black),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(width: 2.0, color: Colors.cyan),
-                      ),
-                      border: const OutlineInputBorder(),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.my_location),
-                        onPressed: (){
-                          controller.getCurrentLocation();
-                          print(controller.position.toString());
 
-                          controller.convertLocation(controller.position);
-                        },
-                      ),
-                    ),
-                  ),
 
 
 
@@ -218,7 +198,7 @@ class _CustomerSignupState extends State<CustomerSignup> {
                                 //password: controller.password.text.trim(),
                                 phone: controller.phone.text.trim(),
                                 id:"",
-                               location: controller.location
+                               location:GeoPoint(0,0)
                             );
 
                             if (_formKey.currentState!.validate()) {

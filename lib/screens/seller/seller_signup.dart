@@ -144,23 +144,7 @@ class _SSignupState extends State<SSignup> {
                       ),
                       const SizedBox(height: 10.0),
 
-                      //Store Address
-                      TextFormField(
-                        controller: controller.address,
-                        readOnly: true,
-                        onTap: () {
-                          Get.to(MapScreen());
-                        },
-                        decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.pin_drop),
-                            labelText: 'Store Address',
-                            labelStyle: TextStyle(color: Colors.black),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(width: 2.0, color: Colors.cyan)),
-                            border: OutlineInputBorder()),
-                      ),
-                      const SizedBox(height: 10.0),
+
 
                       //Email Feild
                       TextFormField(

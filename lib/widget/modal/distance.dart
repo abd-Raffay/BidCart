@@ -14,7 +14,7 @@ Future<int> showRadiusDialog(BuildContext context) async {
           controller: distanceController,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
-            hintText: "Enter distance in meters",
+            hintText: "Enter distance in  KM",
           ),
         ),
         actions: <Widget>[

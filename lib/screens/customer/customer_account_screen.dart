@@ -1,5 +1,4 @@
 import 'package:bidcart/controllers/customer_controllers/customer_account_controller.dart';
-import 'package:bidcart/controllers/customer_controllers/customer_signin_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,13 +14,8 @@ class CustomerAccountScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          children: [
-            Center(
-              child:const Text('My Profile'),
-
-            ),
-          ],
+        title: const Center(
+          child: Text('My Profile'),
         ),
       ),
       body: Obx(() {
@@ -43,6 +37,7 @@ class CustomerAccountScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
                       'Profile Information',
@@ -59,7 +54,12 @@ class CustomerAccountScreen extends StatelessWidget {
                             Text('Name'),
                           ],
                         ),
-                        Text(customer.name),
+                        Flexible(
+                          child: Text(
+                            customer.name,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -73,6 +73,7 @@ class CustomerAccountScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
                       'Personal Information',
@@ -89,7 +90,12 @@ class CustomerAccountScreen extends StatelessWidget {
                             Text('User ID'),
                           ],
                         ),
-                        Text(customer.id),
+                        Flexible(
+                          child: Text(
+                            customer.id,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -103,7 +109,12 @@ class CustomerAccountScreen extends StatelessWidget {
                             Text('E-mail'),
                           ],
                         ),
-                        Text(customer.email),
+                        Flexible(
+                          child: Text(
+                            customer.email,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -117,7 +128,12 @@ class CustomerAccountScreen extends StatelessWidget {
                             Text('Phone number'),
                           ],
                         ),
-                        Text(customer.phone),
+                        Flexible(
+                          child: Text(
+                            customer.phone,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
                       ],
                     ),
                   ],

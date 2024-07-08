@@ -125,7 +125,7 @@ final sellerRepo =Get.put(SellerLoginRepository());
       seller.location.longitude,
       customerlocation.latitude,
       customerlocation.longitude,
-      "meters",
+      "kilometers",
     );
     print("TEMP DISTANCE IS ++++++++++++++++++++++++++ ${tempdistance}");
 

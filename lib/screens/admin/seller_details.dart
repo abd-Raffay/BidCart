@@ -315,7 +315,7 @@ class SellerDetails extends StatelessWidget {
                             ),
                             SizedBox(height: 4.0),
                             Text(
-                              'Inventory ke feild dalni hy',
+                              '',
                               style: TextStyle(fontSize: 16),
                             ),
                           ],
@@ -346,7 +346,7 @@ class SellerDetails extends StatelessWidget {
                               ],
                             ),
                             const Text(
-                              'Sales dalni hyy',
+                              '',
                               style: TextStyle(fontSize: 16.0),
                             ),
                           ],
@@ -399,7 +399,7 @@ class SellerDetails extends StatelessWidget {
                             ),
                             const SizedBox(height: 4.0),
                             const Text(
-                              'rating dalni hyy',
+                              '',
                               style: TextStyle(fontSize: 16.0),
                             ),
                           ],

@@ -42,7 +42,7 @@ class SellerSignUpController extends GetxController {
 
   Future<void> saveLocation(GeoPoint location) async {
     try {
-
+print("LOCATION ISSSSS ${location.latitude}");
       final _auth = FirebaseAuth.instance;
       String? sellerId = _auth.currentUser?.uid;
 
@@ -64,7 +64,6 @@ class SellerSignUpController extends GetxController {
       throw e; // Re-throwing the error for handling in UI or other layers
     }
   }
-
   getLocations() async {
     return  sellerRepo.getAllLocations();
 
