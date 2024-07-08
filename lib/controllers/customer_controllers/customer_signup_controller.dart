@@ -19,9 +19,15 @@ class CustomerSignUpController extends GetxController {
   final name = TextEditingController();
   final phone = TextEditingController();
  late final address = TextEditingController();
-  late GeoPoint location;
+   GeoPoint location= GeoPoint(0, 0);
 
   late Position position;
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    getCurrentLocation();
+  }
 
   void getCurrentLocation() async {
     position = await deteminePosition();
@@ -55,4 +61,8 @@ class CustomerSignUpController extends GetxController {
         customer.email, password, customer);
     customerAuthRepo.setIntialScreen(customerAuthRepo.firebaseUser.value);
   }
+
+
+
+
 }

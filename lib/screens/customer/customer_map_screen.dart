@@ -39,7 +39,7 @@ class CustomerMapScreen extends StatefulWidget {
   }
 }
 
-RxList<Location> locationList = <Location>[].obs;
+RxList<Locations> locationList = <Locations>[].obs;
 final sellerController = Get.put(SellerSignUpController());
 final customersignupController = Get.put(CustomerSignUpController());
 
@@ -72,7 +72,6 @@ class _MapScreenState extends State<CustomerMapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final signupController = Get.put(SellerSignUpController());
     final cartController = Get.put(CartController());
     return Scaffold(
       appBar: TAppBar(
@@ -131,7 +130,7 @@ class _MapScreenState extends State<CustomerMapScreen> {
     );
   }
 
-  addMarker(String? markerid, Location data, LatLng location) async {
+  addMarker(String? markerid, Locations data, LatLng location) async {
     final Uint8List newIcon =
         await widget.getMarkerIcon('assets/logo/storelogo.png', 100);
     var marker = Marker(

@@ -89,7 +89,7 @@ class SellerLoginRepository extends GetxController{
     //final customerData = snapshot.docs.map((e) => CustomerModel.fromSnapshot(e)).single;
     // return customerData;
   }
-  saveLocation(Location location,String sellerid) async {
+  saveLocation(Locations location,String sellerid) async {
     try {
       await _db
           .collection("locations")
@@ -108,12 +108,12 @@ class SellerLoginRepository extends GetxController{
     }
 
   }
-  Future<List<Location>> getAllLocations() async {
+  Future<List<Locations>> getAllLocations() async {
     try {
       QuerySnapshot<Map<String, dynamic>> snapshot =
       await _db.collection("locations").get();
 
-      return snapshot.docs.map((doc) => Location.fromJson(doc.data())).toList();
+      return snapshot.docs.map((doc) => Locations.fromJson(doc.data())).toList();
     } catch (e) {
       print("Error getting locations: $e");
       return [];

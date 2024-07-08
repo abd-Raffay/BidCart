@@ -40,7 +40,7 @@ class MapScreen extends StatefulWidget {
 
 }
 
-RxList<Location> locationList=<Location>[].obs;
+RxList<Locations> locationList=<Locations>[].obs;
 
 final sellerController=Get.put(SellerSignUpController());
 final customersignupController = Get.put(CustomerSignUpController());
@@ -86,11 +86,19 @@ class _MapScreenState extends State<MapScreen> {
           IconButton(
             icon: Icon(Icons.check),
             onPressed: () {
-              //signupController.setLocation(widget._auth.currentUser?.uid,GeoPoint(widget.currentlocation.latitude,widget.currentlocation.longitude));
-            signupController.saveLocation(GeoPoint(widget.currentlocation.latitude, widget.currentlocation.longitude));
-            print(widget.currentlocation);
-              Get.offAll(()=> const SellerNavigationBar()); // Go back after saving
-                        },
+              if (widget.currentlocation != null) {
+                //signupController.setLocation(widget._auth.currentUser?.uid,GeoPoint(widget.currentlocation.latitude,widget.currentlocation.longitude));
+                signupController.setLocationSignup(GeoPoint(widget.currentlocation.latitude, widget.currentlocation.longitude));
+              //signupController.saveLocation(GeoPoint(widget.currentlocation.latitude, widget.currentlocation.longitude));
+              Get.back();
+               // Get.offAll(()=> const SellerNavigationBar()); // Go back after saving
+              } else {
+                // Show a message or alert that location is not selected
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Please select a location')),
+                );
+              }
+            },
           ),
         ],
       ),
@@ -107,10 +115,9 @@ class _MapScreenState extends State<MapScreen> {
             if(widget.currentlocation != position!.target){
               setState(() {
                 widget.currentlocation=position.target;
-                signupController.saveLocation(GeoPoint(widget.currentlocation.latitude, widget.currentlocation.longitude));
-                print(widget.currentlocation);
+               // signupController.saveLocation(GeoPoint(widget.currentlocation.latitude, widget.currentlocation.longitude));
                 //addMarker(widget._auth.currentUser?.uid, currentlocation);
-
+                signupController.setLocationSignup(GeoPoint(widget.currentlocation.latitude, widget.currentlocation.longitude));
               });
             }
           },
@@ -135,7 +142,7 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  addMarker(String? markerid,Location data, LatLng location) async {
+  addMarker(String? markerid,Locations data, LatLng location) async {
     final Uint8List newIcon = await widget.getMarkerIcon('assets/logo/storelogo.png', 100);
     var marker = Marker(
       icon: BitmapDescriptor.fromBytes(newIcon),
