@@ -58,13 +58,11 @@ final GeoPoint? location;
               int distance;
 
 
-
-
               distance =  await showRadiusDialog(context);
               if(distance > 0) {
                 cartController.sendRequest(location!, distance);
                 cartController.clearCart();
-                Get.to(const CustomerOrderScreen());
+                Get.offAll(() => const CustomerOrderScreen());
 
 
                 Get.snackbar("Sucess", "Order Request Sent ",
