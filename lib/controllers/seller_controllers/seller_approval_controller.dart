@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 class SellerApprovalController extends GetxController {
+  SellerApprovalController get instance => Get.find();
   late Timer _timer;
 
   final sellerAuthRepo=Get.put(SellerAuthenticationRepository());

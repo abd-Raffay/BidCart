@@ -1,46 +1,141 @@
+import 'package:bidcart/controllers/customer_controllers/customer_account_controller.dart';
 import 'package:bidcart/controllers/customer_controllers/customer_signin_controller.dart';
-import 'package:bidcart/repository/authentication/customer_authentication_repository.dart';
-import 'package:bidcart/screens/common/onboarding.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CustomerAccountScreen extends StatefulWidget {
+import '../../const/sizes.dart';
+
+class CustomerAccountScreen extends StatelessWidget {
   const CustomerAccountScreen({super.key});
 
   @override
-  State<CustomerAccountScreen> createState() => _CustomerAccountScreenState();
-}
-
-class _CustomerAccountScreenState extends State<CustomerAccountScreen> {
-  final signinController=Get.put(CustomerSignInController());
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Align(
-        alignment: Alignment.topCenter,
-        child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  const Text("Account Screen in Progress ... "),
-                  SizedBox(height: 10,),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.cyan,
-                          foregroundColor: Colors.white,
-                        ),
-                        onPressed: () {signinController.Logout();
+    final accountController = Get.put(CustomerAccountController());
 
-                        },
-                        child: const Text("Logout")),
-                  ),
-                ])),
+    return Scaffold(
+      appBar: AppBar(
+        title: Column(
+          children: [
+            Center(
+              child:const Text('My Profile'),
+
+            ),
+          ],
+        ),
       ),
+      body: Obx(() {
+        // Check if customer data is available
+        if (accountController.customer.value.id == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        final customer = accountController.customer.value;
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Column(
+                  children: [
+                    const Text(
+                      'Profile Information',
+                      style: TextStyle(fontSize: Sizes.fontSizeLg),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: const [
+                            Icon(Icons.person),
+                            SizedBox(width: 8),
+                            Text('Name'),
+                          ],
+                        ),
+                        Text(customer.name),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Column(
+                  children: [
+                    const Text(
+                      'Personal Information',
+                      style: TextStyle(fontSize: Sizes.fontSizeLg),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: const [
+                            Icon(Icons.badge),
+                            SizedBox(width: 8),
+                            Text('User ID'),
+                          ],
+                        ),
+                        Text(customer.id),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: const [
+                            Icon(Icons.email),
+                            SizedBox(width: 8),
+                            Text('E-mail'),
+                          ],
+                        ),
+                        Text(customer.email),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: const [
+                            Icon(Icons.phone),
+                            SizedBox(width: 8),
+                            Text('Phone number'),
+                          ],
+                        ),
+                        Text(customer.phone),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton.icon(
+                onPressed: () {
+                  accountController.logout();
+                },
+                style: ElevatedButton.styleFrom(padding: const EdgeInsets.all(10)),
+                icon: const Icon(Icons.logout),
+                label: const Text('Logout'),
+              ),
+            ],
+          ),
+        );
+      }),
     );
   }
 }

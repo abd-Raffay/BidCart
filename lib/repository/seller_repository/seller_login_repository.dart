@@ -168,6 +168,22 @@ class SellerLoginRepository extends GetxController{
 
     }
   }
+  getActualSellerData(String userid) async {
+    try {
+      print(userid);
+      final snapshot = await _db.collection("seller").get();
+
+      for (var doc in snapshot.docs) {
+        if (doc.id == userid) {
+          return SellerModel.fromSnapshot(doc);
+        }
+      }
+    } catch (e) {
+      // Handle errors
+      print('Error fetching seller data: $e');
+
+    }
+  }
 
   Future<bool> checkSeller(String userid) async {
     try {

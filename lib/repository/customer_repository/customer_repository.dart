@@ -1,5 +1,6 @@
 import 'package:bidcart/model/customer_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -59,6 +60,20 @@ class CustomerRepository extends GetxController {
         .where("Email", isEqualTo: email)
         .get();
 
+    if (snapshot.docs.isNotEmpty) {
+      // If document exists, create a CustomerModel instance from it
+      return CustomerModel.fromSnapshot(snapshot.docs.first);
+    } else {
+      return null; // Return null if no user found with the provided email
+    }
+  }
+
+
+  Future<CustomerModel?> getCustomerrData(String userId) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection("customer")
+        .where("Userid", isEqualTo: userId)
+        .get();
     if (snapshot.docs.isNotEmpty) {
       // If document exists, create a CustomerModel instance from it
       return CustomerModel.fromSnapshot(snapshot.docs.first);
