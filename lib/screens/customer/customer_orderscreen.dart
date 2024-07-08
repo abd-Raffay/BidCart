@@ -45,14 +45,18 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
             children: [
               // Pending Orders Tab
               Obx(() {
-                final orders = orderController.rxOrderRequests;
+
+                final orders = orderController.rxOrderRequests.where((order) => order.status != "accepted" && order.status != "completed" && order.status != "reviewed").toList().obs;
+
                 if (orders.where((p0) => p0.status == "null").isEmpty) {
                   return const Center(
                     child: Text('No Orders Were Placed.'),
                   );
                 } else {
                   return ListView.separated(
+
                     itemBuilder: (BuildContext context, int index) {
+
                       final order = orders[index];
                       if (order.status == "null") {
                         return GestureDetector(
@@ -91,12 +95,8 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
 
               // Completed Orders Tab
               Obx(() {
-                final orders = orderController.rxOrderRequests;
-                if (orders.isEmpty) {
-                  return const Center(
-                    child: Text('No completed orders'),
-                  );
-                } else {
+                final orders = orderController.rxOrderRequests.where((order) => order.status == "accepted" || order.status == "completed").toList().obs;
+
                   return ListView.separated(
                     itemBuilder: (BuildContext context, int index) {
                       final order = orders[index];
@@ -112,7 +112,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                             // Once offers are fetched, get the specific offer for the seller
                             OfferData? offer = orderController.getOffer(order.sellerId!);
 
-                            if (order.status == "accepted" || order.status == "completed" ) {
+                            if (order.status == "accepted" ) {
                               return GestureDetector(
                                 onTap: () {},
                                 child: FutureBuilder<int>(
@@ -180,12 +180,12 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                     separatorBuilder: (BuildContext context, int index) => Divider(),
                     itemCount: orders.length,
                   );
-                }
+
               }),
 
               //Reviewed Orders
               Obx(() {
-                final orders = orderController.rxOrderRequests;
+                final orders = orderController.rxOrderRequests.where((order) => order.status == "reviewed" || order.status == "completed").toList().obs;
                 if (orders.isEmpty) {
                   return const Center(
                     child: Text('No Reviewed orders'),
@@ -206,14 +206,14 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                             // Once offers are fetched, get the specific offer for the seller
                             OfferData? offer = orderController.getOffer(order.sellerId!);
 
-                            if (order.status == "reviewed") {
+
                               return GestureDetector(
                                 onTap: () {},
                                 child: FutureBuilder<int>(
                                   future: orderController.getDistance(order.orderId!, order.sellerId!),
                                   builder: (BuildContext context, AsyncSnapshot<int> distanceSnapshot) {
                                     if (distanceSnapshot.connectionState == ConnectionState.waiting) {
-                                      return Center(child: CircularProgressIndicator());
+                                      return const Center(child: CircularProgressIndicator());
                                     } else if (distanceSnapshot.hasError) {
                                       return Center(child: Text('Error calculating distance'));
                                     } else if (distanceSnapshot.hasData) {
@@ -264,9 +264,6 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                                   },
                                 ),
                               );
-                            } else {
-                              return Container(); // Return empty container if condition not met
-                            }
                           }
                         },
                       );
