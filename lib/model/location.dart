@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Location {
+class Locations {
   String locationid;
   String storename;
   String sellerid;
   GeoPoint location;
 
-  Location({
+  Locations({
     required this.locationid,
     required this.storename,
     required this.sellerid,
@@ -22,8 +22,8 @@ class Location {
     };
   }
 
-  factory Location.fromJson(Map<String, dynamic> json) {
-    return Location(
+  factory Locations.fromJson(Map<String, dynamic> json) {
+    return Locations(
       locationid: json["locationid"],
       storename: json["storename"],
       sellerid: json["sellerid"],
@@ -31,9 +31,9 @@ class Location {
     );
   }
 
-  factory Location.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
+  factory Locations.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
     final data = document.data()!;
-    return Location(
+    return Locations(
       locationid: document.id,
       storename: data["storename"],
       sellerid: data["sellerid"],

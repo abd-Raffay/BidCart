@@ -7,6 +7,7 @@ import 'package:bidcart/widget/app_bar/appBar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -44,16 +45,12 @@ class _SSignupState extends State<SSignup> {
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //mainAxisSize: MainAxisSize.max,
                     children: [
                       Container(
                         width: 200,
                         height: 200,
                         child: Image.asset(Images.logo),
                       ),
-
-                      //Heading and subHeadings
                       const Align(
                         alignment: Alignment.topCenter,
                         child: Text(
@@ -74,15 +71,12 @@ class _SSignupState extends State<SSignup> {
                           " Create your seller account today and tap into a world of "
                           "opportunities to showcase your products and grow your business!",
                           style: TextStyle(
-                            //fontSize: 15,
-                            //fontWeight: FontWeight.bold,
                             color: Colors.grey,
                           ),
                         ),
                       ),
                       const SizedBox(height: 20.0),
-
-                      //Sellername Feild
+                      //Sellername Field
                       TextFormField(
                         controller: controller.sellername,
                         decoration: const InputDecoration(
@@ -93,63 +87,100 @@ class _SSignupState extends State<SSignup> {
                                 borderSide:
                                     BorderSide(width: 2.0, color: Colors.cyan)),
                             border: OutlineInputBorder()),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your full name';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(height: 10.0),
-
                       //Phone Number
                       TextFormField(
                         controller: controller.phone,
+                        keyboardType: TextInputType.phone,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(11), // Adjust maximum length as needed
+                        ],
                         decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.phone),
-                            labelText: 'Phone Number'
-                                ''
-                                '',
-                            labelStyle: TextStyle(color: Colors.black),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(width: 2.0, color: Colors.cyan)),
-                            border: OutlineInputBorder()),
+                          prefixIcon: Icon(Icons.phone),
+                          labelText: 'Phone Number',
+                          labelStyle: TextStyle(color: Colors.black),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: 2.0, color: Colors.cyan)
+                          ),
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your phone number';
+                          } else if (value.length < 9 || value.length > 11) {
+                            return 'Phone number must be between 9 to 11 digits long';
+                          }
+                          return null;
+                        },
                       ),
-                      const SizedBox(height: 10.0),
 
+                      const SizedBox(height: 10.0),
                       //CNIC
                       TextFormField(
                         controller: controller.cnic,
                         decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.card_membership),
-                            labelText: 'CNIC'
-                                ''
-                                '',
-                            labelStyle: TextStyle(color: Colors.black),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(width: 2.0, color: Colors.cyan)),
-                            border: OutlineInputBorder()),
-                      ),
-                      const SizedBox(height: 10.0),
+                          prefixIcon: Icon(Icons.card_membership),
+                          labelText: 'CNIC',
+                          labelStyle: TextStyle(color: Colors.black),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: 2.0, color: Colors.cyan)
+                          ),
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          bool isValidCNIC(String cnic) {
+                            RegExp check = RegExp(r'^[0-9]{5}-[0-9]{7}-[0-9]{1}$');
+                            return check.hasMatch(cnic);
+                          }
 
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your CNIC';
+                          } else if (!isValidCNIC(value)) {
+                            return 'CNIC must be in the format XXXXX-XXXXXXX-X';
+                          }
+                          return null;
+                        },
+                      ),
+
+                      const SizedBox(height: 10.0),
                       //Store Name
                       TextFormField(
                         controller: controller.storename,
                         decoration: const InputDecoration(
                             prefixIcon: Icon(Icons.store),
-                            labelText: 'Store Name'
-                                ''
-                                '',
+                            labelText: 'Store Name',
                             labelStyle: TextStyle(color: Colors.black),
                             focusedBorder: OutlineInputBorder(
                                 borderSide:
                                     BorderSide(width: 2.0, color: Colors.cyan)),
                             border: OutlineInputBorder()),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your store name';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(height: 10.0),
-
                       //Store Address
                       TextFormField(
                         controller: controller.address,
                         readOnly: true,
-                        onTap: () {
-                          Get.to(MapScreen());
+                        onTap: () async {
+                          final selectedLocation = await Get.to(MapScreen());
+                          if (selectedLocation != null) {
+                            controller.setLocationSignup(selectedLocation);
+                            controller.address.text =
+                                "Selected Address"; // Update this to the actual address string
+                          }
                         },
                         decoration: const InputDecoration(
                             prefixIcon: Icon(Icons.pin_drop),
@@ -159,10 +190,15 @@ class _SSignupState extends State<SSignup> {
                                 borderSide:
                                     BorderSide(width: 2.0, color: Colors.cyan)),
                             border: OutlineInputBorder()),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select your store address';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(height: 10.0),
-
-                      //Email Feild
+                      //Email Field
                       TextFormField(
                         controller: controller.email,
                         decoration: const InputDecoration(
@@ -183,21 +219,17 @@ class _SSignupState extends State<SSignup> {
                         },
                       ),
                       const SizedBox(height: 10.0),
-
-                      //password Feild
+                      //Password Field
                       TextFormField(
                         controller: controller.password,
                         decoration: InputDecoration(
-                          prefixIcon: const Icon(
-                            Icons.lock,
-                          ),
+                          prefixIcon: const Icon(Icons.lock),
                           labelText: 'Password',
                           border: const OutlineInputBorder(),
                           labelStyle: const TextStyle(color: Colors.black),
                           focusedBorder: const OutlineInputBorder(
                               borderSide:
                                   BorderSide(width: 2.0, color: Colors.cyan)),
-                          //errorText: "Password must be 8 digits long",
                           suffixIcon: GestureDetector(
                             onTap: () {
                               setState(() {
@@ -216,15 +248,12 @@ class _SSignupState extends State<SSignup> {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your password';
                           } else if (value.length <= 7) {
-                            return 'Password must be 8 digits long';
-                          } else {
-                            print('hello');
-                            return null;
+                            return 'Password must be at least 8 characters long';
                           }
+                          return null;
                         },
                       ),
                       const SizedBox(height: 32.0),
-
                       // SignUp Button
                     ],
                   ),
@@ -243,36 +272,30 @@ class _SSignupState extends State<SSignup> {
                     foregroundColor: Colors.white,
                   ),
                   onPressed: () {
-                    final seller = SellerModel(
-                      sellername: controller.sellername.text.trim(),
-                      email: controller.email.text.trim(),
-                      //password: controller.password.text.trim(),
-                      phone: controller.phone.text.trim(),
-                      storename: controller.storename.text.trim(),
-                      address: controller.address.text.trim(),
-                      cnic: controller.cnic.text.trim(),
-                      userId: "",
-                      status: '',
-                      storeId: '',
-                      location:GeoPoint(0,0),
-                      dateTime: Timestamp.now(),
-                    );
-
+                    final sellerController = Get.put(SellerSignUpController());
                     if (_formKey.currentState!.validate()) {
-                      SellerSignUpController.instance
-                          .createUser(seller, controller.password.text);
-                      //SellerSignUpController.instance.registerUser(controller.email.text.trim(), controller.password.text.trim());
-                      //controller.email.clear();
-                      // controller.password.clear();
-                    }
+                      final seller = SellerModel(
+                        sellername: controller.sellername.text.trim(),
+                        email: controller.email.text.trim(),
+                        phone: controller.phone.text.trim(),
+                        storename: controller.storename.text.trim(),
+                        address: controller.address.text.trim(),
+                        cnic: controller.cnic.text.trim(),
+                        userId: "",
+                        status: '',
+                        storeId: '',
+                        location: sellerController.sellerlocation,
+                        dateTime: Timestamp.now(),
+                      );
 
-                    // await _signUp();
+                      sellerController.createUser(seller, controller.password.text);
+                    }
                   },
                   child: const Text('Sign Up'),
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

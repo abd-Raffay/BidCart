@@ -1,10 +1,13 @@
-import 'package:bidcart/model/location.dart';
+import 'dart:ffi';
+
+import 'package:bidcart/model/location.dart' ;
 import 'package:bidcart/model/seller_model.dart';
 import 'package:bidcart/repository/authentication/seller_authentication_repository.dart';
 import 'package:bidcart/repository/seller_repository/seller_login_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -24,7 +27,10 @@ class SellerSignUpController extends GetxController {
   final storename=TextEditingController();
   final address=TextEditingController();
   final cnic=TextEditingController();
+  final location=TextEditingController();
 
+
+ GeoPoint sellerlocation = GeoPoint(0, 0);
 
 
 
@@ -50,7 +56,7 @@ class SellerSignUpController extends GetxController {
 
 
 
-      Location temp = Location(
+      Locations temp = Locations(
         locationid: "", // Firestore will auto-generate this
         location: location,
         sellerid: sellerId,
@@ -67,9 +73,16 @@ class SellerSignUpController extends GetxController {
 
   getLocations() async {
     return  sellerRepo.getAllLocations();
+  }
 
+  setLocationSignup(GeoPoint location) async {
+   sellerlocation=GeoPoint(location.latitude, location.longitude);
+   await setAddress(sellerlocation);
+  }
 
-
+  setAddress(GeoPoint position) async {
+      List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude,position.longitude);
+      address.text = '${placemarks[0].subLocality}, ${placemarks[0].locality}';
   }
 
 

@@ -1,4 +1,5 @@
 import 'package:bidcart/controllers/common_controllers/forget_password_controller.dart';
+import 'package:bidcart/screens/common/onboarding.dart';
 import 'package:bidcart/screens/customer/customer_login.dart';
 import 'package:bidcart/widget/app_bar/appBar.dart';
 import 'package:flutter/material.dart';
@@ -54,12 +55,11 @@ class ResetPassword extends StatelessWidget {
                   child: ElevatedButton(
 
                     onPressed: () {
-                      Get.back();
+                      Get.offAll(()=>  OnBoarding());
                     },
                     child: const Text(
                       "Done",
                       style: TextStyle(
-
                         color: Colors.white,
                         fontWeight: FontWeight.w400,
                       ),

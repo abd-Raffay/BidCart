@@ -62,6 +62,20 @@ class CustomerAccountScreen extends StatelessWidget {
                         Text(customer.name),
                       ],
                     ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: const [
+                            Icon(Icons.location_on),
+                            SizedBox(width: 8),
+                            Text('Location'),
+                          ],
+                        ),
+                        Text(customer.address),
+                      ],
+                    ),
                   ],
                 ),
               ),

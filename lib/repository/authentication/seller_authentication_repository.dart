@@ -1,3 +1,4 @@
+import 'package:bidcart/model/location.dart';
 import 'package:bidcart/model/seller_model.dart';
 import 'package:bidcart/repository/exception/exceptions.dart';
 import 'package:bidcart/repository/seller_repository/seller_login_repository.dart';
@@ -55,11 +56,11 @@ class SellerAuthenticationRepository extends GetxController {
 
         if (!await sellerrepo.checkSeller(user.uid)) {
           sellerrepo.createUser(seller,user.uid);
+          sellerrepo.saveLocation(Locations( locationid: '', storename: seller.storename, sellerid: seller.userId, location: seller.location), seller.userId);
         }
 
         //check if the seller is approved
         if(await sellerrepo.getApprovalStatus(user.uid)=="approved"){
-          print("Seller location ${seller.location.latitude} == ${0}");
           if(seller.location.longitude==0.0 && seller.location.latitude==0.0){
             print("Seller id is ${seller.userId}");
             print("Seller's location is at coordinates ${seller.location.longitude}, ${seller.location.latitude}");

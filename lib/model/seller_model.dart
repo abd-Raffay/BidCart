@@ -58,7 +58,7 @@ class SellerModel {
       "Status": status,
       "StoreId": storeId,
       "DateTime": dateTime ,
-      "location":location// Server timestamp
+      "location":location,
     };
   }
 

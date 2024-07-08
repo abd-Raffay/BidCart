@@ -12,7 +12,7 @@ class SellerAccountScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: Center(child: const Text('My Profile')),
       ),
       body: Obx(() {
         // Add loading indicator while fetching data
@@ -97,7 +97,7 @@ class SellerAccountScreen extends StatelessWidget {
                             Text('Location'),
                           ],
                         ),
-                        Text(seller.location.longitude.toString()),
+                        Text(seller.address),
                       ],
                     ),
                   ],
@@ -195,6 +195,7 @@ class SellerAccountScreen extends StatelessWidget {
                 onPressed: () {
                   accountController.logout();
                 },
+                style: ElevatedButton.styleFrom(padding: const EdgeInsets.all(10)),
                 icon: const Icon(Icons.logout),
                 label: const Text('Logout'),
               ),

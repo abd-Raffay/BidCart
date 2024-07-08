@@ -3,20 +3,23 @@ import 'package:bidcart/controllers/seller_controllers/seller_home_controller.da
 import 'package:bidcart/model/product_model.dart';
 import 'package:bidcart/model/seller_inventory.dart';
 import 'package:bidcart/repository/seller_repository/seller_store_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class SellerStoreController extends GetxController{
+class SellerStoreController extends GetxController {
+  SellerStoreController get instance => Get.find();
 
-  final homeController = Get.put(SellerHomeController());
 
   @override
   Future<void> onInit() async {
     await getProducts();
     super.onInit();
-
+    inventory.assignAll(homeController.rxInventory);
   }
+
+
 
   final List<Map<String, dynamic>> exploreCards = [
     {
@@ -71,71 +74,79 @@ class SellerStoreController extends GetxController{
     },
   ];
 
-  SellerStoreController get instance => Get.find();
-  final storeRepo= Get.put(SellerStoreRepository());
+
+  final storeRepo = Get.put(SellerStoreRepository());
+  final homeController = Get.put(SellerHomeController());
+
+  User? _auth = FirebaseAuth.instance.currentUser;
+
   late Future<List<ProductModel>> productList;
 
-  TextEditingController dateController=TextEditingController();
-  TextEditingController quantityController=TextEditingController();
-  TextEditingController prizeController=TextEditingController();
-  TextEditingController batchController=TextEditingController();
-  String size="";
+  TextEditingController dateController = TextEditingController();
+  TextEditingController quantityController = TextEditingController();
+  TextEditingController prizeController = TextEditingController();
+  TextEditingController batchController = TextEditingController();
+  String size = "";
 
   List products = [];
-  int index=0;
+  int index = 0;
 
-  List unfilteredList = [];
   List<Inventory> filteredList = [];
 
-  late RxList<Inventory> allproducts = <Inventory>[].obs;
-  //late RxList<Inventory> inventory = <Inventory>[].obs;
+
   final RxList<Inventory> rxSellerProducts = RxList<Inventory>();
 
+  RxList<Inventory> inventory = <Inventory>[].obs;
 
   Future<void> setIndex(int indexx) async {
-     index = indexx;
-     filterList();
+    index = indexx;
+    filterList();
   }
 
-  List<String>getSizes(id){
-
-    ProductModel matchedProduct =products.firstWhere((product) => product.id == id);
+  List<String> getSizes(id) {
+    ProductModel matchedProduct = products.firstWhere((product) =>
+    product.id == id);
     return matchedProduct.size ?? [];
-
   }
 
-  addProducttoInventory(Inventory product){
+  addProducttoInventory(Inventory product) {
+    inventory.assignAll(homeController.rxInventory);
+    bool flag = true;
+    product.size = size;
+    product.quantity = int.parse(quantityController.text.toString());
+    product.batch = batchController.text.toString();
+    product.price = int.parse(prizeController.text.toString());
+    product.dateofexpiry = dateController.text;
 
+    for (int i = 0; i < inventory.length; i++) {
+      if (inventory[i].productid == product.productid &&
+          inventory[i].batch == product.batch &&
+          inventory[i].size == product.size)
 
-    var inventory =homeController.rxInventory;
+        inventory[i].quantity = inventory[i].quantity + product.quantity;
 
-    inventory.add(product);
+      storeRepo.updateInventory(_auth!.uid,inventory[i].inventoryid, inventory[i].quantity);
+      flag = false;
+      print("NO id found");
+    }
 
+    if (flag == true) {
+      inventory.add(product);
+      storeRepo.saveToInventory(product);
+    }
 
-    product.size=size;
-    product.quantity=int.parse(quantityController.text.toString());
-    product.batch=batchController.text.toString();
-    product.price=int.parse(prizeController.text.toString());
-    product.dateofexpiry=dateController.text;
-
-
-    storeRepo.saveToInventory(product);
-    size="";
+    size = "";
     quantityController.clear();
     batchController.clear();
     prizeController.clear();
     dateController.clear();
-
   }
 
 
+
   filterList() async {
-    print("filteredList.length ${filteredList.length}");
-    print("index $index");
 
     filteredList.clear();
-
-
     for (int i = 0; i < rxSellerProducts.length; i++) {
       if (rxSellerProducts[i].category == index.toString()) {
         filteredList.add(rxSellerProducts[i]); // Add filtered items to filteredList
