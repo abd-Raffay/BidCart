@@ -1,3 +1,4 @@
+import 'package:bidcart/model/review_model.dart';
 import 'package:bidcart/model/seller_model.dart';
 import 'package:bidcart/repository/admin/admin_repository.dart';
 import 'package:get/get.dart';
@@ -8,10 +9,12 @@ class AdminController extends GetxController {
   final adminRepo = Get.put(AdminRepository());
 
   late RxList<SellerModel> sellers = <SellerModel>[].obs;
+  late RxList<Review> reviews = <Review>[].obs;
 
   @override
   Future<void> onInit() async {
     getSellerList();
+    getReviews();
     print('Admin Controller initialized');
     super.onInit();
   }
@@ -53,4 +56,16 @@ class AdminController extends GetxController {
   List<SellerModel> deletedSellers() {
     return sellers.where((seller) => seller.status == 'rejected').toList();
   }
+  getReviews(){
+
+     adminRepo.getReviews().listen((reviewList) {
+        reviews.assignAll(reviewList);
+        print(reviews);
+        print(reviews);
+      }, onError: (error) {
+        print('Error fetching reviews: $error');
+      });
+
+  }
+
 }

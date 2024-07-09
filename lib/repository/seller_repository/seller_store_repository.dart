@@ -148,14 +148,49 @@ class SellerStoreRepository extends GetxController {
     }
   }
 
-  Stream<List<RequestData>> getOrderRequests() {
+  Stream<List<OfferData>> getOffersBySeller(String sellerId) {
     try {
-      final CollectionReference orderRequestCollection =
-          FirebaseFirestore.instance.collection('orderrequest');
+      final CollectionReference offersCollection = FirebaseFirestore.instance
+          .collection('selleroffers');
+      final Stream<
+          QuerySnapshot<Map<String, dynamic>>> offerSnapshots = offersCollection
+          .doc(sellerId).collection('offers').snapshots();
 
-      return orderRequestCollection
-          .snapshots()
-          .map((snapshot) => snapshot.docs.map((doc) {
+      return offerSnapshots.map((snapshot) {
+        List<OfferData> offers = [];
+
+        for (var doc in snapshot.docs) {
+          print('Document data: ${doc.data()}');
+          print('Document ID: ${doc.id}');
+          try {
+            OfferData offer = OfferData.fromSnapshot(doc);
+            offers.add(offer);
+            print('Converted offer: ${offer.toJson()}');
+          } catch (e) {
+            print('Error converting document to OfferData: $e');
+            // Print detailed information about each field to identify the problematic one
+            print('Fields in document:');
+            doc.data().forEach((key, value) {
+              print('$key: $value');
+            });
+          }
+        }
+        print('Offers list: ${offers.map((e) => e.toJson()).toList()}');
+        return offers;
+      });
+    } catch (e) {
+      print('Error retrieving offers from Firestore: $e');
+
+      // Show error snackbar (ensure showSnackbar is defined)
+
+
+      return Stream.value([]); // Return an empty stream indicating failure
+    }
+  }  Stream<List<RequestData>> getOrderRequests() {
+    try {
+      final CollectionReference orderRequestCollection = FirebaseFirestore.instance.collection('orderrequest');
+
+      return orderRequestCollection.snapshots().map((snapshot) => snapshot.docs.map((doc) {
                 // Extract data from the document
                 String orderid = doc.id;
                 String customerId = doc['customerid'];
@@ -366,45 +401,7 @@ class SellerStoreRepository extends GetxController {
     }
   }
 
-  Stream<List<OfferData>> getOffersBySeller(String sellerId) {
-    try {
-      final CollectionReference offersCollection = FirebaseFirestore.instance
-          .collection('selleroffers');
-      final Stream<
-          QuerySnapshot<Map<String, dynamic>>> offerSnapshots = offersCollection
-          .doc(sellerId).collection('offers').snapshots();
 
-      return offerSnapshots.map((snapshot) {
-        List<OfferData> offers = [];
-
-        for (var doc in snapshot.docs) {
-          print('Document data: ${doc.data()}');
-          print('Document ID: ${doc.id}');
-          try {
-            OfferData offer = OfferData.fromSnapshot(doc);
-            offers.add(offer);
-            print('Converted offer: ${offer.toJson()}');
-          } catch (e) {
-            print('Error converting document to OfferData: $e');
-            // Print detailed information about each field to identify the problematic one
-            print('Fields in document:');
-            doc.data().forEach((key, value) {
-              print('$key: $value');
-            });
-          }
-        }
-        print('Offers list: ${offers.map((e) => e.toJson()).toList()}');
-        return offers;
-      });
-    } catch (e) {
-      print('Error retrieving offers from Firestore: $e');
-
-      // Show error snackbar (ensure showSnackbar is defined)
-
-
-      return Stream.value([]); // Return an empty stream indicating failure
-    }
-  }
 
   Future<List<OfferData>> cancelOffer(String orderId,String status) async {
     try {
