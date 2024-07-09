@@ -25,11 +25,21 @@ class SellerHomeController extends GetxController {
   RxList<Inventory> rxInventory = <Inventory>[].obs;
   int index = 0;
 
-  Future<List<Inventory>> getInventory(String sellerId) async {
-    inventory = storeRepo.getProductsFromInventory(sellerId);
-    rxInventory.assignAll(await inventory);
-    //print(rxInventory.length);
-    return rxInventory;
+
+  Future<RxList<Inventory>> getInventory(String sellerId) async {
+    try {
+      // Listen to the stream of inventory data
+      storeRepo.getProductsFromInventory(sellerId).listen((List<Inventory> inventory) {
+        // Update the rxInventory with the fetched inventory
+        rxInventory.assignAll(inventory);
+      });
+      print("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG ${rxInventory.length}");
+      return rxInventory;
+
+    } catch (e) {
+      print('Error getting inventory: $e');
+      return rxInventory;
+    }
   }
 
   Future<void> setIndex(int indexx) async {

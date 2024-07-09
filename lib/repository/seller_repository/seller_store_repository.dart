@@ -72,42 +72,43 @@ class SellerStoreRepository extends GetxController {
     }
   }
 
-
-
-  Future<List<Inventory>> getProductsFromInventory(String sellerId) async {
+  Stream<List<Inventory>> getProductsFromInventory(String sellerId) {
     try {
-      //final String? userId = _auth.currentUser?.uid;
-      if (sellerId != null) {
-        print(sellerId);
-        final CollectionReference inventoryCollection =
-            _db.collection('inventory');
-        final DocumentReference userDocRef = inventoryCollection.doc(sellerId);
-        final CollectionReference productsCollection =
-            userDocRef.collection('products');
+      final CollectionReference inventoryCollection = FirebaseFirestore.instance
+          .collection('inventory');
+      final Stream<
+          QuerySnapshot<Map<String, dynamic>>> inventorySnapshots = inventoryCollection
+          .doc(sellerId).collection('products').snapshots();
 
-        final snapshot = await productsCollection.get();
+      return inventorySnapshots.map((snapshot) {
+        List<Inventory> inventory = [];
 
-        List<Inventory> products = [];
-        //print()
-
-        snapshot.docs.forEach((doc) {
-          //print(doc.data());
-         // print(doc.id);
-          Inventory product = Inventory.fromSnapshot(
-              doc as DocumentSnapshot<Map<String, dynamic>>);
-          products.add(product);
-          //print(product.toJson());
-        });
-        return products;
-      } else {
-        print('User not authenticated.');
-        return [];
-      }
+        for (var doc in snapshot.docs) {
+          try {
+            Inventory tempinventory = Inventory.fromSnapshot(doc);
+            inventory.add(tempinventory);
+            print('Inventory: ${tempinventory.toJson()}');
+          } catch (e) {
+            print('Error converting document to OfferData: $e');
+            // Print detailed information about each field to identify the problematic one
+            print('Fields in document:');
+            doc.data().forEach((key, value) {
+              print('$key: $value');
+            });
+          }
+        }
+        return inventory;
+      });
     } catch (e) {
-      print('Error getting products from inventory: $e');
-      return [];
+      print('Error retrieving offers from Firestore: $e');
+
+      // Show error snackbar (ensure showSnackbar is defined)
+
+
+      return Stream.value([]); // Return an empty stream indicating failure
     }
   }
+
 
   void updateInventory(String sellerId, String inventoryId, int quantity) async {
     try {
@@ -186,7 +187,9 @@ class SellerStoreRepository extends GetxController {
 
       return Stream.value([]); // Return an empty stream indicating failure
     }
-  }  Stream<List<RequestData>> getOrderRequests() {
+  }
+
+  Stream<List<RequestData>> getOrderRequests() {
     try {
       final CollectionReference orderRequestCollection = FirebaseFirestore.instance.collection('orderrequest');
 

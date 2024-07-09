@@ -2,12 +2,14 @@ import 'package:bidcart/controllers/customer_controllers/customer_cart_controlle
 import 'package:bidcart/controllers/seller_controllers/seller_store_controller.dart';
 import 'package:bidcart/model/seller_inventory.dart';
 import 'package:bidcart/screens/customer/customer_map_screen.dart';
+import 'package:bidcart/screens/customer/customer_navigation_bar.dart';
 import 'package:bidcart/screens/customer/customer_orderscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../controllers/customer_controllers/customer_navigation_controller.dart';
 import '../modal/distance.dart';
 
 class BottomBar extends StatelessWidget {
@@ -62,7 +64,10 @@ final GeoPoint? location;
               if(distance > 0) {
                 cartController.sendRequest(location!, distance);
                 cartController.clearCart();
-                Get.offAll(() => const CustomerOrderScreen());
+
+
+                Get.offAll(() => CustomerNavigationBar(index:2.obs));
+
 
 
                 Get.snackbar("Sucess", "Order Request Sent ",

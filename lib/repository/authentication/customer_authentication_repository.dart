@@ -41,7 +41,7 @@ class CustomerAuthenticationRepository extends GetxController {
           user.email.toString()) {
         //print("ccccustomer sadasdsdasasdsdadsasadsasda");
         //Get.offAll(() => const CustomerScreen());
-        Get.offAll(()=>const CustomerNavigationBar());
+        Get.offAll(()=>CustomerNavigationBar());
       } else {
         Get.offAll(() => CustomerLoginPage());
 

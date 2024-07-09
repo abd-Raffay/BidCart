@@ -121,13 +121,14 @@ class SellerStoreController extends GetxController {
     for (int i = 0; i < inventory.length; i++) {
       if (inventory[i].productid == product.productid &&
           inventory[i].batch == product.batch &&
-          inventory[i].size == product.size)
-
+          inventory[i].size == product.size) {
         inventory[i].quantity = inventory[i].quantity + product.quantity;
 
-      storeRepo.updateInventory(_auth!.uid,inventory[i].inventoryid, inventory[i].quantity);
-      flag = false;
-      print("NO id found");
+        storeRepo.updateInventory(
+            _auth!.uid, inventory[i].inventoryid, inventory[i].quantity);
+        flag = false;
+        print("NO id found");
+      }
     }
 
     if (flag == true) {
