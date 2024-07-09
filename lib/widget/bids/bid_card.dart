@@ -120,9 +120,7 @@ class BidCard extends StatelessWidget {
                             if (offer.status != "rejected")  // Show reject button if status is not "rejected"
                               ElevatedButton(
                                 onPressed: () {
-                                  // Handle reject action
-                                  //final offerController = Get.put(SellerOfferController());
-                                  //offerController.cancelOffer(offer.orderId, offer.sellerId);
+
                                   orderController.rejectOrder(offer.orderId,offer.sellerId);
                                 },
                                 style: ElevatedButton.styleFrom(

@@ -36,7 +36,7 @@ final customerRepo=Get.put(CustomerRepository());
 
   late List<OfferData> orderoffers = [];
   late RxList<OfferData> rxorderOffers = <OfferData>[].obs;
-
+  RxList<OfferData> rejectedoffers=<OfferData>[].obs;
   final _auth = FirebaseAuth.instance;
 
 
@@ -97,13 +97,22 @@ final customerRepo=Get.put(CustomerRepository());
 
 
   void acceptOrder(String sellerId,String orderId,int price){
-
+    rejectedoffers.clear();
    //print("Seller ID : ${sellerId} && Order ID : ${orderId}");
-    cartRepo.acceptOrder(sellerId, orderId,price);
 
+    cartRepo.acceptOrder(sellerId, orderId,price);
+    rejectedoffers.assignAll(rxorderOffers);
+    print("Rejected orders Length : ${rejectedoffers.length}");
+    rejectedoffers.removeWhere((element) => element.sellerId == sellerId);
+
+    for(int i=0;i<rejectedoffers.length;i++){
+      print("Rejected offer ${rejectedoffers[i].orderId},Seller ID ${rejectedoffers[i].sellerId}");
+      rejectOrder(rejectedoffers[i].orderId,rejectedoffers[i].sellerId);
+    }
   }
 
   void rejectOrder(String orderid,String sellerId){
+
     final sellerOfferController=Get.put( SellerOfferController());
     sellerOfferController.cancelOffer(orderid, sellerId, "rejected");
 

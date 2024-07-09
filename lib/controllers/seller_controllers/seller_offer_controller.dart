@@ -137,16 +137,20 @@ class SellerOfferController extends GetxController {
       await getOffersbyseller(sellerId);
        RxList<OfferData> returnOffers=<OfferData>[].obs;
        returnOffers.assignAll(rxsellermadeoffers);
+
+      print("RXSELLER MADE OFFERS LENGTH +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ${rxsellermadeoffers.length}");
       RxList<Inventory> inventory=<Inventory>[].obs;
       inventory.assignAll(await homeController.getInventory(sellerId));
       print("INVENTORY LENGTH +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ${inventory.length}");
        print("+++++++++++++++++++++++++++++++++++ ${returnOffers.length}");
        print("+++++++++++++++++++++++++++++++++++ ${rxsellermadeoffers.length}");
+      returnOffers.assignAll(rxsellermadeoffers);
       if (returnOffers.isNotEmpty) {
         for (int i = 0; i < returnOffers.length; i++) {
           if (returnOffers[i].orderId == orderid) {
             for (int j = 0; j < returnOffers[i].items.length; j++) {
               for (int k = 0; k < inventory.length; k++) {
+                print("Seller Id ${sellerId} PRODUCT IDDDDDDDDDD ${inventory[k].inventoryid}  QUNATITYYYYYYYYY ${inventory[k].quantity}");
                 if (returnOffers[i].items[j].productid == homeController.rxInventory[k].productid &&
                     returnOffers[i].items[j].batch == inventory[k].batch &&
                     returnOffers[i].items[j].size == inventory[k].size) {
@@ -183,6 +187,7 @@ class SellerOfferController extends GetxController {
     storeRepo.getOffersBySeller(sellerId).listen((List<OfferData> offers) {
       rxsellermadeoffers.assignAll(offers);
     });
+
   }
 
 
