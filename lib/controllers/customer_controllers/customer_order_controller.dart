@@ -1,11 +1,13 @@
 
 
 import 'package:bidcart/controllers/seller_controllers/seller_offer_controller.dart';
+import 'package:bidcart/model/customer_model.dart';
 import 'package:bidcart/model/offer_model.dart';
 import 'package:bidcart/model/request_model.dart';
 import 'package:bidcart/model/review_model.dart';
 import 'package:bidcart/model/seller_model.dart';
 import 'package:bidcart/repository/customer_repository/cart_repository.dart';
+import 'package:bidcart/repository/customer_repository/customer_repository.dart';
 import 'package:bidcart/repository/seller_repository/seller_login_repository.dart';
 import 'package:bidcart/repository/seller_repository/seller_store_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,6 +23,7 @@ class CustomerOrderController extends GetxController{
   final storeRepo = Get.put(SellerStoreRepository());
   final cartRepo = Get.put(CartRepository());
 final sellerRepo =Get.put(SellerLoginRepository());
+final customerRepo=Get.put(CustomerRepository());
   Future<void> onInit() async {
     // Perform initialization tasks herep
     getRequests();
@@ -160,14 +163,16 @@ final sellerRepo =Get.put(SellerLoginRepository());
     return seller.location;
   }
 
-  void saveReview(OfferData offer,String review){
+  Future<void> saveReview(OfferData offer,String review) async {
 
     User? _auth=FirebaseAuth.instance.currentUser;
 
+    CustomerModel? customer=await customerRepo.getCustomerrData(_auth!.uid);
+
     Review tempReview=Review(
-        customerId: _auth!.uid,
+        customerId: _auth.uid,
         offer: offer,
-        customerName: _auth.displayName!,
+        customerName: customer!.name,
         reviewDateTime: "",
         review: review,
     );

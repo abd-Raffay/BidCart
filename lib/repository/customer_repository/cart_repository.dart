@@ -187,8 +187,6 @@ class CartRepository extends GetxController{
         // Add any other fields you want to update here
       };
       await orderRef.update(updatedFields);
-
-
       print('Review saved successfully');
 
     } catch (e) {

@@ -21,7 +21,7 @@ class MapScreen extends StatefulWidget {
   State<MapScreen> createState() => _MapScreenState();
 
 
-  LatLng currentlocation = LatLng(33.5409533, 73.0807394);
+  late LatLng currentlocation ;
   late GoogleMapController mapController;
   Map<String, Marker> markers = {};
   Uint8List? markericon;

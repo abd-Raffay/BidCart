@@ -12,13 +12,11 @@ import 'package:intl/intl.dart';
 class HorizontalStoreCard extends StatelessWidget {
   const HorizontalStoreCard({
     super.key,
-
     required this.tab,
     required this.seller,
   });
 
   final SellerModel seller;
-
   final String tab;
 
   Color _getStatusColor(String status) {
@@ -65,7 +63,6 @@ class HorizontalStoreCard extends StatelessWidget {
             },
             child: Container(
 
-
               padding:  const EdgeInsets.all(10),
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
@@ -93,7 +90,7 @@ class HorizontalStoreCard extends StatelessWidget {
                         children: [
                           Icon(Icons.location_on_rounded, color: Colors.red.shade400),
                          Text(
-                              seller.address.length > 11 ? '${seller.address.substring(0, 31)}...' : seller.address,
+                              seller.address,
                               style: const TextStyle(color: Colors.grey),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -210,6 +207,7 @@ class HorizontalStoreCard extends StatelessWidget {
                             ],
                           )
                 ],
+
               ),
             ),
           ),

@@ -1,20 +1,29 @@
 import 'package:bidcart/controllers/admin_controllers/admin_controller.dart';
-import 'package:bidcart/widget/app_bar/tabBar.dart';
+import 'package:bidcart/screens/common/onboarding.dart';
+
 import 'package:bidcart/widget/store/horizontal_store_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../widget/admin/tabBar.dart';
+
 class StoresScreen extends StatelessWidget {
   final AdminController adminController = Get.put(AdminController());
-
+  void logout() {
+    Get.offAll(()=> OnBoarding());
+  }
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 5,
       child: Scaffold(
         appBar: AppBar(
+          actions: [IconButton(
+            onPressed: logout,
+            icon: Icon(Icons.logout),
+          ),],
 
-          bottom: const TTabBar(
+          bottom: const AdminTabBar(
             tabs: [
               Tab(child: Text("All")),
               Tab(child: Text("Pending")),
@@ -63,7 +72,7 @@ class StoresScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final seller = pendingSellers[index];
                       return HorizontalStoreCard(
-                        seller: pendingSellers[index],
+                        seller: seller,
                         tab: "pending",
                       );
                     },
@@ -84,7 +93,7 @@ class StoresScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final seller = approvedSellers[index];
                       return HorizontalStoreCard(
-                        seller: approvedSellers[index],
+                        seller: seller,
                         tab: "all",
                       );
                     },
@@ -105,7 +114,7 @@ class StoresScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final seller = deletedSellers[index];
                       return HorizontalStoreCard(
-                        seller: deletedSellers[index],
+                        seller: seller,
                         tab: "all",
                       );
                     },
