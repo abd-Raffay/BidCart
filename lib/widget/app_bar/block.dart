@@ -8,10 +8,12 @@ class BlockSeller extends StatelessWidget {
     Key? key,
     required this.storeId,
     required this.status,
+    required this.sellerId,
   }) : super(key: key);
 
   final String storeId;
   final RxString status;
+  final String sellerId;
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +25,11 @@ class BlockSeller extends StatelessWidget {
           if (status.value.toLowerCase() == 'blocked') {
             adminController.setStatus(storeId, "approved"); // Unblock the seller
             status.value = "approved";
+            adminController.endUserSession(sellerId, status.value);
           } else {
             adminController.setStatus(storeId, "blocked"); // Block the seller
             status.value = "blocked";
+            adminController.endUserSession(sellerId, status.value);
           }
           Get.back();
         },

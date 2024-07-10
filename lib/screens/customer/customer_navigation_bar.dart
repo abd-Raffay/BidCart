@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/customer_controllers/customer_navigation_controller.dart';
-import 'customer_account_screen.dart';
-import 'customer_explore_screen.dart';
-import 'customer_orderscreen.dart';
-import 'customer_homescreen.dart';
+
 
 class CustomerNavigationBar extends StatelessWidget {
   final Rx<int>? index;
@@ -22,9 +19,9 @@ class CustomerNavigationBar extends StatelessWidget {
           indicatorColor: Colors.cyan.shade50,
           height: 80,
           elevation: 0,
-          selectedIndex: index?.value ?? controller.selectedIndex.value,
+          selectedIndex: (index?.value == 2) ? index!.value : controller.selectedIndex.value,
           onDestinationSelected: (int newIndex) {
-            if (index != null) {
+            if (index == 2) {
               index!.value = newIndex;
             } else {
               controller.selectedIndex.value = newIndex;
@@ -43,6 +40,7 @@ class CustomerNavigationBar extends StatelessWidget {
         ),
       ),
       body: Obx(() {
+        print(index?.value);
         if (index?.value == 2) {
           return controller.screens[index!.value];
         } else {

@@ -53,7 +53,7 @@ class SellerDetails extends StatelessWidget {
         title: const HeadingText(title: 'Seller Details',),
         showBackArrow: true,
         actions: [
-          BlockSeller(storeId: seller.storeId,status:RxString(seller.status),)
+          BlockSeller(storeId: seller.storeId,status:RxString(seller.status),sellerId: seller.userId,)
         ],
       ),
       body: Padding(
@@ -291,140 +291,29 @@ class SellerDetails extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 16.0),
-                      const Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.inventory,
-                                      color: Colors.brown,
-                                    ),
-                                    Text(
-                                      'Inventory',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 4.0),
-                            Text(
-                              '',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: Sizes.spaceBtwItems/2,),
-
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.money,
-                                  color: Colors.green.shade800,
-                                ),
-                                const Text(
-                                  'Sales',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            const Text(
-                              '',
-                              style: TextStyle(fontSize: 16.0),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 16.0),
-                      const Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.discount,
-                                  color: Colors.red,
-                                ),
-                                Text(
-                                  'Discount',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 4.0),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: Sizes.spaceBtwItems/2),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(width: Sizes.spaceBtwItems),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.star,
-                                  color: Colors.yellow.shade800,
-                                ),
-                                const Text(
-                                  'Rating',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4.0),
-                            const Text(
-                              '',
-                              style: TextStyle(fontSize: 16.0),
-                            ),
-                          ],
-                        ),
-                      ),
                       Expanded(
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Icon(
-                             _getStatusIcon(seller.status),
-                             color: _getStatusColor(seller.status),
-                                ),
+                              _getStatusIcon(seller.status),
+                              color: _getStatusColor(seller.status),
+                            ),
                             Text(
                               seller.status,
                               style: TextStyle(
-                                fontSize: 16.0,
+                                  fontSize: 16.0,
                                   color: _getStatusColor(seller.status)
                               ),
                             ),
                           ],
                         ),
                       ),
+                      const SizedBox(width: 16.0),
                     ],
                   ),
+
+                  const SizedBox(height: Sizes.spaceBtwItems/2),
 
                   const SizedBox(
                     height: 10,

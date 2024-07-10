@@ -5,13 +5,18 @@ import 'package:bidcart/model/seller_inventory.dart';
 import 'package:bidcart/model/seller_model.dart';
 import 'package:bidcart/repository/seller_repository/seller_login_repository.dart';
 import 'package:bidcart/repository/seller_repository/seller_store_repository.dart';
+import 'package:bidcart/widget/snackbar/snackbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../model/request_model.dart';
+
 
 class SellerOfferController extends GetxController {
-  final requestController = Get.put(SellerRequestController());
+ //final requestController = Get.put(SellerRequestController());
   final homeController = Get.put(SellerHomeController());
   final storeRepo = Get.put(SellerStoreRepository());
   final sellerRepo = Get.put(SellerLoginRepository());
@@ -23,40 +28,55 @@ class SellerOfferController extends GetxController {
   late RxList<Inventory> rxOffers = <Inventory>[].obs;
   late RxList<OfferData> returnOffers=<OfferData>[].obs;
   late RxList<OfferData> rxsellermadeoffers = <OfferData>[].obs;
+  late RxList<RequestData> rxOrderRequests = <RequestData>[].obs;
+  RxList<Inventory> inventory=<Inventory>[].obs;
+
 
 
   void sendOffer(String orderid) async {
     int price=0;
-    var orderRequests = requestController.rxOrderRequests;
+    storeRepo.getOrderRequests().listen((requests) {
+      rxOrderRequests.assignAll(requests);
+    });
+
+
     //var inventoryItems = homeController.rxInventory;
     //print(orderRequests[0].items.length);
-    for (var order in orderRequests) {
+    for (var order in rxOrderRequests) {
      // print("ORders id = ${order.orderId} && Orderid = ${orderid}");
       if (order.orderId == orderid) {
         for (var orderItem in order.items) {
           for (var item in homeController.rxInventory) {
             if (orderItem.id == item.productid && orderItem.size == item.size) {
-              price=price+(item.price * orderItem.quantity);
-              item.quantity -= orderItem.quantity;
+              if (item.quantity > orderItem.quantity) {
+                price = price + (item.price * orderItem.quantity);
 
-              print("Seller Id ${sellerId!} PRODUCT IDDDDDDDDDD ${item.inventoryid}  QUNATITYYYYYYYYY ${item.quantity}");
+                item.quantity -= orderItem.quantity;
 
-              storeRepo.updateInventory(sellerId!, item.inventoryid, item.quantity);
+                print("Seller Id ${sellerId!} PRODUCT IDDDDDDDDDD ${item
+                    .inventoryid}  QUNATITYYYYYYYYY ${item.quantity}");
 
-              var modifiedItem = Inventory(
-                productid: item.productid,
-                name: item.name,
-                imageUrl: item.imageUrl,
-                quantity:orderItem.quantity ,
-                size: item.size!,
-                batch:item.batch ,
-                category: item.category,
-                price: item.price,
-                dateofexpiry: item.dateofexpiry,
-                inventoryid: "",
+                storeRepo.updateInventory(
+                    sellerId!, item.inventoryid, item.quantity);
 
-              );
-              rxOffers.add(modifiedItem);
+                var modifiedItem = Inventory(
+                  productid: item.productid,
+                  name: item.name,
+                  imageUrl: item.imageUrl,
+                  quantity: orderItem.quantity,
+                  size: item.size!,
+                  batch: item.batch,
+                  category: item.category,
+                  price: item.price,
+                  dateofexpiry: item.dateofexpiry,
+                  inventoryid: "",
+
+                );
+                rxOffers.add(modifiedItem);
+              }
+              else{
+                break;
+              }
             }
           }
         }
@@ -68,6 +88,7 @@ class SellerOfferController extends GetxController {
       SellerModel? seller = await sellerRepo.getSellerData(userId!);
       // Create an OfferData instance with all required fields filled
       OfferData offer = OfferData(
+
         sellerId: seller!.userId,
         // Replace with actual customer ID
         items: rxOffers.toList(),
@@ -79,6 +100,7 @@ class SellerOfferController extends GetxController {
         orderId: orderid,
         // Replace with actual order ID
         status: 'pending',
+          sellerLocation:seller.location,
         totalPrice: price
 
       );
@@ -104,7 +126,8 @@ class SellerOfferController extends GetxController {
           dateTime: DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
           orderId: orderid,
           status: 'rejected',
-          totalPrice: 0
+          totalPrice: 0,
+          sellerLocation: GeoPoint(0,0),
       );
       await storeRepo.postOffers(offer, orderid);
       await storeRepo.Offerstoseller(offer, orderid);
@@ -123,7 +146,8 @@ class SellerOfferController extends GetxController {
         dateTime: DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
         orderId: orderid,
         status: 'null',
-        totalPrice: 0
+        totalPrice: 0,
+      sellerLocation:GeoPoint(0,0),
     );
     await storeRepo.postOffers(offer, orderid);
     await storeRepo.Offerstoseller(offer, orderid);
@@ -187,7 +211,6 @@ class SellerOfferController extends GetxController {
     storeRepo.getOffersBySeller(sellerId).listen((List<OfferData> offers) {
       rxsellermadeoffers.assignAll(offers);
     });
-
   }
 
 

@@ -55,9 +55,7 @@ class OrderDetails extends StatelessWidget {
               return Divider(color: Colors.grey.shade100);
             },
             itemBuilder: (BuildContext context, int index) {
-              String availabilityText = requestController.availableProduct(
-                          products[index].id, products[index].size) >
-                      0
+              String availabilityText = requestController.availableProduct(products[index].id, products[index].size) > 0
                   ? 'Available: ${requestController.availableProduct(products[index].id, products[index].size)}'
                   : 'Out of stock';
               Color textColor = requestController.availableProduct(products[index].id, products[index].size) > 0 ? Colors.green : Colors.red;

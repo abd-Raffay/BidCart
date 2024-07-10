@@ -1,9 +1,13 @@
+import 'package:bidcart/screens/common/no_internet.dart';
 import 'package:bidcart/screens/seller/seller_add_screen.dart';
 import 'package:bidcart/screens/seller/seller_requests_screen.dart';
 import 'package:bidcart/screens/seller/seller_account_screen.dart';
 import 'package:bidcart/screens/seller/seller_homescreen.dart';
+import 'package:bidcart/screens/seller/session_ended.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../common/internet_connectivity.dart';
 
 class SellerNavigationBar extends StatelessWidget {
   const SellerNavigationBar({super.key});
@@ -32,7 +36,14 @@ class SellerNavigationBar extends StatelessWidget {
           ],
         ),
       ),
-      body: Obx(() => controller.screens[controller.selectedIndex.value]),
+      body: Stack(children: [
+        Obx(
+          () => controller.screens[controller.selectedIndex.value],
+
+        ),
+        SessionMonitor(),
+
+      ]),
     );
   }
 }
@@ -41,8 +52,8 @@ class SellerNavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
 
   final screens = [
-     SellerHomeScreen(),
-     SellerRequestScreen(),
+    SellerHomeScreen(),
+    SellerRequestScreen(),
     const SellerAddScreen(),
     const SellerAccountScreen(),
   ];

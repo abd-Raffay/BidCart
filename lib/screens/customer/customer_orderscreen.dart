@@ -1,5 +1,3 @@
-
-
 import 'package:bidcart/model/offer_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +21,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
@@ -35,7 +33,6 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
             tabs: [
               Tab(text: "Pending"),
               Tab(text: "Completed"),
-              Tab(text:"Reviewed"),
             ],
           ),
         ),
@@ -45,235 +42,160 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
             children: [
               // Pending Orders Tab
               Obx(() {
+                final orders = orderController.rxOrderRequests
+                    .where((order) =>
+                        order.status != "accepted" &&
+                        order.status != "completed" &&
+                        order.status != "reviewed")
+                    .toList();
 
-                final orders = orderController.rxOrderRequests.where((order) => order.status != "accepted" && order.status != "completed" && order.status != "reviewed").toList().obs;
-
-                if (orders.where((p0) => p0.status == "null").isEmpty) {
-                  return const Center(
-                    child: Text('No Orders Were Placed.'),
+                if (orders.isEmpty) {
+                  return Center(
+                    child: Text('No Orders'),
                   );
                 } else {
-                  return ListView.separated(
-
+                  return ListView.builder(
                     itemBuilder: (BuildContext context, int index) {
-
                       final order = orders[index];
-                      if (order.status == "null") {
-                        return GestureDetector(
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return OrderDetails(
-                                  products: order.items,
-                                  showStock: false,
-                                );
-                              },
+                      // Once offers are fetched, get the specific offer for the seller
+                      OfferData? offer =
+                          orderController.getOffer(order.sellerId!);
+
+                      return FutureBuilder<int>(
+                        future: orderController.getDistance(order.orderId!,
+                            order.sellerId!, order.sellerLocation!),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<int> distanceSnapshot) {
+                          if (distanceSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Container(
+                              height: 140, // Adjust height as needed
+                              child: Center(
+                                child: CircularProgressIndicator(),
+                              ),
                             );
-                          },
-                          child: OrderDetailCard(
-                            status: order.status,
-                            orderId: order.orderId!,
-                            totalProducts: order.items.length,
-                            date: order.dateTime,
-                            distance: order.distance,
-                            height: 110,
-                            price: order.price,
-                            sellerId: order.sellerId!,// Ensure date format is correct
-                          ),
-                        );
-                      }
-                      return Container(); // Return empty container if condition not met
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const SizedBox(height: 10);
-                    },
-                    itemCount: orders.length,
-                  );
-                }
-              }),
-
-              // Completed Orders Tab
-              Obx(() {
-                final orders = orderController.rxOrderRequests.where((order) => order.status == "accepted" || order.status == "completed").toList().obs;
-
-                  return ListView.separated(
-                    itemBuilder: (BuildContext context, int index) {
-                      final order = orders[index];
-
-                      return FutureBuilder<void>(
-                        future: orderController.getOffers(order.orderId!),
-                        builder: (BuildContext context, AsyncSnapshot<void> offersSnapshot) {
-                          if (offersSnapshot.connectionState == ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator());
-                          } else if (offersSnapshot.hasError) {
-                            return Center(child: Text('Error fetching offers'));
+                          } else if (distanceSnapshot.hasError) {
+                            return Container(
+                              height: 140, // Adjust height as needed
+                              child: Center(
+                                child: Text('Error fetching distance'),
+                              ),
+                            );
                           } else {
-                            // Once offers are fetched, get the specific offer for the seller
-                            OfferData? offer = orderController.getOffer(order.sellerId!);
-
-                            if (order.status == "accepted" ) {
-                              return GestureDetector(
-                                onTap: () {},
-                                child: FutureBuilder<int>(
-                                  future: orderController.getDistance(order.orderId!, order.sellerId!),
-                                  builder: (BuildContext context, AsyncSnapshot<int> distanceSnapshot) {
-                                    if (distanceSnapshot.connectionState == ConnectionState.waiting) {
-                                      return Center(child: CircularProgressIndicator());
-                                    } else if (distanceSnapshot.hasError) {
-                                      return Center(child: Text('Error calculating distance'));
-                                    } else if (distanceSnapshot.hasData) {
-                                      return FutureBuilder<String>(
-                                        future: orderController.getLocation(order.orderId!, order.sellerId!),
-                                        builder: (BuildContext context, AsyncSnapshot<String> addressSnapshot) {
-                                          if (addressSnapshot.connectionState == ConnectionState.waiting) {
-                                            return Center(child: CircularProgressIndicator());
-                                          } else if (addressSnapshot.hasError) {
-                                            return Center(child: Text('Error fetching address'));
-                                          } else if (addressSnapshot.hasData) {
-                                            // Fetch customer location separately
-                                            return FutureBuilder<GeoPoint>(
-                                              future: orderController.getSellerLocation(order.sellerId!),
-                                              builder: (BuildContext context, AsyncSnapshot<GeoPoint> customerLocationSnapshot) {
-                                                if (customerLocationSnapshot.connectionState == ConnectionState.waiting) {
-                                                  return Center(child: CircularProgressIndicator());
-                                                } else if (customerLocationSnapshot.hasError) {
-                                                  return Center(child: Text('Error fetching customer location'));
-                                                } else if (customerLocationSnapshot.hasData) {
-                                                  return OrderDetailCard(
-                                                    status: order.status,
-                                                    distance: distanceSnapshot.data!,
-                                                    address: addressSnapshot.data!, // Pass address to OrderDetailCard
-                                                    orderId: order.orderId!,
-                                                    totalProducts: order.items.length,
-                                                    date: order.dateTime,
-                                                    height: 140,
-                                                    price: order.price,
-                                                    sellerId: order.sellerId!,
-                                                    sellerLocation: customerLocationSnapshot.data!,
-                                                    customerLocation: order.location,
-                                                    offer: offer, // Use fetched offer data if needed
-                                                  );
-                                                } else {
-                                                  return Container();
-                                                }
-                                              },
-                                            );
-                                          } else {
-                                            return Container();
-                                          }
-                                        },
-                                      );
-                                    } else {
-                                      return Container();
-                                    }
-                                  },
+                            int distance = distanceSnapshot.data!;
+                            return GestureDetector(
+                              onTap: () {},
+                              child: Container(
+                                child: OrderDetailCard(
+                                  status: order.status,
+                                  distance: order.distance,
+                                  orderId: order.orderId!,
+                                  totalProducts: order.items.length,
+                                  date: order.dateTime,
+                                  sellerLocation: order.location,
+                                  height: 140,
+                                  price: order.price,
+                                  sellerId: order.sellerId!,
+                                  customerLocation: order.location,
+                                  offer:
+                                      offer, // Use fetched offer data if needed
                                 ),
-                              );
-                            } else {
-                              return Center(child: Container(child: Text("No Completed Orders"))); // Return empty container if condition not met
-                            }
+                              ),
+                            );
                           }
                         },
                       );
                     },
-                    separatorBuilder: (BuildContext context, int index) => Divider(),
                     itemCount: orders.length,
                   );
-
+                }
               }),
 
               //Reviewed Orders
               Obx(() {
-                final orders = orderController.rxOrderRequests.where((order) => order.status == "reviewed" || order.status == "completed").toList().obs;
+                final orders = orderController.rxOrderRequests
+                    .where((order) =>
+                        order.status == "reviewed" ||
+                        order.status == "accepted" ||
+                        order.status == "completed")
+                    .toList();
+
                 if (orders.isEmpty) {
-                  return const Center(
-                    child: Text('No Reviewed orders'),
+                  return Center(
+                    child: Text('Complete an order'),
                   );
                 } else {
-                  return ListView.separated(
+                  return ListView.builder(
                     itemBuilder: (BuildContext context, int index) {
                       final order = orders[index];
 
                       return FutureBuilder<void>(
                         future: orderController.getOffers(order.orderId!),
-                        builder: (BuildContext context, AsyncSnapshot<void> offersSnapshot) {
-                          if (offersSnapshot.connectionState == ConnectionState.waiting) {
+                        builder: (BuildContext context,
+                            AsyncSnapshot<void> offersSnapshot) {
+                          if (offersSnapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return Center(child: CircularProgressIndicator());
                           } else if (offersSnapshot.hasError) {
                             return Center(child: Text('Error fetching offers'));
                           } else {
-                            // Once offers are fetched, get the specific offer for the seller
-                            OfferData? offer = orderController.getOffer(order.sellerId!);
-
-
-                              return GestureDetector(
-                                onTap: () {},
-                                child: FutureBuilder<int>(
-                                  future: orderController.getDistance(order.orderId!, order.sellerId!),
-                                  builder: (BuildContext context, AsyncSnapshot<int> distanceSnapshot) {
-                                    if (distanceSnapshot.connectionState == ConnectionState.waiting) {
-                                      return const Center(child: CircularProgressIndicator());
-                                    } else if (distanceSnapshot.hasError) {
-                                      return Center(child: Text('Error calculating distance'));
-                                    } else if (distanceSnapshot.hasData) {
-                                      return FutureBuilder<String>(
-                                        future: orderController.getLocation(order.orderId!, order.sellerId!),
-                                        builder: (BuildContext context, AsyncSnapshot<String> addressSnapshot) {
-                                          if (addressSnapshot.connectionState == ConnectionState.waiting) {
-                                            return Center(child: CircularProgressIndicator());
-                                          } else if (addressSnapshot.hasError) {
-                                            return Center(child: Text('Error fetching address'));
-                                          } else if (addressSnapshot.hasData) {
-                                            // Fetch customer location separately
-                                            return FutureBuilder<GeoPoint>(
-                                              future: orderController.getSellerLocation(order.sellerId!),
-                                              builder: (BuildContext context, AsyncSnapshot<GeoPoint> customerLocationSnapshot) {
-                                                if (customerLocationSnapshot.connectionState == ConnectionState.waiting) {
-                                                  return Center(child: CircularProgressIndicator());
-                                                } else if (customerLocationSnapshot.hasError) {
-                                                  return Center(child: Text('Error fetching customer location'));
-                                                } else if (customerLocationSnapshot.hasData) {
-                                                  return OrderDetailCard(
-                                                    status: order.status,
-                                                    distance: distanceSnapshot.data!,
-                                                    address: addressSnapshot.data!, // Pass address to OrderDetailCard
-                                                    orderId: order.orderId!,
-                                                    totalProducts: order.items.length,
-                                                    date: order.dateTime,
-                                                    height: 140,
-                                                    price: order.price,
-                                                    sellerId: order.sellerId!,
-                                                    sellerLocation: customerLocationSnapshot.data!,
-                                                    customerLocation: order.location,
-                                                    offer: offer, // Use fetched offer data if needed
-                                                  );
-                                                } else {
-                                                  return Container();
-                                                }
-                                              },
-                                            );
-                                          } else {
-                                            return Container();
-                                          }
-                                        },
-                                      );
-                                    } else {
-                                      return Container();
-                                    }
-                                  },
-                                ),
-                              );
+                            OfferData? offer =
+                                orderController.getOffer(order.sellerId!);
+                            return FutureBuilder<int>(
+                              future: orderController.getDistance(
+                                  order.orderId!,
+                                  order.sellerId!,
+                                  order.sellerLocation!),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<int> distanceSnapshot) {
+                                if (distanceSnapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Container(
+                                    height: 140, // Adjust height as needed
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
+                                } else if (distanceSnapshot.hasError) {
+                                  return Container(
+                                    height: 140, // Adjust height as needed
+                                    child: Center(
+                                      child: Text('Error fetching distance'),
+                                    ),
+                                  );
+                                } else {
+                                  int distance = distanceSnapshot.data!;
+                                  return GestureDetector(
+                                    onTap: () {},
+                                    child: Container(
+                                      child: OrderDetailCard(
+                                        status: order.status,
+                                        distance: distance,
+                                        orderId: order.orderId!,
+                                        totalProducts: order.items.length,
+                                        date: order.dateTime,
+                                        height: 140,
+                                        price: order.price,
+                                        sellerId: order.sellerId!,
+                                        customerLocation: order.location,
+                                        offer: offer,
+                                        // Use fetched offer data if needed
+                                        sellerLocation: order
+                                            .sellerLocation, // Corrected to use order.sellerLocation
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                            );
                           }
                         },
                       );
                     },
-                    separatorBuilder: (BuildContext context, int index) => Divider(),
                     itemCount: orders.length,
                   );
                 }
               }),
-
             ],
           ),
         ),
