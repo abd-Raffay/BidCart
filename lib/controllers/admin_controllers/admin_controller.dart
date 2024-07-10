@@ -1,6 +1,8 @@
 import 'package:bidcart/model/review_model.dart';
 import 'package:bidcart/model/seller_model.dart';
 import 'package:bidcart/repository/admin/admin_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 class AdminController extends GetxController {
@@ -37,6 +39,7 @@ class AdminController extends GetxController {
     getSellerList();
   }
 
+
   List<SellerModel> allSellers() {
     return sellers.toList();
   }
@@ -56,12 +59,23 @@ class AdminController extends GetxController {
   List<SellerModel> deletedSellers() {
     return sellers.where((seller) => seller.status == 'rejected').toList();
   }
+
+  Future<void> endUserSession(String uid,String status) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('seller')
+          .doc(uid)
+          .update({'Status': status});
+      print('User session ended for UID: $uid');
+    } catch (e) {
+      print('Error ending user session: $e');
+    }
+  }
+
   getReviews(){
 
      adminRepo.getReviews().listen((reviewList) {
         reviews.assignAll(reviewList);
-        print(reviews);
-        print(reviews);
       }, onError: (error) {
         print('Error fetching reviews: $error');
       });

@@ -24,6 +24,7 @@ class CustomerOrderController extends GetxController{
   final cartRepo = Get.put(CartRepository());
 final sellerRepo =Get.put(SellerLoginRepository());
 final customerRepo=Get.put(CustomerRepository());
+  final sellerOfferController=Get.put( SellerOfferController());
   Future<void> onInit() async {
     // Perform initialization tasks herep
     getRequests();
@@ -96,11 +97,11 @@ final customerRepo=Get.put(CustomerRepository());
 
 
 
-  void acceptOrder(String sellerId,String orderId,int price){
-    rejectedoffers.clear();
-   //print("Seller ID : ${sellerId} && Order ID : ${orderId}");
+  void acceptOrder(String sellerId,String orderId,int price,GeoPoint sellerLocation){
+    cartRepo.acceptOrder(sellerId, orderId,price,sellerLocation);
 
-    cartRepo.acceptOrder(sellerId, orderId,price);
+    rejectedoffers.clear();
+    print("Seller ID : ${sellerId} && Order ID : ${orderId}");
     rejectedoffers.assignAll(rxorderOffers);
     print("Rejected orders Length : ${rejectedoffers.length}");
     rejectedoffers.removeWhere((element) => element.sellerId == sellerId);
@@ -109,44 +110,41 @@ final customerRepo=Get.put(CustomerRepository());
       print("Rejected offer ${rejectedoffers[i].orderId},Seller ID ${rejectedoffers[i].sellerId}");
       rejectOrder(rejectedoffers[i].orderId,rejectedoffers[i].sellerId);
     }
+
+
   }
 
   void rejectOrder(String orderid,String sellerId){
 
-    final sellerOfferController=Get.put( SellerOfferController());
     sellerOfferController.cancelOffer(orderid, sellerId, "rejected");
 
   }
 
 
 
-  Future<int> getDistance(String orderid, String sellerid) async {
-    late GeoPoint customerlocation;
-    SellerModel seller = await sellerRepo.getSellerData(sellerid);
-    FlutterMapMath mapMath = FlutterMapMath();
 
+   Future<int> getDistance(String orderid, String sellerid,GeoPoint sellerLocation) async {
+    late GeoPoint customerlocation;
+    FlutterMapMath mapMath = FlutterMapMath();
     for (int i = 0; i < rxOrderRequests.length; i++) {
       if (rxOrderRequests[i].orderId == orderid) {
         customerlocation = GeoPoint(rxOrderRequests[i].location.latitude, rxOrderRequests[i].location.longitude);
         break;
       }
     }
-
     double tempdistance = mapMath.distanceBetween(
-      seller.location.latitude,
-      seller.location.longitude,
+      sellerLocation.latitude,
+      sellerLocation.longitude,
       customerlocation.latitude,
       customerlocation.longitude,
       "meters",
     );
-    print("TEMP DISTANCE IS ++++++++++++++++++++++++++ ${tempdistance}");
 
-    return tempdistance.toInt();
+    return tempdistance.toInt();;
   }
 
-  Future<String> getLocation(String orderid, String sellerid) async {
+  getLocation(String orderid, String sellerid) async {
     late GeoPoint location;
-    SellerModel seller = await sellerRepo.getSellerData(sellerid);
     FlutterMapMath mapMath = FlutterMapMath();
 
     for (int i = 0; i < rxOrderRequests.length; i++) {
@@ -157,20 +155,16 @@ final customerRepo=Get.put(CustomerRepository());
       }
     }
 
-
-
-
     List<Placemark> placemarks = await placemarkFromCoordinates(
         location.latitude, location.longitude);
     Placemark first = placemarks[0];
-    return ' ${first.locality},${first.subLocality},${first
-        .thoroughfare}, ${first.subThoroughfare}';
+    return ' ${first.locality},${first.subLocality},${first.thoroughfare}, ${first.subThoroughfare}';
   }
 
-  Future<GeoPoint> getSellerLocation(String sellerid) async {
-    SellerModel seller = await sellerRepo.getSellerData(sellerid);
-    return seller.location;
+   getSellerLocation(String sellerid) async {
+
   }
+
 
   Future<void> saveReview(OfferData offer,String review) async {
 

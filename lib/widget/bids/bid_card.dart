@@ -97,7 +97,7 @@ class BidCard extends StatelessWidget {
                               ElevatedButton(
                                 onPressed: () {
                                   // Handle accept action
-                                  orderController.acceptOrder(offer.sellerId, offer.orderId,offer.totalPrice);
+                                  orderController.acceptOrder(offer.sellerId, offer.orderId,offer.totalPrice,offer.sellerLocation);
                                 },
                                 style: ElevatedButton.styleFrom(
                                   padding: const EdgeInsets.all(10),

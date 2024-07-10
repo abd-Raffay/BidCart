@@ -14,7 +14,6 @@ class SellerRequestScreen extends StatelessWidget {
     final requestController = Get.put(SellerRequestController());
     final orderController = Get.put(SellerOfferController());
 
-    late RxList<RequestData> orderRequests = <RequestData>[].obs;
 
     return DefaultTabController(
         length: 2, // Number of tabs
@@ -36,61 +35,57 @@ class SellerRequestScreen extends StatelessWidget {
             children: [
               // Tab 1: Pending Requests
               Obx(() {
-                RxList<RequestData> pendingRequests = <RequestData>[].obs;
-                pendingRequests.assignAll(requestController.rxOrderRequests);
-                return pendingRequests.where((request) => request.status != "accepted").isEmpty
-                    ? const Center(
-                        child: Text(
-                          'No Order Requests',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      )
-                    : ListView.builder(
-                        itemCount: pendingRequests
-                            .where((request) => request.status != "accepted")
-                            .length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final filteredRequests = pendingRequests
-                              .where((request) => request.status != "accepted")
-                              .toList();
-                          final request = filteredRequests[index];
-
-                          return SellerRequestCards(
-                            requests: request,
-                            total: request.items.length,
-                            available: requestController.totalAvailableProducts(request.orderId!),
-                          );
-                        },
+                final pendingRequests = requestController.getPendingRequests();
+                if (pendingRequests.isEmpty) {
+                  return Center(
+                    child: Text(
+                      'No Order Requests',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  );
+                } else {
+                  return ListView.builder(
+                    itemCount: pendingRequests.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final request = pendingRequests[index];
+                      return SellerRequestCards(
+                        requests: request,
+                        total: request.items.length,
+                        totalavailable:requestController.totalAvailableProducts(request.orderId!),
                       );
+                    },
+                  );
+                }
               }),
+
               // Tab 2: Completed Requests
               Obx(() {
-                List<RequestData> completedRequests = requestController
-                    .rxOrderRequests
-                    .where((request) => request.status == 'accepted' && requestController.userid == request.sellerId)
-                    .toList();
-                return completedRequests.isEmpty
-                    ? const Center(
-                        child: Text(
-                          'No Completed Requests',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      )
-                    : ListView.builder(
-                        itemCount: completedRequests.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final request = completedRequests[index];
-                          return SellerRequestCards(
-                            requests: request,
-                            total: request.items.length,
-                            available: requestController
-                                .totalAvailableProducts(request.orderId!),
-                          );
-                        },
+                final completedRequests = requestController.getCompletedRequests();
+                if (completedRequests.isEmpty) {
+                  return const Center(
+                    child: Text('No sellers available'),
+                  );
+                } else {
+                  return ListView.builder(
+                    itemCount: completedRequests.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final request = completedRequests[index];
+                      return SellerRequestCards(
+                        requests: request,
+                        total: request.items.length,
+                        totalavailable: requestController.totalAvailableProducts(request.orderId!),
+
+
+
                       );
+                    },
+                  );
+                }
               }),
+
             ],
           ),
+
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               requestController.getOrderStatus();

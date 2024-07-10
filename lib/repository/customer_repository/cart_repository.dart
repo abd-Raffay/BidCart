@@ -47,7 +47,8 @@ class CartRepository extends GetxController{
           'sellerId':"null",
           'location':location,
           'distance':distance,
-          'price':0
+          'price':0,
+          'sellerLocation':GeoPoint(0,0)
           // You can add other fields to the document if needed
         });
 
@@ -75,31 +76,19 @@ class CartRepository extends GetxController{
         List<OfferData> offers = [];
 
         for (var doc in snapshot.docs) {
-          print('Document data: ${doc.data()}');
-          print('Document ID: ${doc.id}');
+
           try {
             OfferData offer = OfferData.fromSnapshot(doc);
             offers.add(offer);
-            print('Converted offer: ${offer.toJson()}');
+
           } catch (e) {
-            print('Error converting document to OfferData: $e');
+
             // Print detailed information about each field to identify the problematic one
-            print('Fields in document:');
+
             doc.data().forEach((key, value) {
-              print('$key: $value');
+
             });
           }
-        }
-
-        print('Offers retrieved for orderId: $orderId');
-        print('Offers list: ${offers.map((e) => e.toJson()).toList()}');
-        if (offers.isEmpty) {
-          showSnackbar(
-            title: "Offer Not Found!",
-            message: "No Offers were placed on this order.",
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-          );
         }
 
         return offers;
@@ -110,7 +99,7 @@ class CartRepository extends GetxController{
     }
   }
 
-  Future<void> acceptOrder(String sellerId, String orderId,int price) async {
+  Future<void> acceptOrder(String sellerId, String orderId,int price,GeoPoint sellerLocation) async {
     try {
       // Get a reference to the specific order document in the Firestore collection
       DocumentReference orderRef = FirebaseFirestore.instance.collection('orderrequest').doc(orderId);
@@ -119,12 +108,24 @@ class CartRepository extends GetxController{
       Map<String, dynamic> updatedFields = {
         'status': 'accepted',
         'sellerId': sellerId,
-        'price':price
+        'price':price,
+        'sellerLocation':sellerLocation
         // Add any other fields you want to update here
       };
 
+
       // Update the document with the new fields
       await orderRef.update(updatedFields);
+
+      final CollectionReference inventoryCollection = _db.collection('selleroffers');
+      final DocumentReference sellerDocRef = inventoryCollection.doc(sellerId);
+      final CollectionReference productsCollection = sellerDocRef.collection('offers');
+
+      // Update the specific product document
+      await productsCollection.doc(orderId).update({
+        'status': "accepted",
+        // Add other fields to update here if necessary
+      });
 
       print('Order accepted successfully.');
       Get.back();
@@ -189,13 +190,15 @@ class CartRepository extends GetxController{
       await orderRef.update(updatedFields);
       print('Review saved successfully');
 
+
+
     } catch (e) {
       // Handle errors
       print('Error saving review: $e');
     }
   }
 
-  Future<void> completeOrder(String orderId) async {
+  Future<void> completeOrder(String orderId,String sellerId) async {
     try {
 
       DocumentReference orderRef = FirebaseFirestore.instance.collection('orderrequest').doc(orderId);
@@ -204,6 +207,15 @@ class CartRepository extends GetxController{
         // Add any other fields you want to update here
       };
       await orderRef.update(updatedFields);
+      final CollectionReference inventoryCollection = _db.collection('selleroffers');
+      final DocumentReference sellerDocRef = inventoryCollection.doc(sellerId);
+      final CollectionReference productsCollection = sellerDocRef.collection('offers');
+
+      // Update the specific product document
+      await productsCollection.doc(orderId).update({
+        'status': "completed",
+        // Add other fields to update here if necessary
+      });
 
 
       print('Review saved successfully');

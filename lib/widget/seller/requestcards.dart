@@ -4,29 +4,33 @@ import 'package:bidcart/controllers/seller_controllers/seller_request_controller
 import 'package:bidcart/model/request_model.dart';
 import 'package:bidcart/widget/Text/heading.dart';
 import 'package:bidcart/widget/Text/labeltext.dart';
+import 'package:bidcart/widget/admin/reviews.dart';
 import 'package:bidcart/widget/seller/order_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../model/review_model.dart';
 import '../../repository/seller_repository/seller_store_repository.dart';
 
 class SellerRequestCards extends StatelessWidget {
-  const SellerRequestCards({
+   SellerRequestCards({
     Key? key,
     required this.requests,
     required this.total,
-    required this.available,
+    required this.totalavailable
   }) : super(key: key);
 
   final RequestData requests;
   final int total;
-  final int available;
+  final int totalavailable;
+
 
   @override
   Widget build(BuildContext context) {
     final offerController = Get.put(SellerOfferController());
+    final requestController=Get.put(SellerRequestController());
 
     return GestureDetector(
         onTap: () async {
@@ -81,6 +85,7 @@ class SellerRequestCards extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 4),
+                        if (requests.status == "null" && totalavailable != 0)
                         Row(
                           children: [
                             const Icon(
@@ -89,23 +94,23 @@ class SellerRequestCards extends StatelessWidget {
                             ),
                             const SizedBox(width: 5),
                             LabelText(
-                                title: "Product Available: $available/$total"),
+                                title: "Product Available: $totalavailable/$total"),
                           ],
                         ),
 
                       ],
                     ),
+
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Row(
                           children: [
-                            if (requests.status != "pending" &&
-                                available != 0 &&
-                                requests.status != "accepted")
+                            if (requests.status == "null" && totalavailable != 0)
                               ElevatedButton(
                                 onPressed: () {
+
                                   offerController.sendOffer(requests.orderId!);
 
                                   // Handle accept action
@@ -128,13 +133,13 @@ class SellerRequestCards extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                            if (requests.status != "pending" && available != 0 && requests.status != "accepted")
+                            if (requests.status == "null" && totalavailable != 0 )
                               const SizedBox(width: 8),
-                            if (requests.status != "pending" && available != 0 && requests.status != "accepted")
+
+                            if (requests.status == "null" && totalavailable != 0)
                               ElevatedButton(
                                 onPressed: () {
-                                  offerController
-                                      .rejectOffer(requests.orderId!);
+                                  offerController.rejectOffer(requests.orderId!);
                                   // Handle reject action
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -155,7 +160,7 @@ class SellerRequestCards extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                            if (requests.status != "pending" && available == 0 && requests.status != "accepted")
+                            if (requests.status == "null" && totalavailable == 0 || total == 0)
                               Column(children: [
                                 Row(
                                   children: [
@@ -219,7 +224,6 @@ class SellerRequestCards extends StatelessWidget {
                                   ),
                                   ElevatedButton(
                                     onPressed: () async {
-                                      final storeRepo = Get.put(SellerStoreRepository());
                                       final _auth = FirebaseAuth.instance;
                                       String? sellerId=_auth.currentUser?.uid;
                                       //print("REQUEST ID ${requests.orderId} && SELLER ID ${requests.sellerId}");
@@ -254,7 +258,8 @@ class SellerRequestCards extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                            if (requests.status == "accepted")
+
+                            if (requests.status == "accepted" || requests.status == "completed")
                               Row(
                                 children: [
                                   Icon(
@@ -271,6 +276,38 @@ class SellerRequestCards extends StatelessWidget {
                                         Colors.green, // Adjust color as needed
                                   ),
                                 ],
+                              ),
+                            if (requests.status == "reviewed" )
+                              ElevatedButton(
+                                onPressed: () {
+                                  Review review;
+                                  try {
+                                    review = requestController.getOrderReview(requests.sellerId!, requests.orderId!);
+                                    showReviewDialog(context, review);
+                                  } catch (e) {
+                                    // Handle the case where no review is found, e.g., set review to null or a default value
+                                   print("no review"); // or provide a default Review object
+                                  }
+
+
+                                },
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.rate_review_outlined,
+                                      size: Sizes.md,
+                                    ),
+                                    Text(
+                                      "View Review",
+                                      style: TextStyle(
+                                          fontSize: Sizes.fontSizeSm),
+                                    ),
+                                  ],
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.all(10),
+
+                                ),
                               ),
                           ],
                         ),

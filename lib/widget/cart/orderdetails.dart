@@ -25,11 +25,11 @@ class OrderDetailCard extends StatelessWidget {
     required this.height,
     required this.distance,
     required this.price,
-    this.offer,
+    required this.offer,
     required this.sellerId,
-    this.sellerLocation,
+    required this.sellerLocation,
     this.customerLocation,
-    this. address,
+    //this. address,
   });
   OfferData? offer;
   double height;
@@ -40,12 +40,16 @@ class OrderDetailCard extends StatelessWidget {
   int distance;
   int price;
   String sellerId;
-  String? address;
+  //String? address;
   GeoPoint? customerLocation;
   GeoPoint?sellerLocation;
+  final orderController = Get.put(CustomerOrderController());
+
+
+
   @override
   Widget build(BuildContext context) {
-    final orderController = Get.put(CustomerOrderController());
+
 
     return SizedBox(
       height: 140, // Fixed height for the card
@@ -59,19 +63,20 @@ class OrderDetailCard extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.all(10), // Adjusting padding
-          child: Row(
+          child: Column(
             children: [
               if (status != "accepted" && status != "completed" && status != "reviewed")
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Left side text
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
-                          const HeadingText(title: "Order ID #  "),
                           LabelText(title: orderId.toString()),
                         ],
                       ),
@@ -111,11 +116,14 @@ class OrderDetailCard extends StatelessWidget {
                           const SizedBox(width: 5),
                           LabelText(
                               title:
-                              "Distance: ${(distance/1000).toString()} km"),
+                              "Distance: ${distance/1000} km "),
                           IconButton(onPressed: () async {
                             int newdistance=0;
                             newdistance =  await showRadiusDialog(context);
-                            orderController.updateDistance(newdistance,orderId);
+                            if(newdistance >0) {
+                              orderController.updateDistance(
+                                  newdistance, orderId);
+                            }
 
                           }, icon: Icon(CupertinoIcons.add_circled,size: Sizes.md,),)
                         ],
@@ -124,10 +132,7 @@ class OrderDetailCard extends StatelessWidget {
                     ],
                   ),
                   // Right side button
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+
                         Column(
                           children: [
                             ElevatedButton(
@@ -198,12 +203,9 @@ class OrderDetailCard extends StatelessWidget {
                           ],
                         ),
 
+
+
                     ],
-                        ),
-
-                    ],
-
-
               ),
 
 
@@ -269,7 +271,7 @@ class OrderDetailCard extends StatelessWidget {
                             const SizedBox(width: 5),
                             LabelText(
                                 title:
-                                "Distance: ${(distance/1000).toString()} km"),
+                                "Distance: ${distance/1000} km"),
                           ],
 
                         ),
@@ -291,6 +293,7 @@ class OrderDetailCard extends StatelessWidget {
                                      showAddressDialog(context,customerLocation!,sellerLocation!);
                                         },
                                     child: Row(
+
                                       children: [
                                         Icon(CupertinoIcons.location,size: Sizes.md,),
                                         SizedBox(width: 2,),
@@ -304,7 +307,7 @@ class OrderDetailCard extends StatelessWidget {
                                     onPressed: () {
 
                                       final cartRepo=Get.put(CartController());
-                                      cartRepo.completeOrder(orderId);
+                                      cartRepo.completeOrder(orderId,sellerId);
 
                                       //change status to completed
                                       //update time
@@ -321,23 +324,24 @@ class OrderDetailCard extends StatelessWidget {
                                 ],
                               ),
                                 if(status == "completed")
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(padding: const EdgeInsets.all(10)),
-                                  onPressed: () {
+                                Row(
+                                  children: [
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(padding: const EdgeInsets.all(10)),
+                                      onPressed: () {
+                                        //add a review
+                                        _showReviewDialog(context,offer!);
 
-
-
-                                    //add a review
-                                    _showReviewDialog(context,offer!);
-
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.rate_review_outlined,size: Sizes.md,),
-                                      SizedBox(width: 2,),
-                                      Text("Add Review",style: TextStyle(fontSize: Sizes.md),),
-                                    ],
-                                  ),
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.rate_review_outlined,size: Sizes.md,),
+                                          SizedBox(width: 2,),
+                                          Text("Add Review",style: TextStyle(fontSize:12),),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               if(status == "reviewed")
                                 Row(

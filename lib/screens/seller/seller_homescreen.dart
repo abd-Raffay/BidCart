@@ -6,6 +6,7 @@ import 'package:bidcart/repository/authentication/customer_authentication_reposi
 import 'package:bidcart/repository/authentication/seller_authentication_repository.dart';
 import 'package:bidcart/screens/common/grid_layout.dart';
 import 'package:bidcart/screens/common/onboarding.dart';
+import 'package:bidcart/screens/seller/session_ended.dart';
 import 'package:bidcart/widget/app_bar/appBar.dart';
 import 'package:bidcart/widget/products/product_cards/inventory_card.dart';
 import 'package:bidcart/widget/products/product_cards/product_card_vertical.dart';
@@ -68,6 +69,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
           ),
         ),
       ),
+
     );
   }
 }

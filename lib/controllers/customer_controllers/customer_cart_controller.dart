@@ -87,8 +87,8 @@ late GeoPoint location;
     await prefs.remove('quantities');
   }
 
-  completeOrder(String orderId){
-    cartRepo.completeOrder(orderId);
+  completeOrder(String orderId,String sellerId){
+    cartRepo.completeOrder(orderId,sellerId);
   }
 
 
@@ -115,7 +115,7 @@ late GeoPoint location;
               image: productList[i].imageUrl,
               name: productList[i].name,
               size: selectedsize,
-              quantity: 1,
+              quantity: quantity,
             );
             cart.add(temp);
             Get.back();

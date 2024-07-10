@@ -9,6 +9,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_map_math/flutter_geo_math.dart';
 import 'package:get/get.dart';
 
+import '../../model/review_model.dart';
+
 
 
 class SellerRequestController extends GetxController {
@@ -19,6 +21,7 @@ class SellerRequestController extends GetxController {
   late List<RequestData> orderRequests = [];
   late RxList<RequestData> rxOrderRequests = <RequestData>[].obs;
   late RxList<OfferData> rxsellermadeoffers = <OfferData>[].obs;
+  late RxList<Review> reviews = <Review>[].obs;
 
 
 
@@ -35,6 +38,7 @@ class SellerRequestController extends GetxController {
     getRequests();
     getOffersbyseller();
     getOrderStatus();
+    getReviews();
   }
 
   RxList<RequestData> getRequests() {
@@ -65,12 +69,11 @@ class SellerRequestController extends GetxController {
     for (int j = 0; j < orderRequests[index].items.length; j++) {
 
       for (int k = 0; k < homeController.rxInventory.length; k++) {
-        //Inventory inventoryItem = homeController.rxInventory[k];
 
         if (orderRequests[index].items[j].id == homeController.rxInventory[k].productid && orderRequests[index].items[j].size == homeController.rxInventory[k].size) {
-          // If a match is found, add the product to available products
+
           availableProducts++;
-          // Add other properties of Product if needed
+
           break; // Break the loop since a match is found for this item
         }
       }
@@ -103,23 +106,20 @@ class SellerRequestController extends GetxController {
     });
   }
 
-  getOrderStatus() {
+  Future<void>getOrderStatus() async {
     //rxOrderRequests.removeWhere((request) => request.status == "accepted");
     for (int i = 0; i < rxOrderRequests.length; i++) {
       //print("Order id ${rxsellermadeoffers[i].orderId} ");
       for (int j = 0; j < rxsellermadeoffers.length; j++) {
         if (rxsellermadeoffers[j].orderId == rxOrderRequests[i].orderId) {
-          if (rxOrderRequests[i].status != "accepted") {
+          if (rxOrderRequests[i].status != "accepted" && rxOrderRequests[i].status != "completed" && rxOrderRequests[i].status != "reviewed" ) {
+            print("rxOrderRequests[i].status ${rxOrderRequests[i].status} == rxsellermadeoffers[j].status ${rxsellermadeoffers[j].status}  ");
             rxOrderRequests[i].status = rxsellermadeoffers[j].status;
           }
         }
       }
       rxOrderRequests.removeWhere((request) => request.status == "rejected");
-      //print(rxOrderRequests.length);
-      for (int i = 0; i < rxOrderRequests.length; i++) {
-        print("${i} Order id ${rxOrderRequests[i].orderId} :: Status ${rxOrderRequests[i].status} ");
-
-      }
+      print(rxOrderRequests.length);
     }
   }
 
@@ -138,6 +138,34 @@ class SellerRequestController extends GetxController {
       print("TEMP DISTANCE ${tempdistance} && ORDER DISTANCE ${rxOrderRequests[i].distance}");
       if(tempdistance >= rxOrderRequests[i].distance){
         rxOrderRequests.removeAt(i);
+      }
+    }
+  }
+
+
+  getPendingRequests()  {
+    return rxOrderRequests.where((requests) => requests.status == "pending" || requests.status == "null" ).toList().obs;
+  }
+
+  getCompletedRequests()  {
+    return rxOrderRequests.where((requests) => requests.status == "accepted" || requests.status  == "completed" || requests.status == "reviewed").toList().obs;
+  }
+
+  getReviews(){
+
+   storeRepo.getReviews().listen((reviewList) {
+      reviews.assignAll(reviewList);
+    }, onError: (error) {
+      print('Error fetching reviews: $error');
+    });
+
+  }
+
+  getOrderReview(String sellerId,String orderId){
+
+    for(int i=0 ;i<reviews.length;i++){
+      if(reviews[i].offer.orderId == orderId && reviews[i].offer.sellerId == sellerId){
+        return reviews[i];
       }
     }
   }

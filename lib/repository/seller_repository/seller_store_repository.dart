@@ -9,6 +9,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../model/review_model.dart';
+
 class SellerStoreRepository extends GetxController {
   SellerStoreRepository get instance => Get.find();
 
@@ -161,22 +163,16 @@ class SellerStoreRepository extends GetxController {
         List<OfferData> offers = [];
 
         for (var doc in snapshot.docs) {
-          print('Document data: ${doc.data()}');
-          print('Document ID: ${doc.id}');
           try {
             OfferData offer = OfferData.fromSnapshot(doc);
             offers.add(offer);
-            print('Converted offer: ${offer.toJson()}');
+
           } catch (e) {
-            print('Error converting document to OfferData: $e');
-            // Print detailed information about each field to identify the problematic one
-            print('Fields in document:');
             doc.data().forEach((key, value) {
               print('$key: $value');
             });
           }
         }
-        print('Offers list: ${offers.map((e) => e.toJson()).toList()}');
         return offers;
       });
     } catch (e) {
@@ -207,6 +203,7 @@ class SellerStoreRepository extends GetxController {
                 int distance=doc['distance'];
                 int price=doc['price'];
                 String sellerId=doc['sellerId'];
+                GeoPoint sellerLocation=doc['sellerLocation'];
 
                 // Create RequestData object
                 return RequestData(
@@ -220,6 +217,7 @@ class SellerStoreRepository extends GetxController {
                   distance: distance,
                   price: price,
                     sellerId: sellerId,
+                  sellerLocation: sellerLocation
                 );
               }).toList()
                 // Sort the list of RequestData objects by date
@@ -266,6 +264,7 @@ class SellerStoreRepository extends GetxController {
                 int distance=doc['distance'];
                 int price=doc['price'];
                 String sellerId=doc['sellerId'];
+                GeoPoint sellerLocation=doc['sellerLocation'];
 
                 // Create RequestData object
                 return RequestData(
@@ -278,7 +277,8 @@ class SellerStoreRepository extends GetxController {
                   status: status,
                   distance: distance,
                   price: price,
-                    sellerId: sellerId
+                    sellerId: sellerId,
+                  sellerLocation: sellerLocation
                 );
               }).toList()
                 // Sort the list of RequestData objects by date
@@ -320,7 +320,47 @@ class SellerStoreRepository extends GetxController {
   }
 
 
+  Stream<List<Review>> getReviews() {
+    final CollectionReference reviewsCollection = FirebaseFirestore.instance.collection('reviews');
+    final Stream<QuerySnapshot> reviewsSnapshots = reviewsCollection.snapshots();
 
+    return reviewsSnapshots.map((snapshot) {
+      List<Review> reviews = [];
+
+      for (var doc in snapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>?;
+        print('Document data: $data');
+        print('Document ID: ${doc.id}');
+        try {
+          if (data != null) {
+            Review review = Review.fromSnapshot(doc as DocumentSnapshot<Map<String, dynamic>>);
+            reviews.add(review);
+            print('Converted review: ${review.toJson()}');
+          } else {
+            print('Document data is null.');
+          }
+        } catch (e) {
+          print('Error converting document to Review: $e');
+          if (data != null) {
+            // Print detailed information about each field to identify the problematic one
+            print('Fields in document:');
+            data.forEach((key, value) {
+              print('$key: $value');
+            });
+          }
+        }
+      }
+
+      // Sort reviews by reviewDateTime
+      reviews.sort((a, b) => a.reviewDateTime.compareTo(b.reviewDateTime));
+
+      print('Sorted Reviews list: ${reviews.map((e) => e.toJson()).toList()}');
+      return reviews;
+    }).handleError((error) {
+      print('Error retrieving reviews from Firestore: $error');
+      return [];
+    });
+  }
 
 
 
@@ -350,12 +390,6 @@ class SellerStoreRepository extends GetxController {
       print('Offer posted to Firestore under orderId: $orderId and customerId: $customerId');
 
       // Show success snackbar
-      showSnackbar(
-        title: "Success",
-        message: "Offer sent!",
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-      );
 
       return true; // Return true indicating success
     } catch (e) {
@@ -404,38 +438,6 @@ class SellerStoreRepository extends GetxController {
     }
   }
 
-
-
-  Future<List<OfferData>> cancelOffer(String orderId,String status) async {
-    try {
-      final CollectionReference offersCollection = FirebaseFirestore.instance.collection('offers');
-      final QuerySnapshot<Map<String, dynamic>> offerSnapshot = await offersCollection.doc(orderId).collection('offers').get();
-
-      List<OfferData> offers = [];
-
-      for (var doc in offerSnapshot.docs) {
-        try {
-          OfferData offer = OfferData.fromSnapshot(doc);
-          offers.add(offer);
-          // print('Converted offer: ${offer.toJson()}');
-        } catch (e) {
-          print('Error converting document to OfferData: $e');
-          // Print detailed information about each field to identify the problematic one
-          // print('Fields in document:');
-          doc.data().forEach((key, value) {
-            print('$key: $value');
-          });
-        }
-      }
-
-      // print('Offers retrieved for orderId: $orderId');
-      // print('Offers list: ${offers.map((e) => e.toJson()).toList()}');
-
-      return offers;
-    } catch (e) {
-      return []; // Return an empty list indicating failure
-    }
-  }
 
   Future<void> deleteOffer(String orderId,String sellerId) async {
     try {

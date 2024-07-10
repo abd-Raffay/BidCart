@@ -9,6 +9,7 @@ class OfferData {
   String orderId;
   String status;
   int totalPrice;
+  GeoPoint sellerLocation;
 
 
   OfferData({
@@ -19,6 +20,7 @@ class OfferData {
     required this.status,
     required this.orderId,
     required this.totalPrice,
+    required this.sellerLocation,
 
   });
 
@@ -31,6 +33,7 @@ class OfferData {
       "orderId": orderId,
       "totalPrice":totalPrice,
       "items": items.map((item) => item.toJson()).toList(),
+      "sellerLocation":sellerLocation,
     };
   }
   factory OfferData.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
@@ -51,6 +54,7 @@ class OfferData {
         dateTime: data["dateTime"] ?? '',
         status: data["status"] ?? 'pending',
           totalPrice:data["totalPrice"] ?? 0,
+        sellerLocation: data["sellerLocation"]
 
       );
     } catch (e) {
@@ -80,6 +84,7 @@ class OfferData {
       dateTime: json['dateTime'] ?? '',
       status: json['status'] ?? '',
         totalPrice: json['totalPrice'] ?? 0,
+        sellerLocation: json["sellerLocation"]
 
     );
   }
