@@ -148,7 +148,8 @@ class SellerRequestController extends GetxController {
   }
 
   getCompletedRequests()  {
-    return rxOrderRequests.where((requests) => requests.status == "accepted" || requests.status  == "completed" || requests.status == "reviewed").toList().obs;
+    String sellerID=_auth.currentUser!.uid;
+    return rxOrderRequests.where((requests) => requests.sellerId ==sellerID && (requests.status == "accepted" || requests.status  == "completed" || requests.status == "reviewed")).toList().obs;
   }
 
   getReviews(){

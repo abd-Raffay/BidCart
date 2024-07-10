@@ -63,6 +63,7 @@ class SellerRequestCards extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        LabelText(title: requests.orderId!),
                         Row(
                           children: [
                             const Icon(
