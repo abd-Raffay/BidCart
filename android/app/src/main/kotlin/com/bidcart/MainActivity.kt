@@ -1,4 +1,4 @@
-package com.example.bidcart
+package com.bidcart
 
 import io.flutter.embedding.android.FlutterActivity
 

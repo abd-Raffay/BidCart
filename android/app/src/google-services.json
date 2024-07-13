@@ -7,12 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:958571913445:android:3296715cf8ba03b607b40c",
+        "mobilesdk_app_id": "1:958571913445:android:046392aaa77ca9a407b40c",
         "android_client_info": {
-          "package_name": "com.example.bidcart"
+          "package_name": "com.bidcart"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "958571913445-m4hqdp1r9ts93br3lnrvh3bni3tl2b43.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC6q05T6bxjpERI0RhZyvHUKYU_UT1jZYA"
@@ -20,7 +25,49 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "958571913445-m4hqdp1r9ts93br3lnrvh3bni3tl2b43.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:958571913445:android:3296715cf8ba03b607b40c",
+        "android_client_info": {
+          "package_name": "com.example.bidcart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "958571913445-fnsr37sapkaks0gribtu9d2jiopta5ig.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bidcart",
+            "certificate_hash": "c83a80524a40c7ffd30ed13ad85c9a04bbb061f3"
+          }
+        },
+        {
+          "client_id": "958571913445-m4hqdp1r9ts93br3lnrvh3bni3tl2b43.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6q05T6bxjpERI0RhZyvHUKYU_UT1jZYA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "958571913445-m4hqdp1r9ts93br3lnrvh3bni3tl2b43.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
