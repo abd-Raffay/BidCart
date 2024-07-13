@@ -220,7 +220,7 @@ class OrderDetailCard extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            const HeadingText(title: "Order ID #  "),
+
                             LabelText(title: orderId.toString()),
                           ],
                         ),
@@ -261,19 +261,6 @@ class OrderDetailCard extends StatelessWidget {
                             ),
                              LabelText(title: "Total Price: ${price} Rs"),
                           ],
-                        ),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.social_distance,
-                              size: Sizes.md,
-                            ),
-                            const SizedBox(width: 5),
-                            LabelText(
-                                title:
-                                "Distance: ${distance/1000} km"),
-                          ],
-
                         ),
                       ],
                     ),

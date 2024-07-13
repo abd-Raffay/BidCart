@@ -142,10 +142,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                             OfferData? offer =
                                 orderController.getOffer(order.sellerId!);
                             return FutureBuilder<int>(
-                              future: orderController.getDistance(
-                                  order.orderId!,
-                                  order.sellerId!,
-                                  order.sellerLocation!),
+                              future: orderController.getDistance(order.orderId!, order.sellerId!, order.sellerLocation!),
                               builder: (BuildContext context,
                                   AsyncSnapshot<int> distanceSnapshot) {
                                 if (distanceSnapshot.connectionState ==

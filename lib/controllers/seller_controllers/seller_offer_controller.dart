@@ -157,17 +157,12 @@ class SellerOfferController extends GetxController {
 
   Future<void> cancelOffer(String orderid,String sellerId,String status) async {
     try {
-      // Assuming returnOffers is a RxList or similar to store fetched offers
       await getOffersbyseller(sellerId);
-       RxList<OfferData> returnOffers=<OfferData>[].obs;
-       returnOffers.assignAll(rxsellermadeoffers);
-
-      print("RXSELLER MADE OFFERS LENGTH +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ${rxsellermadeoffers.length}");
+      print("RXSELLER MADE OFFERS LENGTH +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ${returnOffers.length}");
       await getInventory(sellerId);
       print("INVENTORY LENGTH +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ${inventory.length}");
-       print("+++++++++++++++++++++++++++++++++++ ${returnOffers.length}");
-       print("+++++++++++++++++++++++++++++++++++ ${rxsellermadeoffers.length}");
-      returnOffers.assignAll(rxsellermadeoffers);
+      print("+++++++++++++++++++++++++++++++++++ ${returnOffers.length}");
+
       if (returnOffers.isNotEmpty) {
         for (int i = 0; i < returnOffers.length; i++) {
           if (returnOffers[i].orderId == orderid) {
@@ -203,10 +198,7 @@ class SellerOfferController extends GetxController {
 
 
   Future<void> getOffersbyseller(String sellerId) async {
-    storeRepo.getOffersBySeller(sellerId).listen((List<OfferData> offers) {
-      rxsellermadeoffers.assignAll(offers);
-    });
-
+      returnOffers.assignAll(await storeRepo.getSellerOffers(sellerId));
     print("++++++++++++++++++++++ GET OFFERS BY SELLER ++++++++++++++++++++++++");
   }
   Future<void> getInventory(String sellerId) async {

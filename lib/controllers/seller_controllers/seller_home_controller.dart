@@ -62,6 +62,23 @@ class SellerHomeController extends GetxController {
     }
   }
 
+  updateProduct(String productId,int quantity) {
+    try {
+      storeRepo.updateProduct(productId, quantity);
+      Get.back();
+      Get.snackbar("Quantity Updated", "",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.green.withOpacity(0.5),
+          colorText: Colors.white,
+          snackStyle: SnackStyle.GROUNDED
+      );
+
+    } on Exception catch (e) {
+
+      // TODO
+    }
+  }
+
   // ____________------------- Dialogs _---------------------
 
   showDeleteDialog(BuildContext context, inventoryid) {
@@ -86,6 +103,56 @@ class SellerHomeController extends GetxController {
             TextButton(
               onPressed: () {
                 // Add your logic for cancel button
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text("Cancel"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showUpdateDialog(BuildContext context, String productId) {
+    final TextEditingController quantityController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shadowColor: Colors.white10,
+          title: const Text("Update item"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text("Enter the quantity to update:"),
+              TextField(
+                controller: quantityController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  hintText: '>0',
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                final int? quantity = int.tryParse(quantityController.text);
+                if (quantity != null && quantity > 0) {
+                  updateProduct(productId, quantity);
+                 // Navigator.of(context).pop(); // Close the dialog after update
+                } else {
+                  // Show an error message if the quantity is not valid
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Please enter a valid quantity greater than 0')),
+                  );
+                }
+              },
+              child: const Text("OK"),
+            ),
+            TextButton(
+              onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
               child: const Text("Cancel"),

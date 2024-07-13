@@ -58,8 +58,6 @@ final GeoPoint? location;
             }
             else if (functionality == "sendrequest") {
               int distance;
-
-
               distance =  await showRadiusDialog(context);
               if(distance > 0) {
                 cartController.sendRequest(location!, distance);
