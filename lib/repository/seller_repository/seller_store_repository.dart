@@ -111,8 +111,39 @@ class SellerStoreRepository extends GetxController {
     }
   }
 
+  Future<List<Inventory>> getInventory(String sellerId) async {
+    try {
+      final CollectionReference inventoryCollection = FirebaseFirestore.instance.collection('inventory');
+      final QuerySnapshot<Map<String, dynamic>> inventorySnapshot = await inventoryCollection
+          .doc(sellerId)
+          .collection('products')
+          .get();
 
-  void updateInventory(String sellerId, String inventoryId, int quantity) async {
+      List<Inventory> inventory = [];
+
+      for (var doc in inventorySnapshot.docs) {
+        try {
+          Inventory tempinventory = Inventory.fromSnapshot(doc);
+          inventory.add(tempinventory);
+          print('Inventory: ${tempinventory.toJson()}');
+        } catch (e) {
+          print('Error converting document to Inventory: $e');
+          // Print detailed information about each field to identify the problematic one
+          print('Fields in document:');
+          doc.data().forEach((key, value) {
+            print('$key: $value');
+          });
+        }
+      }
+      return inventory;
+    } catch (e) {
+      print('Error retrieving inventory from Firestore: $e');
+      return []; // Return an empty list indicating failure
+    }
+  }
+
+
+  Future<void> updateInventory(String sellerId, String inventoryId, int quantity) async {
     try {
 
       final CollectionReference inventoryCollection = _db.collection('inventory');

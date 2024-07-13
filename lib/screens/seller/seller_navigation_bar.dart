@@ -7,7 +7,6 @@ import 'package:bidcart/screens/seller/session_ended.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../common/internet_connectivity.dart';
 
 class SellerNavigationBar extends StatelessWidget {
   const SellerNavigationBar({super.key});

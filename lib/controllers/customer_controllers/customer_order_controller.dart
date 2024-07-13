@@ -98,18 +98,18 @@ final customerRepo=Get.put(CustomerRepository());
 
 
   void acceptOrder(String sellerId,String orderId,int price,GeoPoint sellerLocation){
-    cartRepo.acceptOrder(sellerId, orderId,price,sellerLocation);
 
     rejectedoffers.clear();
     print("Seller ID : ${sellerId} && Order ID : ${orderId}");
     rejectedoffers.assignAll(rxorderOffers);
     print("Rejected orders Length : ${rejectedoffers.length}");
     rejectedoffers.removeWhere((element) => element.sellerId == sellerId);
-
+    print("Rejected orders Length after : ${rejectedoffers.length}");
     for(int i=0;i<rejectedoffers.length;i++){
       print("Rejected offer ${rejectedoffers[i].orderId},Seller ID ${rejectedoffers[i].sellerId}");
       rejectOrder(rejectedoffers[i].orderId,rejectedoffers[i].sellerId);
     }
+    cartRepo.acceptOrder(sellerId, orderId,price,sellerLocation);
 
 
   }

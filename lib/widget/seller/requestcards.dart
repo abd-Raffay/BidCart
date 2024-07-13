@@ -44,7 +44,7 @@ class SellerRequestCards extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: SizedBox(
-            height: 100,
+            height: 120,
             child: Card(
               color: Colors.white,
               shadowColor: Colors.black,

@@ -1,6 +1,7 @@
 import 'package:bidcart/model/cart_model.dart';
 import 'package:bidcart/model/offer_model.dart';
 import 'package:bidcart/repository/customer_repository/customer_repository.dart';
+import 'package:bidcart/screens/customer/customer_orderscreen.dart';
 import 'package:bidcart/widget/snackbar/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -128,7 +129,7 @@ class CartRepository extends GetxController{
       });
 
       print('Order accepted successfully.');
-      Get.back();
+      Get.offAll(() => const CustomerOrderScreen());
 
 
     } catch (e) {
