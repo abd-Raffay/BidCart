@@ -163,8 +163,7 @@ class SellerOfferController extends GetxController {
        returnOffers.assignAll(rxsellermadeoffers);
 
       print("RXSELLER MADE OFFERS LENGTH +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ${rxsellermadeoffers.length}");
-      RxList<Inventory> inventory=<Inventory>[].obs;
-      inventory.assignAll(await homeController.getInventory(sellerId));
+      await getInventory(sellerId);
       print("INVENTORY LENGTH +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ${inventory.length}");
        print("+++++++++++++++++++++++++++++++++++ ${returnOffers.length}");
        print("+++++++++++++++++++++++++++++++++++ ${rxsellermadeoffers.length}");
@@ -174,26 +173,22 @@ class SellerOfferController extends GetxController {
           if (returnOffers[i].orderId == orderid) {
             for (int j = 0; j < returnOffers[i].items.length; j++) {
               for (int k = 0; k < inventory.length; k++) {
-                print("Seller Id ${sellerId} PRODUCT IDDDDDDDDDD ${inventory[k].inventoryid}  QUNATITYYYYYYYYY ${inventory[k].quantity}");
-                if (returnOffers[i].items[j].productid == homeController.rxInventory[k].productid &&
+
+                if (returnOffers[i].items[j].productid == inventory[k].productid &&
                     returnOffers[i].items[j].batch == inventory[k].batch &&
                     returnOffers[i].items[j].size == inventory[k].size) {
 
                   inventory[k].quantity += returnOffers[i].items[j].quantity;
-                  print("Seller Id ${sellerId} PRODUCT IDDDDDDDDDD ${inventory[k].inventoryid}  QUNATITYYYYYYYYY ${inventory[k].quantity}");
-                  storeRepo.updateInventory(sellerId, inventory[k].inventoryid, inventory[k].quantity);
-
+                  await storeRepo.updateInventory(sellerId, inventory[k].inventoryid, inventory[k].quantity);
                 }
               }
             }
           }
         }
+        inventory.clear();
         await storeRepo.deleteOffer(orderid, sellerId);
         await storeRepo.deleteOfferSeller(orderid, sellerId,status);
 
-        //await storeRepo.cancelOffer(orderid,status);
-
-        //resetOffer(orderid);
       } else {
         print("No offers returned.");
         // Handle case where no offers were returned
@@ -211,7 +206,15 @@ class SellerOfferController extends GetxController {
     storeRepo.getOffersBySeller(sellerId).listen((List<OfferData> offers) {
       rxsellermadeoffers.assignAll(offers);
     });
+
+    print("++++++++++++++++++++++ GET OFFERS BY SELLER ++++++++++++++++++++++++");
   }
+  Future<void> getInventory(String sellerId) async {
+
+    inventory.assignAll( await storeRepo.getInventory(sellerId));
+    print("++++++++++++++++++++++ GET INventoryyyy ++++++++++++++++++++++++");
+  }
+
 
 
 

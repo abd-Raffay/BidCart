@@ -125,19 +125,26 @@ class SellerRequestController extends GetxController {
 
   calculatedistance() async {
 
-    SellerModel seller = await sellerrepo.getSellerData(_auth.currentUser!.uid);
-    FlutterMapMath mapMath = FlutterMapMath();
-    for(int i=0 ;i<rxOrderRequests.length;i++) {
-      double tempdistance = mapMath.distanceBetween(
-        seller.location.latitude,
-        seller.location.longitude,
-        rxOrderRequests[i].location.latitude,
-        rxOrderRequests[i].location.longitude,
-        "meters",
-      );
-      print("TEMP DISTANCE ${tempdistance} && ORDER DISTANCE ${rxOrderRequests[i].distance}");
-      if(tempdistance >= rxOrderRequests[i].distance){
-        rxOrderRequests.removeAt(i);
+      SellerModel? seller = await sellerrepo.getSellerData(_auth.currentUser!.uid);
+      if(seller == null) {
+        print("Seller is null");
+      }
+      else{
+      FlutterMapMath mapMath = FlutterMapMath();
+      for (int i = 0; i < rxOrderRequests.length; i++) {
+        double tempdistance = mapMath.distanceBetween(
+          seller.location.latitude,
+          seller.location.longitude,
+          rxOrderRequests[i].location.latitude,
+          rxOrderRequests[i].location.longitude,
+          "meters",
+        );
+        print(
+            "TEMP DISTANCE ${tempdistance} && ORDER DISTANCE ${rxOrderRequests[i]
+                .distance}");
+        if (tempdistance >= rxOrderRequests[i].distance) {
+          rxOrderRequests.removeAt(i);
+        }
       }
     }
   }
