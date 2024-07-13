@@ -1,5 +1,6 @@
 import 'package:bidcart/model/cart_model.dart';
 import 'package:bidcart/model/offer_model.dart';
+import 'package:bidcart/model/request_model.dart';
 import 'package:bidcart/repository/customer_repository/customer_repository.dart';
 import 'package:bidcart/screens/customer/customer_orderscreen.dart';
 import 'package:bidcart/widget/snackbar/snackbar.dart';
@@ -62,6 +63,45 @@ class CartRepository extends GetxController{
     } catch (e) {
       // Handle errors
       print('Error saving order request: $e');
+    }
+  }
+
+  Future<void> generateNewRequest(RequestData request) async {
+    try {
+      final CollectionReference orderRequestCollection = _db.collection('orderrequest');
+
+      // Access the current user's ID
+      final String? userId = _auth.currentUser?.uid;
+
+      final DateTime now = DateTime.now();
+      final String combinedDateTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
+      final List<Map<String, dynamic>> itemsData = request.items.map((item) => item.toJson()).toList();
+      if (userId != null) {
+
+          await orderRequestCollection.add({
+            'customerName':request.customerName,
+            'customerid': request.customerId,
+            'items': itemsData,
+            'dateTime':combinedDateTime,
+            'status':"null",
+            'sellerId':"null",
+            'location':request.location,
+            'distance':request.distance,
+            'price':0,
+            'sellerLocation':GeoPoint(0,0)
+            // You can add other fields to the document if needed
+          });
+
+          Get.offAll(() => const CustomerOrderScreen());
+
+
+      } else {
+        print('User not authenticated.');
+        // Handle the case where the user is not authenticated
+      }
+    } catch (e) {
+      // Handle errors
+      print('Error saving New order request: $e');
     }
   }
 
@@ -129,7 +169,6 @@ class CartRepository extends GetxController{
       });
 
       print('Order accepted successfully.');
-      Get.offAll(() => const CustomerOrderScreen());
 
 
     } catch (e) {

@@ -96,6 +96,7 @@ class InventoryCardVertical extends StatelessWidget {
                           title: product.quantity.toString(),
                           smallSize: true,
                         ),
+
                       ],
                     ),
                   ],
@@ -120,6 +121,27 @@ class InventoryCardVertical extends StatelessWidget {
                 child: Center(
                   child: Icon(
                     CupertinoIcons.bin_xmark,
+                    size: 15,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            right: 45,
+            top: 10,
+            child: GestureDetector(
+              onTap: () {
+                homeController.showUpdateDialog(context,product.inventoryid);
+              },
+              child: CircularContainer(
+                backgroundColor: Colors.cyan,
+                width: 30,
+                height: 30,
+                child: Center(
+                  child: Icon(
+                    CupertinoIcons.add,
                     size: 15,
                     color: Colors.white,
                   ),

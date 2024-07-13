@@ -181,6 +181,27 @@ class SellerStoreRepository extends GetxController {
       print('Error deleting product: $e');
     }
   }
+  Future<void> updateProduct(String productId,int quantity) async {
+    try {
+      final CollectionReference inventoryCollection =
+      FirebaseFirestore.instance.collection('inventory');
+
+      if (_auth.currentUser?.uid != null) {
+        final DocumentReference userDocRef =
+        inventoryCollection.doc(_auth.currentUser?.uid);
+        final CollectionReference productsCollection =
+        userDocRef.collection('products');
+        // Delete the document with the specified product ID
+        await productsCollection.doc(productId).update({
+          'quantity': quantity,
+        });
+      } else {
+        print('User not authenticated.');
+      }
+    } catch (e) {
+      print('Error updating product: $e');
+    }
+  }
 
   Stream<List<OfferData>> getOffersBySeller(String sellerId) {
     try {
@@ -215,6 +236,60 @@ class SellerStoreRepository extends GetxController {
       return Stream.value([]); // Return an empty stream indicating failure
     }
   }
+
+  Future<List<OfferData>> getSellerOffers(String sellerId) async {
+    try {
+      final CollectionReference offersCollection = FirebaseFirestore.instance
+          .collection('selleroffers');
+      final QuerySnapshot<
+          Map<String, dynamic>> offerSnapshot = await offersCollection
+          .doc(sellerId)
+          .collection('offers')
+          .get();
+
+      List<OfferData> offers = [];
+
+      for (var doc in offerSnapshot.docs) {
+        try {
+          OfferData offer = OfferData.fromSnapshot(doc);
+          offers.add(offer);
+        } catch (e) {
+          print('Error converting document to OfferData: $e');
+          // Print detailed information about each field to identify the problematic one
+          print('Fields in document:');
+          doc.data().forEach((key, value) {
+            print('$key: $value');
+          });
+        }
+      }
+      return offers;
+    } catch (e) {
+      print('Error retrieving offers from Firestore: $e');
+      return []; // Return an empty list indicating failure
+    }
+  }
+
+  Future<OfferData?> getSellerOffer(String sellerId, String orderId) async {
+    try {
+      final CollectionReference offersCollection = FirebaseFirestore.instance.collection('offers');
+      final DocumentSnapshot<Map<String, dynamic>> docSnapshot = await offersCollection
+          .doc(orderId)
+          .collection('offers')
+          .doc(sellerId)
+          .get();
+
+      if (docSnapshot.exists) {
+        return OfferData.fromSnapshot(docSnapshot);
+      } else {
+        print('Document does not exist');
+        return null;
+      }
+    } catch (e) {
+      print('Error retrieving offers from Firestore: $e');
+      return null; // Return null indicating failure
+    }
+  }
+
 
   Stream<List<RequestData>> getOrderRequests() {
     try {

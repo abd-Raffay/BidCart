@@ -1,6 +1,7 @@
 
 
 import 'package:bidcart/controllers/seller_controllers/seller_offer_controller.dart';
+import 'package:bidcart/model/cart_model.dart';
 import 'package:bidcart/model/customer_model.dart';
 import 'package:bidcart/model/offer_model.dart';
 import 'package:bidcart/model/request_model.dart';
@@ -10,6 +11,7 @@ import 'package:bidcart/repository/customer_repository/cart_repository.dart';
 import 'package:bidcart/repository/customer_repository/customer_repository.dart';
 import 'package:bidcart/repository/seller_repository/seller_login_repository.dart';
 import 'package:bidcart/repository/seller_repository/seller_store_repository.dart';
+import 'package:bidcart/screens/customer/customer_orderscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -97,7 +99,7 @@ final customerRepo=Get.put(CustomerRepository());
 
 
 
-  void acceptOrder(String sellerId,String orderId,int price,GeoPoint sellerLocation){
+  Future<void> acceptOrder(String sellerId,String orderId,int price,GeoPoint sellerLocation) async {
 
     rejectedoffers.clear();
     print("Seller ID : ${sellerId} && Order ID : ${orderId}");
@@ -109,7 +111,9 @@ final customerRepo=Get.put(CustomerRepository());
       print("Rejected offer ${rejectedoffers[i].orderId},Seller ID ${rejectedoffers[i].sellerId}");
       rejectOrder(rejectedoffers[i].orderId,rejectedoffers[i].sellerId);
     }
-    cartRepo.acceptOrder(sellerId, orderId,price,sellerLocation);
+    await cartRepo.acceptOrder(sellerId, orderId,price,sellerLocation);
+
+    await checkOrder(orderId);
 
 
   }
@@ -183,11 +187,62 @@ final customerRepo=Get.put(CustomerRepository());
     cartRepo.saveReview(tempReview);
 
 
-    //orderid
-    //customerid
-    //sellerid
-    //date
-    //review
+  }
+
+
+
+  Future<void> checkOrder(String orderId)async {
+    try {
+      print("+++++++++++++++++++++ CHECKING ORDER +++++++++++++++++++++++++++++++++");
+      // Find the order with the given orderId
+      RequestData order = rxOrderRequests.firstWhere(
+            (element) => element.orderId == orderId,
+        orElse: () => throw Exception('Order not found'),
+      );
+      List<CartModel> newItems=[];
+      OfferData? offer =await storeRepo.getSellerOffer(order.sellerId!,order.orderId!);
+
+      int totalcount=0;
+      int count=0;
+      for(int i=0; i<order.items.length;i++){
+        count=0;
+        for(int j=0 ;j<offer!.items.length;j++){
+
+          if(order.items[i].id == offer.items[j].productid && order.items[i].size == offer.items[j].size ){
+            count++;
+            totalcount++;
+          }
+        }
+        if(count == 0){
+          newItems.add(order.items[i]);
+          count=0;
+        }
+      }
+
+      print("TOTAL COUNT ${totalcount} ORDER COUNT ${order.items.length}");
+      print("NEW ITEMSS AREEEE ${newItems.length}");
+      if(totalcount == order.items.length){
+        Get.back();
+      }else {
+        RequestData tempOrder = RequestData(
+            customerId: order.customerId,
+            items: newItems,
+            customerName: order.customerName,
+            dateTime: "",
+            status: "",
+            sellerId: "",
+            location: order.location,
+            distance: order.distance,
+            price: 0,
+            sellerLocation: const GeoPoint(0, 0)
+        );
+        cartRepo.generateNewRequest(tempOrder);
+      }
+
+    } catch (e) {
+      print('Error: $e');
+    }
+
 
 
   }
