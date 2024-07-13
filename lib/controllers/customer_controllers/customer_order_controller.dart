@@ -24,8 +24,8 @@ class CustomerOrderController extends GetxController{
 
   final storeRepo = Get.put(SellerStoreRepository());
   final cartRepo = Get.put(CartRepository());
-final sellerRepo =Get.put(SellerLoginRepository());
-final customerRepo=Get.put(CustomerRepository());
+  final sellerRepo =Get.put(SellerLoginRepository());
+  final customerRepo=Get.put(CustomerRepository());
   final sellerOfferController=Get.put( SellerOfferController());
   Future<void> onInit() async {
     // Perform initialization tasks herep
@@ -68,12 +68,13 @@ final customerRepo=Get.put(CustomerRepository());
     await cartRepo.updateDistance(distance,orderid);
   }
 
-   getOffers(String orderId) {
-    cartRepo.getOffersByOrderId(orderId).listen((List<OfferData> offers) {
+  Future<List<OfferData>> getOffers(String orderId) async {
+    try {
+      final List<OfferData> offers = await cartRepo.getOffersByOrderId(orderId).first;
       rxorderOffers.assignAll(offers);
-
       print("Order Length ${rxorderOffers.length}");
-    }, onError: (dynamic error) {
+      return offers;
+    } catch (error) {
       print('Error fetching offers: $error');
       // Handle error (e.g., show a snackbar)
       Get.snackbar(
@@ -83,7 +84,8 @@ final customerRepo=Get.put(CustomerRepository());
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
-    });
+      return [];
+    }
   }
 
   OfferData? getOffer(String sellerId) {
@@ -127,7 +129,7 @@ final customerRepo=Get.put(CustomerRepository());
 
 
 
-   Future<int> getDistance(String orderid, String sellerid,GeoPoint sellerLocation) async {
+  Future<int> getDistance(String orderid, String sellerid,GeoPoint sellerLocation) async {
     late GeoPoint customerlocation;
     FlutterMapMath mapMath = FlutterMapMath();
     for (int i = 0; i < rxOrderRequests.length; i++) {
@@ -165,7 +167,7 @@ final customerRepo=Get.put(CustomerRepository());
     return ' ${first.locality},${first.subLocality},${first.thoroughfare}, ${first.subThoroughfare}';
   }
 
-   getSellerLocation(String sellerid) async {
+  getSellerLocation(String sellerid) async {
 
   }
 
@@ -177,11 +179,11 @@ final customerRepo=Get.put(CustomerRepository());
     CustomerModel? customer=await customerRepo.getCustomerrData(_auth!.uid);
 
     Review tempReview=Review(
-        customerId: _auth.uid,
-        offer: offer,
-        customerName: customer!.name,
-        reviewDateTime: "",
-        review: review,
+      customerId: _auth.uid,
+      offer: offer,
+      customerName: customer!.name,
+      reviewDateTime: "",
+      review: review,
     );
 
     cartRepo.saveReview(tempReview);

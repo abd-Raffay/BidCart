@@ -44,9 +44,9 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
               Obx(() {
                 final orders = orderController.rxOrderRequests
                     .where((order) =>
-                        order.status != "accepted" &&
-                        order.status != "completed" &&
-                        order.status != "reviewed")
+                order.status != "accepted" &&
+                    order.status != "completed" &&
+                    order.status != "reviewed")
                     .toList();
 
                 if (orders.isEmpty) {
@@ -58,9 +58,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                     itemBuilder: (BuildContext context, int index) {
                       final order = orders[index];
                       // Once offers are fetched, get the specific offer for the seller
-                      OfferData? offer =
-                          orderController.getOffer(order.sellerId!);
-
+                      OfferData? offer = orderController.getOffer(order.sellerId!);
                       return FutureBuilder<int>(
                         future: orderController.getDistance(order.orderId!,
                             order.sellerId!, order.sellerLocation!),
@@ -98,7 +96,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                                   sellerId: order.sellerId!,
                                   customerLocation: order.location,
                                   offer:
-                                      offer, // Use fetched offer data if needed
+                                  offer, // Use fetched offer data if needed
                                 ),
                               ),
                             );
@@ -113,11 +111,10 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
 
               //Reviewed Orders
               Obx(() {
-                final orders = orderController.rxOrderRequests
-                    .where((order) =>
-                        order.status == "reviewed" ||
-                        order.status == "accepted" ||
-                        order.status == "completed")
+                final orders = orderController.rxOrderRequests.where((order) =>
+                order.status == "reviewed" ||
+                    order.status == "accepted" ||
+                    order.status == "completed")
                     .toList();
 
                 if (orders.isEmpty) {
@@ -128,25 +125,24 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                   return ListView.builder(
                     itemBuilder: (BuildContext context, int index) {
                       final order = orders[index];
+                      print(order.orderId);
 
-                      return FutureBuilder<void>(
+                      return FutureBuilder<List<OfferData>>(
                         future: orderController.getOffers(order.orderId!),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<void> offersSnapshot) {
-                          if (offersSnapshot.connectionState ==
-                              ConnectionState.waiting) {
+                        builder: (BuildContext context, AsyncSnapshot<List<OfferData>> offersSnapshot) {
+                          if (offersSnapshot.connectionState == ConnectionState.waiting) {
                             return Center(child: CircularProgressIndicator());
                           } else if (offersSnapshot.hasError) {
                             return Center(child: Text('Error fetching offers'));
                           } else {
-                            OfferData? offer =
-                                orderController.getOffer(order.sellerId!);
+                            List<OfferData>? offers = offersSnapshot.data;
+                            print(offers);
+                            OfferData? offer = offers?.isNotEmpty == true ? offers!.first : null; // Assuming you want the first offer
+                            print(offer?.orderId);
                             return FutureBuilder<int>(
                               future: orderController.getDistance(order.orderId!, order.sellerId!, order.sellerLocation!),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<int> distanceSnapshot) {
-                                if (distanceSnapshot.connectionState ==
-                                    ConnectionState.waiting) {
+                              builder: (BuildContext context, AsyncSnapshot<int> distanceSnapshot) {
+                                if (distanceSnapshot.connectionState == ConnectionState.waiting) {
                                   return Container(
                                     height: 140, // Adjust height as needed
                                     child: Center(
@@ -177,8 +173,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                                         customerLocation: order.location,
                                         offer: offer,
                                         // Use fetched offer data if needed
-                                        sellerLocation: order
-                                            .sellerLocation, // Corrected to use order.sellerLocation
+                                        sellerLocation: order.sellerLocation, // Corrected to use order.sellerLocation
                                       ),
                                     ),
                                   );
