@@ -67,15 +67,7 @@ class _ExploreProductsState extends State<ExploreProducts> {
                         return GestureDetector(
                           onTap: () {
                             controller.setIndex(index);
-                            Get.to(ProductDetail(
-                              id: product.id,
-                              imageUrl: product.imageUrl,
-                              description: product.description,
-                              size: product.size,
-                              category: product.category,
-                              title: product.name,
-                              quantity: product.quantity,
-                            ));
+
                           },
                           child: ProductCardVertical(
                             isNetworkImage: true,

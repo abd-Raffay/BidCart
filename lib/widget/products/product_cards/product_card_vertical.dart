@@ -1,5 +1,5 @@
 import 'package:bidcart/const/sizes.dart';
-import 'package:bidcart/screens/customer/product_detail.dart';
+
 import 'package:bidcart/widget/modal/product_modal.dart';
 import 'package:bidcart/widget/products/product_text/product_title_text.dart';
 import 'package:bidcart/widget/container/round_image.dart';
