@@ -128,7 +128,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                       print(order.orderId);
 
                       return FutureBuilder<List<OfferData>>(
-                        future: orderController.getOffers(order.orderId!),
+                        future: orderController.getOffersNew(order.orderId!),
                         builder: (BuildContext context, AsyncSnapshot<List<OfferData>> offersSnapshot) {
                           if (offersSnapshot.connectionState == ConnectionState.waiting) {
                             return Center(child: CircularProgressIndicator());

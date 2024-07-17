@@ -83,6 +83,26 @@ class CustomerOrderController extends GetxController{
     });
   }
 
+  Future<List<OfferData>> getOffersNew(String orderId) async {
+    try {
+      final List<OfferData> offers = await cartRepo.getOffersByOrderId(orderId).first;
+      rxorderOffers.assignAll(offers);
+      print("Order Length ${rxorderOffers.length}");
+      return offers;
+    } catch (error) {
+      print('Error fetching offers: $error');
+      // Handle error (e.g., show a snackbar)
+      Get.snackbar(
+        "Error",
+        "Failed to fetch offers",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return [];
+    }
+  }
+
   OfferData? getOffer(String sellerId) {
     try {
       print(rxorderOffers.length);
