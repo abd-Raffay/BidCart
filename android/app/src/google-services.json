@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "958571913445-tk0en6t6pme2b05lueo52t7838ru548v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bidcart",
+            "certificate_hash": "c83a80524a40c7ffd30ed13ad85c9a04bbb061f3"
+          }
+        },
+        {
           "client_id": "958571913445-m4hqdp1r9ts93br3lnrvh3bni3tl2b43.apps.googleusercontent.com",
           "client_type": 3
         }

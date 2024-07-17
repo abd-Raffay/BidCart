@@ -29,6 +29,7 @@ class CustomerOrderController extends GetxController{
   final sellerOfferController=Get.put( SellerOfferController());
   Future<void> onInit() async {
     // Perform initialization tasks herep
+
     getRequests();
     super.onInit();
   }
@@ -40,6 +41,7 @@ class CustomerOrderController extends GetxController{
   late List<OfferData> orderoffers = [];
   late RxList<OfferData> rxorderOffers = <OfferData>[].obs;
   RxList<OfferData> rejectedoffers=<OfferData>[].obs;
+  final List<OfferData> offers= [];
   final _auth = FirebaseAuth.instance;
 
 
@@ -63,13 +65,12 @@ class CustomerOrderController extends GetxController{
     await cartRepo.updateDistance(distance,orderid);
   }
 
-  Future<List<OfferData>> getOffers(String orderId) async {
-    try {
-      final List<OfferData> offers = await cartRepo.getOffersByOrderId(orderId).first;
+  getOffers(String orderId) {
+    cartRepo.getOffersByOrderId(orderId).listen((List<OfferData> offers) {
       rxorderOffers.assignAll(offers);
+
       print("Order Length ${rxorderOffers.length}");
-      return offers;
-    } catch (error) {
+    }, onError: (dynamic error) {
       print('Error fetching offers: $error');
       // Handle error (e.g., show a snackbar)
       Get.snackbar(
@@ -79,8 +80,7 @@ class CustomerOrderController extends GetxController{
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
-      return [];
-    }
+    });
   }
 
   OfferData? getOffer(String sellerId) {
