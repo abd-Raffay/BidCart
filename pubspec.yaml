@@ -46,6 +46,7 @@ dependencies:
   flutter_map_math: ^0.1.7
   shared_preferences: ^2.2.3
   flutter_polyline_points: ^2.1.0
+  flutter_local_notifications: ^17.2.1+2
 
 
 

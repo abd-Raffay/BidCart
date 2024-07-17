@@ -350,8 +350,7 @@ class SellerStoreRepository extends GetxController {
 
   Stream<List<RequestData>> getOrder(String? userId) {
     try {
-      final CollectionReference<Map<String, dynamic>> orderRequestCollection =
-          FirebaseFirestore.instance.collection('orderrequest');
+      final CollectionReference<Map<String, dynamic>> orderRequestCollection = FirebaseFirestore.instance.collection('orderrequest');
 
       return orderRequestCollection
           .where('customerid', isEqualTo: userId)

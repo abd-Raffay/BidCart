@@ -49,8 +49,8 @@ final GeoPoint? location;
 
               int qty=0;
             if (functionality == "add") {
-              //print("Size ${size}");
-              // print("ID ${productId}");
+              print("Size ${size}");
+               print("ID ${productId}");
               qty=await cartController.getQuantity(productId, size);
               //print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ${qty} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 

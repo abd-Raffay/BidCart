@@ -48,12 +48,7 @@ class CustomerOrderController extends GetxController{
     storeRepo.getOrder(_auth.currentUser?.uid).listen((requests) {
       orderRequests = requests;
       rxOrderRequests.assignAll(orderRequests);
-
-
-
     });
-
-
     return rxOrderRequests;
   }
 

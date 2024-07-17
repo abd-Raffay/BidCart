@@ -8,6 +8,8 @@ import 'package:bidcart/widget/container/round_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../widget/cart/add_remove_buttons.dart';
+
 class ProductDetail extends StatefulWidget {
   ProductDetail({
     super.key,
@@ -36,6 +38,7 @@ class ProductDetail extends StatefulWidget {
 
 class _ProductDetailState extends State<ProductDetail> {
   String? dropdownValue;
+  String? size;
 
   @override
   void initState() {
@@ -78,6 +81,7 @@ class _ProductDetailState extends State<ProductDetail> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const SizedBox(width: Sizes.spaceBtwItems),
+                    AddRemoveButtons(quantity: RxInt(widget.quantity),id: widget.id,size: size.toString()),
                     DropdownMenu(
                       width: 170,
                       label: const Text(
@@ -128,7 +132,6 @@ class _ProductDetailState extends State<ProductDetail> {
       bottomNavigationBar: BottomBar(
         size: widget.sizee,
         productId: widget.id,
-        quantity: cartController.getQuantity(widget.id,widget.size),
         buttontext: 'Add to Cart',
         functionality: "add",
       ),

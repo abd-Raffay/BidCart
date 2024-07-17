@@ -3,8 +3,10 @@ import 'package:bidcart/model/offer_model.dart';
 
 import 'package:bidcart/model/request_model.dart';
 import 'package:bidcart/model/seller_model.dart';
+import 'package:bidcart/notification.dart';
 import 'package:bidcart/repository/seller_repository/seller_login_repository.dart';
 import 'package:bidcart/repository/seller_repository/seller_store_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_map_math/flutter_geo_math.dart';
 import 'package:get/get.dart';
@@ -23,6 +25,7 @@ class SellerRequestController extends GetxController {
   late RxList<OfferData> rxsellermadeoffers = <OfferData>[].obs;
   late RxList<Review> reviews = <Review>[].obs;
 
+  late RxList<RequestData> previousRequests = <RequestData>[].obs;
 
 
   final _auth = FirebaseAuth.instance;
@@ -42,17 +45,34 @@ class SellerRequestController extends GetxController {
   }
 
   RxList<RequestData> getRequests() {
-    storeRepo.getOrderRequests().listen((requests) {
+    storeRepo.getOrderRequests().listen((requests) async {
       orderRequests = requests;
       rxOrderRequests.assignAll(orderRequests);
       getOffersbyseller();
       // Call getOrderStatus after updating rxOrderRequests
       getOrderStatus();
-      calculatedistance();
+      await calculatedistance();
+
+      if(!const ListEquality().equals(rxOrderRequests, previousRequests)) {
+        if (rxOrderRequests.length > previousRequests.length) {
+          NotificationService().showNotification(
+            title: "New Order Request ",
+            body: "New Request has placed.",
+          );
+        }
+      }
+
+
+
+      // Update previous requests list
+      previousRequests.assignAll(rxOrderRequests);
+
+
     });
 
     return rxOrderRequests;
   }
+
 
 
   totalAvailableProducts(String orderid) {
@@ -123,13 +143,14 @@ class SellerRequestController extends GetxController {
     }
   }
 
-  calculatedistance() async {
+  Future<void> calculatedistance() async {
 
       SellerModel? seller = await sellerrepo.getSellerData(_auth.currentUser!.uid);
       if(seller == null) {
         print("Seller is null");
       }
       else{
+        print("Calcluting distance");
       FlutterMapMath mapMath = FlutterMapMath();
       for (int i = 0; i < rxOrderRequests.length; i++) {
         double tempdistance = mapMath.distanceBetween(
@@ -140,10 +161,10 @@ class SellerRequestController extends GetxController {
           "meters",
         );
         print(
-            "TEMP DISTANCE ${tempdistance} && ORDER DISTANCE ${rxOrderRequests[i]
-                .distance}");
+            "TEMP DISTANCE ${tempdistance} && ORDER DISTANCE ${rxOrderRequests[i].distance}");
         if (tempdistance >= rxOrderRequests[i].distance) {
           rxOrderRequests.removeAt(i);
+
         }
       }
     }
