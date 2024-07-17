@@ -91,6 +91,11 @@ class BidDetails extends StatelessWidget {
                         LabelText(title: "Price : Rs ${bid.items[index].price}")
 
                       ],
+                    ),
+                    Row(
+                      children: [
+                        LabelText(title: "Date of Expiry : ${bid.items[index].dateofexpiry}")
+                      ],
                     )
                     /*if (showStock)
                       Column(

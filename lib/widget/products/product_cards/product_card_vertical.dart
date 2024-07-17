@@ -60,7 +60,7 @@ class ProductCardVertical extends StatelessWidget {
                 backgroundColor: Colors.transparent,
                 child: GestureDetector(
                   onTap: () {
-                    Get.to(ProductDetail(
+                   /*Get.to(ProductDetail(
                       id: productId,
                       imageUrl: imageUrl,
                       title: productTitle,
@@ -68,7 +68,7 @@ class ProductCardVertical extends StatelessWidget {
                       size: size,
                       category: '',
                       quantity: quantity,
-                    ));
+                    ));*/
                   },
                   child: RoundedImage(
                     imageUrl: imageUrl,

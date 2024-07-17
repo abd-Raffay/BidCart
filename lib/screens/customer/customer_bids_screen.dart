@@ -33,7 +33,7 @@ class _BidScreenState extends State<BidScreen> {
       body: Obx(
             () {
           if (orderController.rxorderOffers == null || orderController.rxorderOffers.isEmpty) {
-            return Center(
+            return const Center(
               child: Text("No bids placed"),
             );
           }

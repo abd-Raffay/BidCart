@@ -7,12 +7,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'notification.dart';
+
 void main() async {
   // This will make sure firebase is initialized
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate();
+  NotificationService().initNotification();
   //Get.put(CustomerAuthenticationRepository());
   //Get.put(SellerAuthenticationRepository());
   Get.put(Navigation());
